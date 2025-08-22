@@ -6,15 +6,15 @@
         <a-breadcrumb-item class="text-gray-500">List</a-breadcrumb-item>
         <a-breadcrumb-item class="text-gray-700 font-medium">App</a-breadcrumb-item>
       </a-breadcrumb>
-      
-      <a-layout-content class="bg-white rounded-lg shadow-sm p-6 min-h-[280px]">
-        <slot/>
+        <a-layout-content class="bg-white rounded-lg shadow-sm p-6 max-h-[92%] overflow-scroll ">
+        <ContentWrapper/>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 
 <script lang="ts" setup>
+import ContentWrapper from './ContentWrapper.vue';
 // Component accepts slot content
 
 </script>

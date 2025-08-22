@@ -3,17 +3,18 @@
     <AppSidebar v-model:collapsed="collapsed"/>
     <a-layout>
      <Header :collapsed="collapsed" @toggle="collapsed = !collapsed" />
-      <Body>
-        <!-- Your content goes here -->
-        <router-view />
-      </Body>
+      <Body/>
+       
     </a-layout>
   </a-layout>
 </template>
 
 <script lang="ts" setup>
+//@ts-ignore
 import Header from './Header.vue';
+//@ts-ignore
 import AppSidebar from './LayoutSidebar.vue';
+//@ts-ignore
 import Body from './AppBody.vue';
 import { ref } from 'vue';
 
