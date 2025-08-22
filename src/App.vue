@@ -1,6 +1,12 @@
 <script setup lang="ts">
+//@ts-ignore
+import AppLayout from './components/layout/AppLayout.vue';
+
 </script>
 
 <template>
-  <router-view/>
+    <AppLayout>
+      <router-view />
+      <slot />
+    </AppLayout>
 </template>

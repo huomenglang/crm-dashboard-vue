@@ -7,7 +7,7 @@ import Reports from '@/view/Reports.vue'
 import CustomerReports from '@/view/CustomerReport.vue'
 import ExportReports from '@/view/ExportReports.vue'
 import NotFound from '@/view/NotFound.vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '../stores/auth'
 import Login from '@/view/Login.vue'
 
 const routes: RouteRecordRaw[] = [

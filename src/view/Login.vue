@@ -25,7 +25,7 @@
 import { ref } from 'vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '../stores/auth';
 
 const router = useRouter();
 const auth = useAuthStore();

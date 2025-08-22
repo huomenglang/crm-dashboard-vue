@@ -1,5 +1,6 @@
-import { AppConfig } from "@/configs"
-import { TOKEN_KEY } from "@/constant"
+
+import  {TOKEN_KEY}  from "../constant/index"
+import {AppConfig} from "../configs/index"
 import axios, { type AxiosRequestConfig } from "axios"
 
 

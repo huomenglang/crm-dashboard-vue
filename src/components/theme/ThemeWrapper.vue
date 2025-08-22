@@ -14,9 +14,9 @@ const themeConfig = computed(() => ({
 }))
 
 // Optional: toggle dark mode
-function toggleDark() {
-  isDark.value = !isDark.value
-}
+// function toggleDark() {
+//   isDark.value = !isDark.value
+// }
 </script>
 
 <template>

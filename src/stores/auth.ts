@@ -81,6 +81,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Role/authority check
   const isAuthorized = (roles?: string | string[]) => {
+    if(roles === undefined || roles === null) return true;
     return true;
   };
 

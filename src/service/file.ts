@@ -1,4 +1,4 @@
-import {getAxiosConfig} from "@/utils"
+import {getAxiosConfig} from "../utils/index"
 
 const url = '/uploads/'
 export const url_ = '/api/v1/files'
