@@ -8,13 +8,19 @@
         </a-form-item>
 
         <a-form-item label="Password">
-          <a-input-password v-model:value="formState.password" placeholder="Password" />
+          <a-input-password
+            v-model:value="formState.password"
+            placeholder="Password"
+          />
         </a-form-item>
 
         <a-form-item>
-          <a-button type="primary" html-type="submit" class="w-full" :loading="loading">
-            Log in
-          </a-button>
+          
+          <RoundButton >Primary</RoundButton>
+          <RoundButton :is-danger="true">កន្ទុមរុយ</RoundButton>
+
+           <RoundButton :secondary="true" >Primary</RoundButton>
+          <RoundButton :is-danger="true" :secondary="true">Danger</RoundButton>
         </a-form-item>
       </a-form>
     </a-card>
@@ -22,17 +28,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { message } from 'ant-design-vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
+import { ref } from "vue";
+import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth";
+import RoundButton from "@/components/base/RoundButton.vue";
 
 const router = useRouter();
 const auth = useAuthStore();
 
 const formState = ref({
-  username: '',
-  password: '',
+  username: "",
+  password: "",
 });
 const loading = ref(false);
 
@@ -45,17 +52,17 @@ const handleSubmit = async () => {
 
     const { username, password } = formState.value;
     if (!username || !password) {
-      message.error('Please fill in all fields.');
+      message.error("Please fill in all fields.");
       return;
     }
 
     const user = await auth.login(username, password);
     if (user) {
-      message.success('Login successful!');
-      router.push('/dashboard');
+      message.success("Login successful!");
+      router.push("/dashboard");
     }
   } catch (err: any) {
-    message.error(err.message || 'Login failed');
+    message.error(err.message || "Login failed");
   } finally {
     loading.value = false;
   }

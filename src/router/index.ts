@@ -10,6 +10,7 @@ import NotFound from '@/view/NotFound.vue'
 import { useAuthStore } from '../stores/auth'
 import Login from '@/view/Login.vue'
 import ContentWrapper from '@/components/layout/ContentWrapper.vue'
+import { RoutePath } from './routes_path'
 
 const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'Login', component: Login,meta: { layout: false } },
@@ -19,17 +20,21 @@ const routes: RouteRecordRaw[] = [
     component: ContentWrapper, // everything else uses AppLayout
     children: [
       { path: '/', redirect: '/dashboard' },
-      { path: 'dashboard', name: 'Dashboard', component: Dashboard },
-      { path: 'customers', name: 'Customers', component: Customer },
+      { path:RoutePath.DASHBOARD, name: 'Dashboard', component: Dashboard },
+      { path:RoutePath.CUSTOMER, name: 'Customers', component: Customer },
+      { path:RoutePath.INVOICE, name: 'Invoice', component: Customer },
       {
-        path: 'reports',
+        path: RoutePath.REPORT,
         name: 'Reports',
         component: Reports,
         children: [
           { path: 'customers', name: 'CustomerReports', component: CustomerReports },
+           { path: 'customers/:id', name: 'CustomerReports', component: CustomerReports },
           { path: 'export', name: 'ExportReports', component: ExportReports },
+          { path: 'export/:id', name: 'ExportReports', component: ExportReports },
         ],
       },
+       { path:RoutePath.ADMINISTRATION, name: 'Administration', component: Customer },
       {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
