@@ -4,23 +4,14 @@
       <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
       <a-form @submit.prevent="handleSubmit" layout="vertical">
         <a-form-item label="Username">
-          <a-input v-model:value="formState.username" placeholder="Username" />
+           <AntInput v-model:value="formState.username"  placeholder="Username" size="large" />
         </a-form-item>
 
-        <a-form-item label="Password">
-          <a-input-password
-            v-model:value="formState.password"
-            placeholder="Password"
-          />
+        <a-form-item label="Password" class="!mb-2">
+           <AntInput v-model:value="formState.password" placeholder="Password" size="large"  type="password"/>
         </a-form-item>
-
         <a-form-item>
-          
-          <RoundButton >Primary</RoundButton>
-          <RoundButton :is-danger="true">កន្ទុមរុយ</RoundButton>
-
-           <RoundButton :secondary="true" >Primary</RoundButton>
-          <RoundButton :is-danger="true" :secondary="true">Danger</RoundButton>
+          <submit-button @submit="handleSubmit" class="w-full" > Submit </submit-button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -32,7 +23,10 @@ import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
-import RoundButton from "@/components/base/RoundButton.vue";
+import SubmitButton from "@/components/base/button/SubmitButton.vue";
+import RoundButton from "@/components/base/button/RoundButton.vue";
+import AntInput from "@/components/base/input/AntInput.vue";
+
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -44,6 +38,7 @@ const formState = ref({
 const loading = ref(false);
 
 const handleSubmit = async () => {
+  console.log("Submitting form with", formState.value);
   loading.value = true;
 
   try {

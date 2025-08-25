@@ -8,6 +8,8 @@
       />
       <menu-fold-outlined v-else class="trigger text-xl" @click="toggle" />
     </div>
+
+    
     <div class="flex items-center space-x-5">
       <div
         class="text-xl w-11 h-11 font-bold cursor-pointer hover:bg-gray-100 hover:rounded-full hover:shadow-2xl flex justify-center items-center"
