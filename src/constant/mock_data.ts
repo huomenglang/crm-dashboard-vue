@@ -8,8 +8,15 @@ import {
   BarChartOutlined,
   CalendarOutlined,
   MessageOutlined,
+  BoxPlotFilled,
+  UserAddOutlined,
+  BoxPlotOutlined,
+  ShopOutlined,
+  ShoppingCartOutlined,
+  UsergroupAddOutlined,
   
 } from '@ant-design/icons-vue';
+// import { Boxes, ContactRound, ShoppingBasket, ShoppingCart, Warehouse } from 'lucide-vue-next';
 
 export interface ItemMenuProps {
   key: string;
@@ -20,114 +27,77 @@ export interface ItemMenuProps {
 }
 export const menuData: ItemMenuProps[] = [
   {
-    key: 'dashboard',
+    key: 'dashboards',
     title: 'Dashboard',
     icon: DashboardOutlined,
-    path: '/dashboard'
+    path: '/dashboards'
   },
   {
-    key: 'sub1',
+    key: 'customers',
     title: 'Customers',
-    icon: TeamOutlined,
-    children: [
-      {
-        key: '1',
-        title: 'Customer List',
-        icon: UserOutlined,
-        path: '/customers/list'
-      },
-      {
-        key: '2',
-        title: 'Add Customer',
-        icon: UserOutlined,
-        path: '/customers/add'
-      },
-      {
-        key: '3',
-        title: 'Customer Groups',
-        icon: TeamOutlined,
-        path: '/customers/groups'
-      }
-    ]
+    icon: UserAddOutlined,
+    path: '/customers'
   },
   {
-    key: 'sub2',
-    title: 'Sales',
+    key: 'categories',
+    title: 'Categories',
     icon: ShoppingOutlined,
-    children: [
-      {
-        key: '4',
-        title: 'Orders',
-        icon: ShoppingOutlined,
-        path: '/sales/orders'
-      },
-      {
-        key: '5',
-        title: 'Invoices',
-        icon: FileOutlined,
-        path: '/sales/invoices'
-      },
-      {
-        key: '6',
-        title: 'Quotes',
-        icon: FileOutlined,
-        path: '/sales/quotes'
-      }
-    ]
+    path: '/categories',
+
   },
   {
-    key: 'sub3',
-    title: 'Analytics',
+    key: 'products',
+    title: 'Products',
+    icon: BoxPlotOutlined,
+    path: '/products',
+
+  },
+  {
+    key: 'warehouses',
+    title: 'Warehouse',
+    icon: ShopOutlined,
+    path: '/warehouses',
+
+  },
+  {
+    key: 'orders',
+    title: 'Orders',
+    icon: ShoppingCartOutlined,
+    path: '/orders',
+
+  },
+    {
+    key: 'purchase-orders',
+    title: 'Purchase',
+    icon: ShoppingOutlined,
+    path: '/purchase-orders',
+
+  },
+  {
+    key: 'suppliers',
+    title: 'Supplier',
+    icon: UsergroupAddOutlined,
+    path: '/suppliers',
+
+  },
+  {
+    key: 'reports',
+    title: 'Report',
     icon: BarChartOutlined,
     children: [
       {
-        key: '7',
+        key: '/customer/orders',
         title: 'Reports',
         icon: BarChartOutlined,
         path: '/analytics/reports'
       },
       {
-        key: '8',
+        key: '/suppliers/purchase-orders',
         title: 'Statistics',
         icon: BarChartOutlined,
         path: '/analytics/statistics'
       }
     ]
-  },
-  {
-    key: 'calendar',
-    title: 'Calendar',
-    icon: CalendarOutlined,
-    path: '/calendar'
-  },
-  {
-    key: 'messages',
-    title: 'Messages',
-    icon: MessageOutlined,
-    path: '/messages'
-  },
-  {
-    key: 'settings',
-    title: 'Settings',
-    icon: SettingOutlined,
-    children: [
-      {
-        key: '9',
-        title: 'General',
-        icon: SettingOutlined,
-        path: '/settings/general'
-      },
-      {
-        key: '10',
-        title: 'Users',
-        icon: TeamOutlined,
-        path: '/settings/users'
-      },
-      {
-        key: '11',
-        title: 'Preferences',
-        icon: SettingOutlined,
-        path: '/settings/preferences'
-      }
-    ]
-  }];
+  }
+
+  ];

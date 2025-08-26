@@ -21,6 +21,7 @@
     <a-menu
       v-model:selectedKeys="selectedKeys"
       v-model:openKeys="openKeys"
+      @click="handleMenuClick"
       mode="inline"
       class="!border-none !bg-inherit"
     >
@@ -81,9 +82,21 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { menuData, type ItemMenuProps } from "../../constant/mock_data"; // Adjust path as needed
+import { useRouter } from "vue-router";
 
 
 const selectedKeys = ref<string[]>(["dashboard"]);
 const openKeys = ref<string[]>(["customers"]);
 const collapsed = defineModel<boolean>("collapsed", { default: false });
+const route=useRouter();
+
+const handleMenuClick = (item:any) => {
+ let key=''
+ if(item.key){
+   key=item.key.replace('item-','')
+ }
+
+  console.log("Menu item clicked:", item);
+  route.push(key);
+};
 </script>

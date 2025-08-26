@@ -11,6 +11,13 @@ import { useAuthStore } from '../stores/auth'
 import Login from '@/view/Login.vue'
 import ContentWrapper from '@/components/layout/ContentWrapper.vue'
 import { RoutePath } from './routes_path'
+import Product from '@/view/Product.vue'
+import { Warehouse } from 'lucide-vue-next'
+import Order from '@/view/Order.vue'
+import PurchaseOrder from '@/view/PurchaseOrder.vue'
+import Category from '@/view/Category.vue'
+import Supplier from '@/view/Supplier.vue'
+import Configuration from '@/view/Configuration.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'Login', component: Login,meta: { layout: false } },
@@ -22,7 +29,16 @@ const routes: RouteRecordRaw[] = [
       { path: '/', redirect: '/dashboard' },
       { path:RoutePath.DASHBOARD, name: 'Dashboard', component: Dashboard },
       { path:RoutePath.CUSTOMER, name: 'Customers', component: Customer },
-      { path:RoutePath.INVOICE, name: 'Invoice', component: Customer },
+      { path:RoutePath.PRODUCT, name: 'Products', component: Product },
+      { path:RoutePath.WAREHOUSE, name: 'Warehouse', component: Warehouse },
+      {
+        path: RoutePath.ORDER,
+        name: 'Orders',
+        component: Order,
+      },
+      { path: RoutePath.PURCHASE_ORDER, name: 'PurchaseOrder', component: PurchaseOrder },
+      {path:RoutePath.CATEGORY,name:'Category',component:Category},
+      {path:RoutePath.SUPPLIER,name:'Supplier',component:Supplier},
       {
         path: RoutePath.REPORT,
         name: 'Reports',
@@ -34,7 +50,7 @@ const routes: RouteRecordRaw[] = [
           { path: 'export/:id', name: 'ExportReports', component: ExportReports },
         ],
       },
-       { path:RoutePath.ADMINISTRATION, name: 'Administration', component: Customer },
+       { path:RoutePath.ADMINISTRATION, name: 'Administration', component: Configuration },
       {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',

@@ -8,8 +8,74 @@ export interface DataItem {
   address: string;
   phoneNumber: string;
   description: string;
+  image?: string;
 }
 
+export const customerData: DataItem[] = [
+{
+    key: 1,
+    firstname: "Tola",
+    lastname: "Sam",
+    gender: "Male",
+    email: "toa@gmail.com",
+    age: 30,
+    address: "123 Main St",
+    phoneNumber: "092 119 111",
+    description: "Lorem ipsum dolor sit amet.",
+    image: "https://randomuser.me/api/portraits/men/1.jpg"
+  },
+  {
+    key: 2,
+    firstname: "Sophea",
+    lastname: "Tan",
+    gender: "Female",
+    email: "sophea@gmail.com",
+    age: 25,
+    address: "456 Elm St",
+    phoneNumber: "092 119 222",
+    description: "Consectetur adipiscing elit.",
+    image: "https://randomuser.me/api/portraits/women/2.jpg"
+  },
+  {
+    key: 3,
+    firstname: "John",
+    lastname: "Doe",
+    gender: "Male",
+    email: "john@gmail.com",
+    age: 28,
+    address: "789 Oak St",
+    phoneNumber: "092 119 333",
+    description:
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    image: "https://randomuser.me/api/portraits/men/3.jpg"
+  },
+  {
+    key: 4,
+    firstname: "Jane",
+    lastname: "Smith",
+    gender: "Female",
+    email: "jane@gmail.com",
+    age: 22,
+    address: "321 Pine St",
+    phoneNumber: "092 119 444",
+    description:
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    image: "https://randomuser.me/api/portraits/women/4.jpg"
+  },
+  {
+    key: 5,
+    firstname: "Michael",
+    lastname: "Johnson",
+    gender: "Male",
+    email: "michael@gmail.com",
+    age: 35,
+    address: "654 Maple St",
+    phoneNumber: "092 119 555",
+    description:
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    image: "https://randomuser.me/api/portraits/men/5.jpg"
+  }
+];
 export const data: DataItem[] = [
   {
     key: 1,
@@ -17,6 +83,134 @@ export const data: DataItem[] = [
     lastname: "Sam",
     gender: "Male",
     email: "toa@gmail.com",
+    age: 30,
+    address: "123 Main St",
+    phoneNumber: "092 119 111",
+    description: "Lorem ipsum dolor sit amet.",
+  },
+  {
+    key: 2,
+    firstname: "Sophea",
+    lastname: "Tan",
+    gender: "Female",
+    email: "sophea@gmail.com",
+    age: 25,
+    address: "456 Elm St",
+    phoneNumber: "092 119 222",
+    description: "Consectetur adipiscing elit.",
+  },
+  {
+    key: 3,
+    firstname: "John",
+    lastname: "Doe",
+    gender: "Male",
+    email: "john@gmail.com",
+    age: 28,
+    address: "789 Oak St",
+    phoneNumber: "092 119 333",
+    description:
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    key: 4,
+    firstname: "Jane",
+    lastname: "Smith",
+    gender: "Female",
+    email: "jane@gmail.com",
+    age: 22,
+    address: "321 Pine St",
+    phoneNumber: "092 119 444",
+    description:
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  },
+  {
+    key: 5,
+    firstname: "Michael",
+    lastname: "Johnson",
+    gender: "Male",
+    email: "michael@gmail.com",
+    age: 35,
+    address: "654 Maple St",
+    phoneNumber: "092 119 555",
+    description:
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  },
+  {
+    key: 6,
+    firstname: "Emily",
+    lastname: "Davis",
+    gender: "Female",
+    email: "emily@gmail.com",
+    age: 27,
+    address: "987 Cedar St",
+    phoneNumber: "092 119 666",
+    description:
+      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  },
+  {
+    key: 7,
+    firstname: "Vicheka",
+    lastname: "Sam",
+    gender: "Male",
+    email: "vicheka@gmail.com",
+    age: 30,
+    address: "123 Main St",
+    phoneNumber: "092 119 111",
+    description: "Lorem ipsum dolor sit amet.",
+  },
+  {
+    key: 8,
+    firstname: "Sophearith",
+    lastname: "Tan",
+    gender: "Female",
+    email: "sophearith@gmail.com",
+    age: 25,
+    address: "456 Elm St",
+    phoneNumber: "092 119 222",
+    description: "Consectetur adipiscing elit.",
+  },
+  {
+    key: 9,
+    firstname: "John do",
+    lastname: "Doe",
+    gender: "Male",
+    email: "john.doe@gmail.com",
+    age: 28,
+    address: "789 Oak St",
+    phoneNumber: "092 119 333",
+    description:
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    key: 10,
+    firstname: "Janna",
+    lastname: "Smith",
+    gender: "Female",
+    email: "janna@gmail.com",
+    age: 22,
+    address: "321 Pine St",
+    phoneNumber: "092 119 444",
+    description:
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  },
+  {
+    key: 11,
+    firstname: "Vichra",
+    lastname: "Johnson",
+    gender: "Male",
+    email: "vichra@gmail.com",
+    age: 35,
+    address: "654 Maple St",
+    phoneNumber: "092 119 555",
+    description:
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  },
+  {
+    key: 12,
+    firstname: "Veasna",
+    lastname: "Davis",
+    gender: "Female",
+    email: "veasna@gmail.com",
     age: 30,
     address: "123 Main St",
     phoneNumber: "092 119 111",

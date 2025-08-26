@@ -54,12 +54,35 @@
       :class="['custom-table', tableClass]"
       :scroll="mergedScroll"
       
+      
     >
       <!-- Custom Body Cells -->
       <template #bodyCell="{ column, record, index }">
+       <template v-if="column.key === 'image'">
+         <a-image
+          v-if="record.image"
+          :src="record.image"
+          class="!w-10 !h-10 !rounded-full border-2 border-gray-200"
+          :preview="true"
+          style="border-radius: 6px; object-fit: cover;"
+          fallback="https://via.placeholder.com/50?text=No+Image"
+        />
+        <div v-else class="w-[50px] h-[50px] bg-gray-200 rounded-md flex items-center justify-center">
+          <span class="text-gray-400 text-xs">No Image</span>
+        </div>
+        </template>
+
         <!-- Action Column -->
-        <template v-if="column.key === 'operation'">
-          <div class="flex items-center space-x-2">
+        <template v-else-if="column.key === 'operation'">
+          <div class="flex items-center gap-x-0.5">
+            <round-button 
+              @click="emit('view', record, index)"
+              :class="viewButtonClass"
+              
+            >
+              <EyeOutlined />
+            </round-button>
+             <a-divider type="vertical" />
             <round-button 
               @click="emit('edit', record, index)"
               :class="editButtonClass"
@@ -115,6 +138,7 @@ import {
   SearchOutlined,
   FilterOutlined,
   PlusOutlined,
+  EyeOutlined,
 } from "@ant-design/icons-vue";
 
 import RoundButton from "@/components/base/button/RoundButton.vue";
@@ -140,6 +164,7 @@ interface CustomTableProps extends Omit<TableProps, 'columns' | 'dataSource'> {
   searchButtonClass?: string;
   filterButtonClass?: string;
   editButtonClass?: string;
+  viewButtonClass?: string;
   deleteButtonClass?: string;
 }
 
@@ -165,6 +190,7 @@ const emit = defineEmits<{
   (e: 'delete', record: any, index: number): void;
   (e: 'search', value: string): void;
   (e: 'filter'): void;
+  (e: 'view', record: any, index: number): void;
   (e: 'update:searchValue', value: string): void;
 }>();
 

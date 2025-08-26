@@ -2,7 +2,6 @@
 import { Modal } from "ant-design-vue";
 import type { ModalProps } from "ant-design-vue";
 import { defineProps, defineEmits } from "vue";
-import RoundButton from "../button/RoundButton.vue";
 
 // ✅ Extend Ant Design Vue Modal props
 interface BaseModalProps extends ModalProps {
