@@ -11,18 +11,16 @@
       </div>
 
       <!-- Search and Filter Section -->
-     <div class="w-[50%] flex flex-between">
+      <div class="w-[50%] flex flex-between">
         <div class="flex justify-end items-center gap-2 w-full">
           <!-- Search Input -->
-          <div class=" w-[60%] flex justify-center gap-2">
+          <div class="w-[60%] flex justify-center gap-2">
             <ant-input
               :placeholder="searchPlaceholder"
               :value="searchValue"
               @update:value="handleSearch"
-             
             />
-            <round-button 
-             
+            <round-button
               :class="searchButtonClass"
               @click="emit('search', searchValue)"
             >
@@ -31,9 +29,8 @@
           </div>
 
           <!-- Filter Button -->
-          <round-button 
-            
-            @click="emit('filter')" 
+          <round-button
+            @click="emit('filter')"
             class="ml-2"
             :class="filterButtonClass"
           >
@@ -53,57 +50,73 @@
       :data-source="data"
       :class="['custom-table', tableClass]"
       :scroll="mergedScroll"
-      
-      
     >
       <!-- Custom Body Cells -->
       <template #bodyCell="{ column, record, index }">
-       <template v-if="column.key === 'image'">
-         <a-image
-          v-if="record.image"
-          :src="record.image"
-          class="!w-10 !h-10 !rounded-full border-2 border-gray-200"
-          :preview="true"
-          style="border-radius: 6px; object-fit: cover;"
-          fallback="https://via.placeholder.com/50?text=No+Image"
-        />
-        <div v-else class="w-[50px] h-[50px] bg-gray-200 rounded-md flex items-center justify-center">
-          <span class="text-gray-400 text-xs">No Image</span>
-        </div>
+        <template v-if="column.key === 'image'">
+          <a-image
+            v-if="record.image"
+            :src="record.image"
+            class="!w-10 !h-10 !rounded-full border-2 border-gray-200"
+            :preview="true"
+            style="border-radius: 6px; object-fit: cover"
+            fallback="https://via.placeholder.com/50?text=No+Image"
+          />
+          <div
+            v-else
+            class="w-[50px] h-[50px] bg-gray-200 rounded-md flex items-center justify-center"
+          >
+            <span class="text-gray-400 text-xs">No Image</span>
+          </div>
         </template>
 
         <!-- Action Column -->
         <template v-else-if="column.key === 'operation'">
           <div class="flex items-center gap-x-0.5">
-            <round-button 
+            <round-button
               @click="emit('view', record, index)"
               :class="viewButtonClass"
-              
             >
               <EyeOutlined />
             </round-button>
-             <a-divider type="vertical" />
-            <round-button 
+            <a-divider type="vertical" />
+            <round-button
               @click="emit('edit', record, index)"
               :class="editButtonClass"
             >
               <EditOutlined />
             </round-button>
             <a-divider type="vertical" />
-            <round-button 
-              :is-danger="true"
-              @click="emit('delete', record, index)"
-              :class="deleteButtonClass"
+
+            <a-popconfirm
+              title="Are you sure delete?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="handleConfirm(record, index)"
+              class="flex justify-center items-center"
             >
-              <DeleteOutlined />
-            </round-button>
+              <template #icon><QuestionCircleOutlined style="color: red" /></template>
+              <round-button :is-danger="true" :class="deleteButtonClass">
+                <DeleteOutlined />
+              </round-button>
+            </a-popconfirm>
           </div>
         </template>
 
         <!-- Default Slot for other columns -->
         <template v-else>
-          <slot :name="`bodyCell-${column.key}`" :record="record" :index="index" :column="column">
-            <slot :name="`column-${column.key}`" :record="record" :index="index" :column="column">
+          <slot
+            :name="`bodyCell-${column.key}`"
+            :record="record"
+            :index="index"
+            :column="column"
+          >
+            <slot
+              :name="`column-${column.key}`"
+              :record="record"
+              :index="index"
+              :column="column"
+            >
               {{ record[column.dataIndex] }}
             </slot>
           </slot>
@@ -113,9 +126,7 @@
       <!-- Empty State -->
       <template #emptyText>
         <slot name="empty">
-          <div class="text-center py-8 text-gray-500">
-            No data found
-          </div>
+          <div class="text-center py-8 text-gray-500">No data found</div>
         </slot>
       </template>
 
@@ -130,8 +141,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, type CSSProperties,useAttrs } from 'vue';
-import type { TableColumnsType, TableProps } from 'ant-design-vue';
+import { computed, ref, type CSSProperties, useAttrs } from "vue";
+import type { TableColumnsType, TableProps } from "ant-design-vue";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -139,23 +150,24 @@ import {
   FilterOutlined,
   PlusOutlined,
   EyeOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons-vue";
 
 import RoundButton from "@/components/base/button/RoundButton.vue";
 import AntInput from "@/components/base/input/AntInput.vue";
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 // Define props that extend Ant Design Table props
-interface CustomTableProps extends Omit<TableProps, 'columns' | 'dataSource'> {
+interface CustomTableProps extends Omit<TableProps, "columns" | "dataSource"> {
   // Required props
   columns: TableColumnsType;
   data: any[];
-  
+
   // Custom props
   searchPlaceholder?: string;
   searchValue?: string;
-  
+
   // Class overrides
   containerClass?: string;
   tableClass?: string;
@@ -169,29 +181,29 @@ interface CustomTableProps extends Omit<TableProps, 'columns' | 'dataSource'> {
 }
 
 const props = withDefaults(defineProps<CustomTableProps>(), {
-  searchPlaceholder: 'Search...',
-  searchValue: '',
+  searchPlaceholder: "Search...",
+  searchValue: "",
 
-  containerClass: '',
-  tableClass: '',
-  createButtonClass: '',
-  searchInputClass: '',
-  searchButtonClass: '',
-  filterButtonClass: '',
-  editButtonClass: '',
-  deleteButtonClass: '',
-  scroll: () => ({ x: 1500, y: 1000 })
+  containerClass: "",
+  tableClass: "",
+  createButtonClass: "",
+  searchInputClass: "",
+  searchButtonClass: "",
+  filterButtonClass: "",
+  editButtonClass: "",
+  deleteButtonClass: "",
+  scroll: () => ({ x: 1500, y: 1000 }),
 });
 
 // Define emits
 const emit = defineEmits<{
-  (e: 'create'): void;
-  (e: 'edit', record: any, index: number): void;
-  (e: 'delete', record: any, index: number): void;
-  (e: 'search', value: string): void;
-  (e: 'filter'): void;
-  (e: 'view', record: any, index: number): void;
-  (e: 'update:searchValue', value: string): void;
+  (e: "create"): void;
+  (e: "edit", record: any, index: number): void;
+  (e: "delete", record: any, index: number): void;
+  (e: "search", value: string): void;
+  (e: "filter"): void;
+  (e: "view", record: any, index: number): void;
+  (e: "update:searchValue", value: string): void;
 }>();
 
 // Table ref
@@ -200,7 +212,7 @@ const tableRef = ref();
 // Process columns to include actions if needed
 const processedColumns = computed(() => {
   const columns = [...props.columns];
-  
+
   return columns;
 });
 
@@ -208,14 +220,17 @@ const processedColumns = computed(() => {
 const mergedScroll = computed(() => ({
   x: 1500,
   y: 1000,
-  ...props.scroll
+  ...props.scroll,
 }));
 
 // Handle search input
 const handleSearch = (value: string) => {
-  emit('update:searchValue', value);
+  emit("update:searchValue", value);
 };
 
+const handleConfirm = (record: any, index: any) => {
+  emit("delete", record, index);
+};
 // Expose table methods
 defineExpose({
   tableRef,

@@ -18,20 +18,13 @@
       @filter="handleFilter"
     />
 
-    <ant-modal
-      :footer="null"
-      :title="modalTitle"
-      v-model:open="showModal"
-      width="800px"
-      @cancel="handleModalCancel"
-    >
-      <CustomerForm 
-        @submit="handleSave"
-        @cancel="handleCancel"
-        :customer="customer"
-        :is-edit-mode="mode === 'edit'"
-      />
-    </ant-modal>
+     <customer-form
+      :open="showModal"
+      :isEditing="isEditing"
+      :initialValues="customer || {}"
+      @close="showModal = false"
+      @submit="handleSubmit"
+    />
   </div>
 </template>
 
@@ -46,8 +39,8 @@ import { type Customer, getAll, createOne, updateOne, deleteOne } from "@/compon
 // Modal state
 const showModal = ref(false);
 const customer = ref<Customer | null>(null);
+const isEditing = ref(false)
 const mode = ref<"create" | "edit">("create");
-const modalTitle = computed(() => mode.value === "create" ? "Create Customer" : "Edit Customer");
 
 // Table data
 const loading = ref(false);
@@ -73,7 +66,7 @@ const handleCreate = () => {
 
 const handleEdit = (record: Customer) => {
   showModal.value = true;
-  mode.value = "edit";
+  isEditing.value = true;
   console.log("Editing customer:", {...record});
   customer.value = { ...record };
   
@@ -92,18 +85,28 @@ const handleFilter = () => {
   console.log('Open filter');
 };
 
-const handleSave = (customerData: Customer, isEdit: boolean) => {
-  if (isEdit && customer.value) {
-    // Update existing customer
-    updateOne(customer.value.id, customerData,'customer');
-  } else {
-    // Create new customer
-    createOne(customerData,'customer');
-  }
+// const handleSave = (customerData: Customer, isEdit: boolean) => {
+//   if (isEdit && customer.value) {
+//     // Update existing customer
+//     updateOne(customer.value.id, customerData,'customer');
+//   } else {
+//     // Create new customer
+//     createOne(customerData,'customer');
+//   }
   
-  showModal.value = false;
-  list.value = getAll('customer'); // Refresh the list
-};
+//   showModal.value = false;
+//   list.value = getAll('customer'); // Refresh the list
+// };
+const handleSubmit = (values: Omit<Customer, "id">) => {
+  if (isEditing.value && customer.value) {
+    updateOne(customer.value.id, values,'customer');
+    list.value = getAll('customer'); 
+  } else {
+    createOne({ id: Date.now().toString(), ...values },'customer');
+    list.value = getAll('customer'); 
+  }
+  showModal.value = false
+}
 
 const handleCancel = () => {
   showModal.value = false;
