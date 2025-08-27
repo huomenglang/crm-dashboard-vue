@@ -28,10 +28,10 @@ export interface ItemMenuProps {
 }
 export const menuData: ItemMenuProps[] = [
   {
-    key: 'dashboards',
+    key: 'dashboard',
     title: 'Dashboard',
     icon: DashboardOutlined,
-    path: '/dashboards'
+    path: '/dashboard'
   },
   {
     key: 'customers',

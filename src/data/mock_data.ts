@@ -1,7 +1,9 @@
 import type { CategoryProps } from "@/components/pages/category/category";
 import type { Customer } from "@/components/pages/customer/customer";
+import type { ProductResponse } from "@/components/pages/product/product";
 import type { Supplier } from "@/components/pages/supplier/supplier";
 import type { UmsProps } from "@/components/pages/ums/ums";
+import type { WarehouseProps } from "@/components/pages/warehouse/warehouse";
 
 export const customerData: Customer[] = [
   {
@@ -104,6 +106,45 @@ export const categoryData: CategoryProps[] = [
   },
 ];
 
+export const warehouseData: WarehouseProps[] = [
+  {
+    id: "1",
+    name: "WatPhnom",
+    location:"Phnom Penh",
+    description: "Central Warehouse",
+  },
+  {
+    id: "2",
+    name: "KohPich",
+    location:"Phnom Penh",
+    description: "Second Warehouse",
+  },
+  {
+    id: "3",
+    name: "ChroyChangvar",
+    location:"Phnom Penh",
+    description: "Third Warehouse",
+  },
+  {
+    id: "4",
+    name: "Takmao",
+    location:"Kandal",
+    description: "Fourth Warehouse",
+  },
+  {
+    id: "5",
+    name: "Tultumpung",
+    location:"Phnom Penh",
+    description: "Fifth Warehouse",
+  },
+  {
+    id: "5",
+    name: "Sonthormuk",
+    location:"Phnom Penh",
+    description: "Sixth Warehouse",
+  },
+];
+
 export const UmsData: UmsProps[] = [
   {
     id: "1",
@@ -116,7 +157,7 @@ export const UmsData: UmsProps[] = [
     description: "ខ្នាតទូទៅ",
   },
   {
-    id: "2",
+    id: "6",
     name: "ឡូ",
     description: "ខ្នាតទូទៅ",
   },
@@ -185,4 +226,110 @@ export const supplierData: Supplier[] = [
     image: "https://randomuser.me/api/portraits/men/5.jpg",
   },
 ];
+export const productData:ProductResponse[]=[
+  {
+    id: "1",
+    name: "Pepsi",
+    description: "Description of Pepsi",
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
+    warehouse: {
+      id: "1",
+      name: "WatPhnom"
+    },
+    units: [
+      {
+        unitId: "1",
+        unitName: "កំប៉ុង",
+        conversionToBase: 1,
+        sellingPrice: 1.00,
+      },
+      {
+        unitId: "2",
+        unitName: "កេស",
+        conversionToBase: 1,
+        sellingPrice: 22.00,
+      },
+    ],
+    quantity: 1000,
+    cost: 0.8,
+    category: {
+      id: "1",
+      name: "Beer"
+    },
+    createdAt: new Date("2025-08-27T00:00:00Z"),
+    updatedAt: new Date("2023-08-27T00:00:00Z"),
+    updatedBy: "Admin",
+    createdBy: "Admin",
+  },
+  {
+    id: "2",
+    name: "Hanuman Beer",
+    description: "Description of Hanuman Beer",
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
+    warehouse: {
+      id: "1",
+      name: "WatPhnom"
+    },
+    units: [
+      {
+        unitId: "1",
+        unitName: "កំប៉ុង",
+        conversionToBase: 1,
+        sellingPrice: 1.00,
+      },
+      {
+        unitId: "2",
+        unitName: "កេស",
+        conversionToBase: 1,
+        sellingPrice: 22.00,
+      },
+    ],
+    quantity: 1000,
+    cost: 0.8,
+    category: {
+      id: "1",
+      name: "Beer"
+    },
+    createdAt: new Date("2025-08-27T00:00:00Z"),
+    updatedAt: new Date("2023-08-27T00:00:00Z"),
+    updatedBy: "Admin",
+    createdBy: "Admin",
+  },
+  {
+    id: "1",
+    name: "ABC Beer",
+    description: "Description of ABC Beer",
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
+    warehouse: {
+      id: "1",
+      name: "WatPhnom"
+    },
+    units: [
+      {
+        unitId: "1",
+        unitName: "កំប៉ុង",
+        conversionToBase: 1,
+        sellingPrice: 1.5,
+      },
+      {
+        unitId: "2",
+        unitName: "កេស",
+        conversionToBase: 1,
+        sellingPrice: 32.00,
+      },
+    ],
+    quantity: 1000,
+    cost: 1.2,
+    category: {
+      id: "1",
+      name: "Beer"
+    },
+    createdAt: new Date("2025-08-27T00:00:00Z"),
+    updatedAt: new Date("2023-08-27T00:00:00Z"),
+    updatedBy: "Admin",
+    createdBy: "Admin",
+  }
+
+]
+
 

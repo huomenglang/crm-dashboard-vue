@@ -5,4 +5,5 @@ export const enum KEY {
   ORDER = "order",
   UNIT = "unit",
   SUPPLIER = "supplier",
+  WAREHOUSE = "warehouse",
 }

@@ -34,6 +34,7 @@ import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
 import AntModal from '@/components/base/modal/AntModal.vue';
 import CategoryForm from '@/components/pages/category/CategoryForm.vue';
 import { categoryColums, type CategoryProps } from '@/components/pages/category/category';
+import { KEY } from '@/data/Key';
 
 // Modal state
 const showModal = ref(false);
@@ -45,7 +46,7 @@ const loading = ref(false);
 const searchTerm = ref('');
 const page = ref(1);
 const pageSize = ref(6);
-const list = ref<CategoryProps[]>(getAll('category'));
+const list = ref<CategoryProps[]>(getAll(KEY.CATEGORY));
 console.log('list; ',list)
 
 // Event handlers

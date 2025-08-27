@@ -12,13 +12,13 @@ import Login from '@/view/Login.vue'
 import ContentWrapper from '@/components/layout/ContentWrapper.vue'
 import { RoutePath } from './routes_path'
 import Product from '@/view/Product.vue'
-import { Warehouse } from 'lucide-vue-next'
 import Order from '@/view/Order.vue'
 import PurchaseOrder from '@/view/PurchaseOrder.vue'
 import Category from '@/view/Category.vue'
 import Supplier from '@/view/Supplier.vue'
 import Configuration from '@/view/Configuration.vue'
 import Ums from '@/view/Ums.vue'
+import Warehouse from '@/view/Warehouse.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'Login', component: Login,meta: { layout: false } },

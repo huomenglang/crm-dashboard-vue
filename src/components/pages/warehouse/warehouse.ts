@@ -1,15 +1,16 @@
-export interface CategoryProps {
+
+export interface WarehouseProps {
   id: string
   name: string
-  image?: string
+  location?: string
   description?: string
 }
 
-export const categoryColums=[
+export const warehouseColumns=[
        
         { title: 'Name', dataIndex: 'name', key: 'name' },
+        { title: 'Location', dataIndex: 'location', key: 'location' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
-        { title: 'Image', dataIndex: 'image', key: 'image',width:60 },
         {
           title: 'Action',
           key: 'operation',
