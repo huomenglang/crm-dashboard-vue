@@ -16,6 +16,7 @@ const RoutePath = {
     CATEGORY: 'categories',
     ATTACHMENT: 'attachments',
     CUSTOMER: 'customers',
+    UNIT: 'units',
     INVOICE: 'invoices',
     TAG: 'tags',
   

@@ -14,6 +14,7 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
   UsergroupAddOutlined,
+  ApartmentOutlined,
   
 } from '@ant-design/icons-vue';
 // import { Boxes, ContactRound, ShoppingBasket, ShoppingCart, Warehouse } from 'lucide-vue-next';
@@ -44,6 +45,12 @@ export const menuData: ItemMenuProps[] = [
     icon: ShoppingOutlined,
     path: '/categories',
 
+  },
+  {
+    key: 'units',
+    title: 'Units',
+    icon: ApartmentOutlined,
+    path: '/units',
   },
   {
     key: 'products',

@@ -81,7 +81,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { menuData, type ItemMenuProps } from "../../constant/mock_data"; // Adjust path as needed
+import { menuData, type ItemMenuProps } from "@/router/menu"; // Adjust path as needed
 import { useRouter } from "vue-router";
 
 

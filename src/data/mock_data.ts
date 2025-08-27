@@ -1,16 +1,6 @@
-import type { CategoryProps } from "../category/category";
-
-export interface Customer {
-  id: string; // generated client-side
-  firstname: string;
-  lastname: string;
-  gender: "Male" | "Female" | "Other";
-  email: string;
-  phoneNumber: string;
-  address?: string;
-  age: number;
-  image: string; // data URL
-}
+import type { CategoryProps } from "@/components/pages/category/category";
+import type { Customer } from "@/components/pages/customer/customer";
+import type { UmsProps } from "@/components/pages/ums/ums";
 
 export const customerData: Customer[] = [
   {
@@ -112,52 +102,36 @@ export const categoryData: CategoryProps[] = [
     description: "A project manager with a knack for leadership.",
   },
 ];
-const getDataByKey = (key: string) => {
-  if (key === "customer") return customerData;
-  if (key === "category") return categoryData;
-};
 
-const KEY = "customer";
-export function ensureSeed(key?: string) {
-  console.log("Ensuring seed data...", key);
-  const raw = localStorage.getItem(key || KEY);
-  if (!raw) {
-    localStorage.setItem(key || KEY, JSON.stringify(getDataByKey(key || KEY)));
-  }
-}
-
-export function getAll(key?: string): any[] {
-  console.log("Getting all data...", key);
-  if (!key) key = KEY;
-  ensureSeed(key);
-  const raw = localStorage.getItem(key || KEY);
-  return raw ? (JSON.parse(raw) as any[]) : [];
-}
-
-export function saveAll(list: any[], key?: string) {
-  if (!key) key = KEY;
-  localStorage.setItem(key || KEY, JSON.stringify(list));
-}
-
-export function createOne(data: Omit<any, "id">, key?: string): any {
-  if (!key) key = KEY;
-  const all = getAll(key);
-  const item: any = { id: crypto.randomUUID(), ...data };
-  all.unshift(item);
-  saveAll(all, key);
-  return item;
-}
-
-export function updateOne(id: string, patch: any, key?: string): any | null {
-  const all = getAll(key);
-  const idx = all.findIndex((c) => c.id === id);
-  if (idx === -1) return null;
-  const updated = { ...all[idx], ...patch };
-  all[idx] = updated;
-  saveAll(all, key);
-  return updated;
-}
-export function deleteOne(id: string, key?: string) {
-  const all = getAll(key).filter((c) => c.id !== id);
-  saveAll(all, key);
-}
+export const UmsData: UmsProps[] = [
+  {
+    id: "1",
+    name: "កំប៉ុង",
+    description: "ខ្នាតទូទៅ",
+  },
+  {
+    id: "2",
+    name: "កញ្ចប់",
+    description: "ខ្នាតទូទៅ",
+  },
+  {
+    id: "2",
+    name: "ឡូ",
+    description: "ខ្នាតទូទៅ",
+  },
+  {
+    id: "3",
+    name: "ដុំ",
+    description: "ខ្នាតទូទៅ",
+  },
+  {
+    id: "4",
+    name: "កេស",
+    description: "ខ្នាតទូទៅ",
+  },
+  {
+    id: "5",
+    name: "យួរ",
+    description: "ខ្នាតទូទៅ",
+  },
+];

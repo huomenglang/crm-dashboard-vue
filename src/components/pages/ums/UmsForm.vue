@@ -3,14 +3,14 @@ import { Modal, Form, Input, Button } from "ant-design-vue"
 import { Form as VForm, Field } from "vee-validate"
 import * as yup from "yup"
 import { UploadOutlined } from "@ant-design/icons-vue"
-import type { CategoryProps } from "./category"
+import type { UmsProps } from "./ums"
 import  RoundButton  from "@/components/base/button/RoundButton.vue"
 import Upload from "@/components/base/upload/Upload.vue"
 
 const props = defineProps<{
   open: boolean
   isEditing: boolean
-  initialValues?: Partial<CategoryProps>
+  initialValues?: Partial<UmsProps>
 }>()
 
 const emit = defineEmits<{
@@ -21,22 +21,21 @@ const emit = defineEmits<{
 // ✅ Validation schema
 const schema = yup.object({
   name: yup.string().required("Name is required"),
-  description: yup.string().required("Description is required"),
-  image: yup.string().nullable()
+  description: yup.string().required("Description is required")
 })
 
 </script>
 
 <template>
   <Modal
-    :open="open"
-    :title="isEditing ? 'Edit Category' : 'Create Category'"
+    :open="props.open"
+    :title="props.isEditing ? 'Edit Unit' : 'Create Unit'"
     :footer="null"
     destroyOnClose
     @cancel="emit('close')"
   >
     <VForm
-      :initial-values="initialValues || {}"
+      :initial-values="props.initialValues || {}"
       :validation-schema="schema"
       @submit="values => emit('submit', values)"
     >
@@ -54,18 +53,6 @@ const schema = yup.object({
         </Field>
       </Form.Item>
 
-      <Form.Item label="Image" name="image">
-         <Field name="image" v-slot="{ field, setValue, errorMessage }">
-            <Upload
-              :file="field.value"
-              :url-link="field.value"
-              @change="(data: any) => setValue(data?.base64)"
-            />
-            <span class="text-red-500 text-sm">{{ errorMessage }}</span>
-          </Field>
-      </Form.Item>
-
-      
                <div class="flex justify-end space-x-3 pt-4 gap-2">
             <round-button
               :is-danger="true"

@@ -18,6 +18,7 @@ import PurchaseOrder from '@/view/PurchaseOrder.vue'
 import Category from '@/view/Category.vue'
 import Supplier from '@/view/Supplier.vue'
 import Configuration from '@/view/Configuration.vue'
+import Ums from '@/view/Ums.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'Login', component: Login,meta: { layout: false } },
@@ -30,6 +31,7 @@ const routes: RouteRecordRaw[] = [
       { path:RoutePath.DASHBOARD, name: 'Dashboard', component: Dashboard },
       { path:RoutePath.CUSTOMER, name: 'Customers', component: Customer },
       { path:RoutePath.PRODUCT, name: 'Products', component: Product },
+      { path:RoutePath.UNIT, name: 'Units', component: Ums },
       { path:RoutePath.WAREHOUSE, name: 'Warehouse', component: Warehouse },
       {
         path: RoutePath.ORDER,

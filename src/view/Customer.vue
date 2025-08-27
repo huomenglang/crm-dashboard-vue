@@ -34,7 +34,8 @@ import TableAnt from "@/components/base/table/TableAnt.vue";
 import { computed, ref, watch } from "vue"
 import CustomerForm from "@/components/pages/customer/CustomerForm.vue";
 import AntModal from "@/components/base/modal/AntModal.vue";
-import { type Customer, getAll, createOne, updateOne, deleteOne } from "@/components/pages/customer/customer";
+import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
+import type { Customer } from "@/components/pages/customer/customer";
 
 // Modal state
 const showModal = ref(false);

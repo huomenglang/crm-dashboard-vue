@@ -1,15 +1,12 @@
-export interface CategoryProps {
+export interface UmsProps {
   id: string
   name: string
-  image: string
   description: string
 }
 
-export const categoryColums=[
-       
+export const umsColumns = [
         { title: 'Name', dataIndex: 'name', key: 'name' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
-        { title: 'Image', dataIndex: 'image', key: 'image',width:60 },
         {
           title: 'Action',
           key: 'operation',
