@@ -38,7 +38,6 @@ import { categoryColums, type CategoryProps } from '@/components/pages/category/
 // Modal state
 const showModal = ref(false);
 const category = ref<CategoryProps | null>(null);
-const mode = ref<"create" | "edit">("create");
 const isEditing = ref(false)
 
 // Table data
@@ -52,13 +51,13 @@ console.log('list; ',list)
 // Event handlers
 const handleCreate = () => {
   showModal.value = true;
-  mode.value = "create";
+isEditing.value = false;
   category.value = null;
 };
 
 const handleEdit = (record: CategoryProps) => {
   showModal.value = true;
-  mode.value = "edit";
+  isEditing.value = true;
   category.value = { ...record };
   
 };

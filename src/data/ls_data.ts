@@ -1,10 +1,12 @@
 import { KEY } from "./Key";
-import { categoryData, customerData, UmsData } from "./mock_data";
+import { categoryData, customerData, supplierData, UmsData } from "./mock_data";
 
 const getDataByKey = (key: string) => {
   if (key === KEY.CUSTOMER) return customerData;
   if (key === KEY.CATEGORY) return categoryData;
   if (key === KEY.UNIT) return UmsData;
+  if (key === KEY.SUPPLIER) return supplierData;
+  if (key === KEY.PRODUCT) return []
 };
 
 const DEFAULT_KEY = KEY.CUSTOMER;

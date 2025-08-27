@@ -1,5 +1,6 @@
 import type { CategoryProps } from "@/components/pages/category/category";
 import type { Customer } from "@/components/pages/customer/customer";
+import type { Supplier } from "@/components/pages/supplier/supplier";
 import type { UmsProps } from "@/components/pages/ums/ums";
 
 export const customerData: Customer[] = [
@@ -135,3 +136,53 @@ export const UmsData: UmsProps[] = [
     description: "ខ្នាតទូទៅ",
   },
 ];
+
+export const supplierData: Supplier[] = [
+  {
+    id: "1",
+    name: "Sam Vicheka",
+    gender: "Male",
+    address: "123 Main St",
+    phoneNumber: "092 119 111",
+    description: "A Cookie supplier of goods.",
+    image:
+      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIj48L3BhdGg+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ij48L2NpcmNsZT48L3N2Zz4=",
+  },
+  {
+    id: "2",
+    name: "Sophea Tan",
+    gender: "Female",
+    address: "456 Elm St",
+    phoneNumber: "092 119 222",
+    description: "A supplier of organic products.",
+    image: "https://randomuser.me/api/portraits/women/2.jpg",
+  },
+  {
+    id: "3",
+    name: "Ratha Kim",
+    gender: "Male",
+    address: "789 Oak St",
+    phoneNumber: "092 119 333",
+    description: "A supplier of electronic goods.",
+    image: "https://randomuser.me/api/portraits/men/3.jpg",
+  },
+  {
+    id: "4",
+    name: "Daro Chan",
+    gender: "Female",
+    description: "A supplier of beauty products.",
+    address: "321 Pine St",
+    phoneNumber: "092 119 444",
+    image: "https://randomuser.me/api/portraits/women/4.jpg",
+  },
+  {
+    id: "5",
+    name: "Tep Kosal",
+    gender: "Male",
+    description: "A supplier of Beer goods.",
+    address: "654 Maple St",
+    phoneNumber: "092 119 555",
+    image: "https://randomuser.me/api/portraits/men/5.jpg",
+  },
+];
+

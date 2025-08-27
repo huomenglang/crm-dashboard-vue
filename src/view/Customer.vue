@@ -35,13 +35,12 @@ import { computed, ref, watch } from "vue"
 import CustomerForm from "@/components/pages/customer/CustomerForm.vue";
 import AntModal from "@/components/base/modal/AntModal.vue";
 import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
-import type { Customer } from "@/components/pages/customer/customer";
+import { columns, type Customer } from "@/components/pages/customer/customer";
 
 // Modal state
 const showModal = ref(false);
 const customer = ref<Customer | null>(null);
 const isEditing = ref(false)
-const mode = ref<"create" | "edit">("create");
 
 // Table data
 const loading = ref(false);
@@ -61,7 +60,7 @@ watch(showModal, (newVal) => {
 // Event handlers
 const handleCreate = () => {
   showModal.value = true;
-  mode.value = "create";
+  isEditing.value = false;
   customer.value = null;
 };
 
@@ -134,25 +133,5 @@ const dataTable = computed(() => {
   return filtered.value.slice(start, start + pageSize.value);
 });
 
-const columns: TableColumnsType = [
-  { title: "First Name", width: 60, dataIndex: "firstname", key: "firstname" },
-  { title: "Last Name", width: 60, dataIndex: "lastname", key: "lastname" },
-  { title: "Gender", width: 50, dataIndex: "gender", key: "gender" },
-  { title: "Age", dataIndex: "age", key: "age", width: 80 },
-  { title: "Email", dataIndex: "email", key: "email", width: 100 },
-  { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber", width: 100 },
-  { title: "Address", dataIndex: "address", key: "address", width: 100 },
-  { 
-    title: "Profile", 
-    dataIndex: "image", 
-    key: "image", 
-    width: 50,
-   },
-  {
-    title: "Action",
-    key: "operation",
-    fixed: "right",
-    width: 120,
-  },
-];
+
 </script>

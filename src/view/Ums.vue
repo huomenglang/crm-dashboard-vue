@@ -38,7 +38,6 @@ import { KEY } from '@/data/Key';
 // Modal state
 const showModal = ref(false);
 const ums = ref<UmsProps | null>(null);
-const mode = ref<"create" | "edit">("create");
 const isEditing = ref(false)
 
 // Table data
@@ -52,13 +51,13 @@ console.log('list; ',list)
 // Event handlers
 const handleCreate = () => {
   showModal.value = true;
-  mode.value = "create";
+isEditing.value = false;
   ums.value = null;
 };
 
 const handleEdit = (record: UmsProps) => {
   showModal.value = true;
-  mode.value = "edit";
+  isEditing.value = true;
   ums.value = { ...record };
 
 };
