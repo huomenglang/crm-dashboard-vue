@@ -46,7 +46,7 @@ import {
   ShoppingCartOutlined,
   ArrowRightOutlined 
 } from '@ant-design/icons-vue'
-import type { Order } from './order'
+import type { Order } from '../order/order'
 
 defineProps<{
   order: Order
