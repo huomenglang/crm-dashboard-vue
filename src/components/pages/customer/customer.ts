@@ -3,8 +3,8 @@ import type { TableColumnsType } from "ant-design-vue";
 
 export interface Customer {
   id: string; // generated client-side
-  firstname: string;
-  lastname: string;
+  name: string;
+  // lastname: string;
   gender: "Male" | "Female" | "Other";
   email: string;
   phoneNumber: string;
@@ -14,8 +14,8 @@ export interface Customer {
 }
 
 export const columns: TableColumnsType<Customer> = [
-  { title: "First Name", width: 60, dataIndex: "firstname", key: "firstname" },
-  { title: "Last Name", width: 60, dataIndex: "lastname", key: "lastname" },
+  { title: "First Name", width: 60, dataIndex: "name", key: "name" },
+  // { title: "Last Name", width: 60, dataIndex: "lastname", key: "lastname" },
   { title: "Gender", width: 50, dataIndex: "gender", key: "gender" },
   { title: "Age", dataIndex: "age", key: "age", width: 80 },
   { title: "Email", dataIndex: "email", key: "email", width: 100 },

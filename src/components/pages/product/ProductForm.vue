@@ -173,6 +173,19 @@ const handleRemoveUnit = (idx: any,data:any) => {
           </Field>
         </Form.Item>
       </div>
+      <div class="">
+        <Form.Item label="" class="flex-1" name="sku">
+          <label class="block text-[13px] font-medium text-gray-600"
+            >SKU *</label
+          >
+          <Field name="sku" v-slot="{ field, errorMessage }">
+            <Input v-bind="field" placeholder="Enter SKU" />
+            <div v-if="errorMessage" class="text-red-500 text-sm">
+              {{ errorMessage }}
+            </div>
+          </Field>
+        </Form.Item>
+      </div>
 
       <div class="-mt-3">
         <Form.Item label="" class="flex-1" name="category">

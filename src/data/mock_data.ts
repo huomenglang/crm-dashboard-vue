@@ -1,6 +1,8 @@
+
 import type { CategoryProps } from "@/components/pages/category/category";
 import type { Customer } from "@/components/pages/customer/customer";
 import type { ProductResponse } from "@/components/pages/product/product";
+import { type OrderResponse } from "@/components/pages/quotation/quotation";
 import type { Supplier } from "@/components/pages/supplier/supplier";
 import type { UmsProps } from "@/components/pages/ums/ums";
 import type { WarehouseProps } from "@/components/pages/warehouse/warehouse";
@@ -8,8 +10,8 @@ import type { WarehouseProps } from "@/components/pages/warehouse/warehouse";
 export const customerData: Customer[] = [
   {
     id: "1",
-    firstname: "Tola",
-    lastname: "Sam",
+    // firstname: "Tola",
+    name: "Sam Toal",
     gender: "Male",
     email: "toa@gmail.com",
     age: 30,
@@ -20,8 +22,7 @@ export const customerData: Customer[] = [
   },
   {
     id: "2",
-    firstname: "Sophea",
-    lastname: "Tan",
+    name: "Sophea Tan",
     gender: "Female",
     email: "sophea@gmail.com",
     age: 25,
@@ -32,8 +33,7 @@ export const customerData: Customer[] = [
   },
   {
     id: "3",
-    firstname: "John",
-    lastname: "Doe",
+    name: "John Doe",
     gender: "Male",
     email: "john@gmail.com",
     age: 28,
@@ -44,8 +44,7 @@ export const customerData: Customer[] = [
   },
   {
     id: "4",
-    firstname: "Jane",
-    lastname: "Smith",
+    name: "Jane Smith",
     gender: "Female",
     email: "jane@gmail.com",
     age: 22,
@@ -56,8 +55,7 @@ export const customerData: Customer[] = [
   },
   {
     id: "5",
-    firstname: "Michael",
-    lastname: "Johnson",
+    name: "Michael Johnson",
     gender: "Male",
     email: "michael@gmail.com",
     age: 35,
@@ -230,6 +228,7 @@ export const productData:ProductResponse[]=[
   {
     id: "1",
     name: "Pepsi",
+    sku: "PEP-001",
     description: "Description of Pepsi",
     image: "https://randomuser.me/api/portraits/men/1.jpg",
     warehouse: {
@@ -264,6 +263,7 @@ export const productData:ProductResponse[]=[
   {
     id: "2",
     name: "Hanuman Beer",
+    sku: "HNB-001",
     description: "Description of Hanuman Beer",
     image: "https://randomuser.me/api/portraits/men/1.jpg",
     warehouse: {
@@ -298,6 +298,7 @@ export const productData:ProductResponse[]=[
   {
     id: "1",
     name: "ABC Beer",
+    sku: "ABC-001",
     description: "Description of ABC Beer",
     image: "https://randomuser.me/api/portraits/men/1.jpg",
     warehouse: {
@@ -331,5 +332,62 @@ export const productData:ProductResponse[]=[
   }
 
 ]
+
+export const orderResponseData: OrderResponse = {
+  orderId: "ORD-1001",
+  customerId: "CUST-001",
+  orderDate: "2025-08-28",
+  paymentMethod: "CASH",
+  note: "Urgent delivery",
+  totalAmount: 66.0,
+  products: [
+    {
+      productId: "PROD-001",
+      productName: "Coca Cola",
+      subtotal: 21.0,
+      units: [
+        {
+          unitId: "UNIT-BOX",
+          unitName: "Box",
+          quantity: 2,
+          unitPrice: 9.0,
+          subtotal: 18.0,
+          baseUnitId: "UNIT-BOTTLE",
+          baseUnitQuantity: 20
+        },
+        {
+          unitId: "UNIT-BOTTLE",
+          unitName: "Bottle",
+          quantity: 3,
+          unitPrice: 1.0,
+          subtotal: 3.0,
+          baseUnitId: "UNIT-BOTTLE",
+          baseUnitQuantity: 3
+        }
+      ]
+    },
+    {
+      productId: "PROD-002",
+      productName: "Pepsi",
+      subtotal: 45.0,
+      units: [
+        {
+          unitId: "UNIT-MIDDLE",
+          unitName: "Middle",
+          quantity: 1,
+          unitPrice: 45.0,
+          subtotal: 45.0,
+          baseUnitId: "UNIT-BOTTLE",
+          baseUnitQuantity: 40
+        }
+      ]
+    }
+  ]
+};
+
+
+
+
+
 
 

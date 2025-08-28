@@ -5,6 +5,7 @@ const RoutePath = {
     WAREHOUSE: 'warehouses',
     PROFILE: 'profile',
     RESET: 'reset',
+    QUOTATION: 'quotations',
     PRODUCT: 'products',
     ADMIN_USER: 'users',
     REPORT:'report',

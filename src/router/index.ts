@@ -12,13 +12,15 @@ import Login from '@/view/Login.vue'
 import ContentWrapper from '@/components/layout/ContentWrapper.vue'
 import { RoutePath } from './routes_path'
 import Product from '@/view/Product.vue'
-import Order from '@/view/Order.vue'
+
 import PurchaseOrder from '@/view/PurchaseOrder.vue'
 import Category from '@/view/Category.vue'
 import Supplier from '@/view/Supplier.vue'
 import Configuration from '@/view/Configuration.vue'
 import Ums from '@/view/Ums.vue'
 import Warehouse from '@/view/Warehouse.vue'
+import Quotation from '@/view/quotation/Quotation.vue'
+import Order from '@/view/order/Order.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'Login', component: Login,meta: { layout: false } },
@@ -29,6 +31,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '/', redirect: '/dashboard' },
       { path:RoutePath.DASHBOARD, name: 'Dashboard', component: Dashboard },
+      { path:RoutePath.QUOTATION, name: 'Quotations', component: Quotation },
       { path:RoutePath.CUSTOMER, name: 'Customers', component: Customer },
       { path:RoutePath.PRODUCT, name: 'Products', component: Product },
       { path:RoutePath.UNIT, name: 'Units', component: Ums },

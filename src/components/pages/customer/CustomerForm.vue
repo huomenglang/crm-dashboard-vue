@@ -21,8 +21,8 @@ const emit = defineEmits<{
 
 // ✅ Validation schema
 const schema = yup.object({
-  firstname: yup.string().required("First Name is required"),
-  lastname: yup.string().required("Last Name is required"),
+  // firstname: yup.string().required("First Name is required"),
+  name: yup.string().required(" Name is required"),
   email: yup
     .string()
     .email("Invalid email format")
@@ -48,7 +48,7 @@ const schema = yup.object({
       @submit="(values) => emit('submit', values)"
     >
       <div class="flex gap-x-1">
-        <Form.Item label="" class="flex-1" name="firstname">
+        <!-- <Form.Item label="" class="flex-1" name="firstname">
           <label class="block text-[13px] font-medium text-gray-600"
             >First Name *</label
           >
@@ -58,13 +58,13 @@ const schema = yup.object({
               {{ errorMessage }}
             </div>
           </Field>
-        </Form.Item>
+        </Form.Item> -->
 
-        <Form.Item label="" class="flex-1" name="lastname">
+        <Form.Item label="" class="flex-1" name="name">
           <label class="block text-[13px] font-medium text-gray-600"
             >Last Name
           </label>
-          <Field name="lastname" v-slot="{ field, errorMessage }">
+          <Field name="name" v-slot="{ field, errorMessage }">
             <Input v-bind="field" placeholder="Enter Last name" />
             <div v-if="errorMessage" class="text-red-500 text-sm">
               {{ errorMessage }}

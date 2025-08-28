@@ -34,6 +34,21 @@ export const menuData: ItemMenuProps[] = [
     path: '/dashboard'
   },
   {
+    key: 'quotations',
+    title: 'Quotations',
+    icon: ShoppingCartOutlined,
+    path: '/quotations',
+
+  },
+    {
+    key: 'orders',
+    title: 'Orders',
+    icon: ShoppingCartOutlined,
+    path: '/orders',
+
+  },
+
+  {
     key: 'customers',
     title: 'Customers',
     icon: UserAddOutlined,
@@ -66,13 +81,7 @@ export const menuData: ItemMenuProps[] = [
     path: '/warehouses',
 
   },
-  {
-    key: 'orders',
-    title: 'Orders',
-    icon: ShoppingCartOutlined,
-    path: '/orders',
 
-  },
     {
     key: 'purchase-orders',
     title: 'Purchase',

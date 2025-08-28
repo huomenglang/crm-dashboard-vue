@@ -20,6 +20,7 @@ export interface ProductUnit {
 
 export interface ProductResponse extends Product {
   warehouse: WarehouseProps;
+  sku: string;
   units: ProductUnit[];
   quantity: number;
   cost: number;
@@ -29,11 +30,13 @@ export interface ProductRequest extends Omit<Product, 'id' | 'category'> {
   baseUnitId: string;
   warehouseId: string;
   categoryId: string;
+  sku?: string;
   units: ProductUnit[];
 }
 
 export const columns: TableColumnsType<ProductResponse> = [
   { title: "Name", width: 60, dataIndex: "name", key: "name" },
+  { title: "SKU", width: 60, dataIndex: "sku", key: "sku" },
   { title: "Warehouse", width: 60, dataIndex: "warehouse", key: "warehouse" },
   // { title: "Units", width: 50, dataIndex: "units", key: "units" },
   // { title: "Quantity", dataIndex: "quantity", key: "quantity", width: 80 },
