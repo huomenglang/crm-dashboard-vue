@@ -34,11 +34,11 @@ export interface ProductRequest extends Omit<Product, 'id' | 'category'> {
 
 export const columns: TableColumnsType<ProductResponse> = [
   { title: "Name", width: 60, dataIndex: "name", key: "name" },
-  { title: "Warehouse", width: 60, dataIndex: "warehouse.name", key: "warehouse.name" },
+  { title: "Warehouse", width: 60, dataIndex: "warehouse", key: "warehouse" },
   // { title: "Units", width: 50, dataIndex: "units", key: "units" },
   // { title: "Quantity", dataIndex: "quantity", key: "quantity", width: 80 },
   { title: "Cost", dataIndex: "cost", key: "cost", width: 100 },
-  { title: "Category", dataIndex: "category.name", key: "category.name", width: 100 },
+  { title: "Category", dataIndex: "category", key: "category", width: 100 },
   {
     title: "Profile",
     dataIndex: "image",

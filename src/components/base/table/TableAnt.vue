@@ -50,6 +50,7 @@
       :data-source="data"
       :class="['custom-table', tableClass]"
       :scroll="mergedScroll"
+      
     >
       <!-- Custom Body Cells -->
       <template #bodyCell="{ column, record, index }">
@@ -67,6 +68,17 @@
             class="w-[50px] h-[50px] bg-gray-200 rounded-md flex items-center justify-center"
           >
             <span class="text-gray-400 text-xs">No Image</span>
+          </div>
+        </template>
+
+        <template v-else-if="column.key === 'category'">
+          <div class="text-sm text-gray-700">
+            {{ record?.category?.name }}
+          </div>
+        </template>
+        <template v-else-if="column.key === 'warehouse'">
+          <div class="text-sm text-gray-700">
+            {{ record?.warehouse?.name }}
           </div>
         </template>
 
@@ -132,7 +144,7 @@
 
       <!-- Header Cell Slots -->
       <template v-for="column in columns" #[`headerCell-${column.key}`]>
-        <slot :name="`header-${column.key}`" :column="column">
+        <slot :name="`header-${column?.key}`" :column="column">
           {{ column.title }}
         </slot>
       </template>

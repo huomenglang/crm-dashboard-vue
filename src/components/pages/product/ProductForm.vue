@@ -7,7 +7,7 @@ import Upload from "@/components/base/upload/Upload.vue";
 import type { ProductRequest, ProductResponse, ProductUnit } from "./product";
 import type { CategoryProps } from "../category/category";
 import { getAll } from "@/data/ls_data";
-import { ref, toRaw } from "vue";
+import { ref, toRaw, watch } from "vue";
 import { KEY } from "@/data/Key";
 import { type UmsProps } from "../ums/ums";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
@@ -15,10 +15,10 @@ import type { SelectProps } from "ant-design-vue/es/vc-select";
 const props = defineProps<{
   open: boolean;
   isEditing: boolean;
-  initialValues?: Partial<ProductRequest>;
+  initialValues?: any;
 }>();
 
-const { setFieldValue, resetField } = useForm({
+const { setFieldValue, resetField,resetForm } = useForm({
   initialValues: props.initialValues || {
     name: "",
     categoryId: undefined,
@@ -53,9 +53,6 @@ let options = ref<SelectProps['options']>(getAll(KEY.UNIT)).value?.map(unit => (
 
 let dataUnits=options
 
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
 
 const filterOption = (input: string, option: any) => {
   const label = option?.label?.toString().toLowerCase() || "";
@@ -70,18 +67,63 @@ const filterOption = (input: string, option: any) => {
 const schema = yup.object({
   name: yup.string().required(),
   categoryId: yup.number().required("Category is required"),
-  units: yup
-    .array()
-    .of(
-      yup.object({
-        unitName: yup.string().required(),
-        conversionToBase: yup.number().positive().required(),
-        sellingPrice: yup.number().positive().required(),
-      })
-    )
-    .min(1, "At least one unit is required"),
+  
 });
 
+
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (props.isEditing && props.initialValues) {
+      // reset form with initialValues (including units array)
+      console.log('Resetting form with initial values:', toRaw(props.initialValues));
+
+      resetForm({
+        values: {
+          ...props.initialValues,
+          // fallback to at least 1 unit
+          units:
+            props.initialValues?.units?.length > 0
+              ? props.initialValues.units 
+              : [
+                  {
+                    unitId: Date.now().toString(),
+                    unitName: "",
+                    conversionToBase: 1,
+                    sellingPrice: 0,
+                  },
+                ],
+        },
+      });
+       console.log('all options',options)
+      const selectedProdId=toRaw(props.initialValues.units).map((f:any)=>f?.unitName?.key);
+      const newOptions=dataUnits?.filter((unit)=>!selectedProdId?.some((f:any)=>f===unit.id))
+      console.log('selectedProdId values:',selectedProdId);
+      console.log('newOptions values:',newOptions);
+      options=newOptions;
+
+    }
+
+    if (isOpen && !props.isEditing) {
+      // Reset to default for new create
+      resetForm({
+        values: {
+          name: "",
+          categoryId: undefined,
+          description: "",
+          units: [
+            {
+              unitId: Date.now().toString(),
+              unitName: "",
+              conversionToBase: 1,
+              sellingPrice: 0,
+            },
+          ],
+        },
+      });
+    }
+  }
+);
 
 //remove used unit after selected
 const handleRemoveUnit = (idx: any,data:any) => {
@@ -97,10 +139,7 @@ const handleRemoveUnit = (idx: any,data:any) => {
     }
   }
   remove(idx);
-  resetField(`units[${idx}].unitName`, {});
-  resetField(`units[${idx}].unitId`, {});
-  resetField(`units[${idx}].conversionToBase`, {});
-  resetField(`units[${idx}].sellingPrice`, {});
+
 };
 
 
@@ -183,6 +222,7 @@ const handleRemoveUnit = (idx: any,data:any) => {
                 
               }"
               @blur="() => {
+                console.log('blur event',fields);
                 //@ts-ignore
                 const newOptions=dataUnits?.filter((unit)=>!fields.some(f=>f?.value?.unitId===unit.id))
                 options=newOptions;
