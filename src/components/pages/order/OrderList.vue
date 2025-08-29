@@ -34,66 +34,65 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-import OrderCard from './OrderCard.vue'
-import type { Order, OrderStatus } from './order'
-import { mockOrders } from './orderData'
+import OrderCard from "./OrderCard.vue";
+import type { Order, OrderStatus } from "./order";
+import { mockOrders } from "./orderData";
 
-
-const router = useRouter()
-const searchTerm = ref('')
-const statusFilter = ref<OrderStatus | undefined>()
-const loading = ref(false)
+const router = useRouter();
+const searchTerm = ref("");
+const statusFilter = ref<OrderStatus | undefined>();
+const loading = ref(false);
 
 // Status options for filter dropdown
 const statusOptions = [
-  { value: 'CREATED', label: 'Created' },
-  { value: 'STOCK_VERIFIED', label: 'Stock Verified' },
-  { value: 'APPROVED', label: 'Approved' },
-  { value: 'SHIPPED', label: 'Shipped' },
-  { value: 'COMPLETED', label: 'Completed' },
-  { value: 'CANCELLED', label: 'Cancelled' },
-]
+  { value: "ALL", label: "All Statuses" },
+  { value: "CREATED", label: "Created" },
+  { value: "STOCK_VERIFIED", label: "Stock Verified" },
+  { value: "APPROVED", label: "Approved" },
+  { value: "SHIPPED", label: "Shipped" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "CANCELLED", label: "Cancelled" },
+];
 
 // Filter orders based on search term and status
 const filteredOrders = computed(() => {
-  let result = mockOrders
-
+  let result = mockOrders;
   if (searchTerm.value) {
-    const term = searchTerm.value.toLowerCase()
-    result = result.filter(order => 
+    const term = searchTerm.value.toLowerCase();
+    result = result.filter((order) =>
       order.orderNo.toLowerCase().includes(term)
-    )
+    );
   }
 
   if (statusFilter.value) {
-    result = result.filter(order => order.status === statusFilter.value)
+    result = result.filter((order) => order.status === statusFilter.value);
   }
 
-  return result
-})
+  return result;
+});
 
 const handleSearch = () => {
   // Search logic is handled in computed property
-}
+};
 
 const handleFilter = () => {
   // Filter logic is handled in computed property
-}
+};
 
 const handleOrderClick = (order: Order) => {
-  router.push(`/orders/${order.orderId}`)
-}
+  router.push(`/orders/${order.orderId}`);
+};
 
 onMounted(() => {
   // In a real app, you would fetch orders from an API
-  loading.value = true
+  loading.value = true;
   setTimeout(() => {
-    loading.value = false
-  }, 500)
-})
+    loading.value = false;
+  }, 500);
+});
 </script>
 
 <style scoped>

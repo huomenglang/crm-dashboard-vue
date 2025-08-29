@@ -1,65 +1,48 @@
 <template>
   <div class="order-details" v-if="order">
-    <div class="details-header">
-      <h2>Order #{{ order.orderNo }}</h2>
-      <div class="header-actions">
-        <a-button v-if="isEditable" type="primary" @click="handleSave">
-          <template #icon><SaveOutlined /></template>
-          Save Changes
-        </a-button>
-        <a-button>
-          <template #icon><PrinterOutlined /></template>
-          Print
-        </a-button>
+    <div class="pt-3 pl-3">
+      <div class="flex flex-col">
+        <div class="flex items-center justify-center">
+         <PhoneCallIcon class="text-gray-600 w-4 h-4" />
+        <span class="!mt-3 text-[10px] text-gray-600">
+          {{ order.customer.phone }}
+        </span>
       </div>
+      <div class="flex items-center">
+         <MailCheckIcon class="text-gray-600" />
+        <span class="!mt-3 text-xl text-gray-600">
+          {{ order.customer.email }}
+        </span>
+      </div>
+      </div>
+      <div class="flex gap-x-0.5 justify-center items-center">
+        <ReceiptIcon class="text-gray-600" />
+        <h1 class="!mt-3 text-xl text-gray-600">
+          {{ order.orderNo }}
+          <span class="text-lg "> ({{ order.customer.name }})</span>
+        </h1>
+      </div>
+      <span class="text-[10px] flex justify-center -mt-2 text-gray-500">
+        <b> Ordered At: {{ formatDate(order.createdAt) }} </b>
+        </span
+      >
     </div>
 
-    <order-steps 
-      :current-status="order.status" 
+    <order-steps
+      :current-status="order.status"
       @status-change="handleStatusChange"
       :editable="isEditable"
       class="order-steps-container"
     />
 
-    <a-divider class="section-divider" />
+
 
     <div class="details-content">
-      <div class="content-section">
-        <h3 class="section-title">Order Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Customer:</span>
-            <span class="info-value">{{ order.customer.name }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Email:</span>
-            <span class="info-value">{{ order.customer.email }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Phone:</span>
-            <span class="info-value">{{ order.customer.phone }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Address:</span>
-            <span class="info-value">{{ order.customer.address }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Order Date:</span>
-            <span class="info-value">{{ formatDate(order.createdAt) }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Last Updated:</span>
-            <span class="info-value">{{ formatDate(order.updatedAt) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <a-divider class="section-divider" />
 
       <div class="content-section">
         <h3 class="section-title">Products</h3>
         <table-product
-          :products="order.products" 
+          :products="order.products"
           :editable="isEditable"
           @product-update="$emit('product-update', $event)"
           class="products-table"
@@ -73,11 +56,15 @@
         <div class="summary-grid">
           <div class="summary-item">
             <span class="summary-label">Subtotal:</span>
-            <span class="summary-value">${{ calculateSubtotal().toFixed(2) }}</span>
+            <span class="summary-value"
+              >${{ calculateSubtotal().toFixed(2) }}</span
+            >
           </div>
           <div class="summary-item" v-if="order.discount">
             <span class="summary-label">Discount ({{ order.discount }}%):</span>
-            <span class="summary-value discount">-${{ calculateDiscount().toFixed(2) }}</span>
+            <span class="summary-value discount"
+              >-${{ calculateDiscount().toFixed(2) }}</span
+            >
           </div>
           <div class="summary-item" v-if="order.tax">
             <span class="summary-label">Tax:</span>
@@ -86,7 +73,9 @@
           <a-divider class="summary-divider" />
           <div class="summary-item total">
             <span class="summary-label">Total Amount:</span>
-            <span class="summary-value total">${{ order.totalAmount.toFixed(2) }}</span>
+            <span class="summary-value total"
+              >${{ order.totalAmount.toFixed(2) }}</span
+            >
           </div>
         </div>
       </div>
@@ -143,65 +132,75 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { 
-  SaveOutlined, 
+import { computed } from "vue";
+import {
+  SaveOutlined,
   PrinterOutlined,
   UserOutlined,
   CheckCircleOutlined,
   CarOutlined,
-  CloseCircleOutlined
-} from '@ant-design/icons-vue'
-import type { Order, OrderProduct, OrderStatus } from './order'
-import OrderSteps from './OrderSteps.vue'
-import TableProduct from './TableProduct.vue'
+  CloseCircleOutlined,
+} from "@ant-design/icons-vue";
+import type { Order, OrderProduct, OrderStatus } from "./order";
+import OrderSteps from "./OrderSteps.vue";
+import TableProduct from "./TableProduct.vue";
+import {
+  BadgeInfoIcon,
+  CalculatorIcon,
+  CalendarCheck,
+  MailCheckIcon,
+  PhoneCallIcon,
+  ReceiptIcon,
+} from "lucide-vue-next";
 
 const props = defineProps<{
-  order: Order
-}>()
+  order: Order;
+}>();
 
 const emit = defineEmits<{
-  (e: 'status-change', status: string): void
-  (e: 'product-update', products: OrderProduct[]): void
-}>()
+  (e: "status-change", status: OrderStatus): void;
+  (e: "product-update", products: OrderProduct[]): void;
+}>();
 
 const isEditable = computed(() => {
-  return props.order.status === 'CREATED'
-})
+  return props.order.status === "CREATED";
+});
 
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
+  return new Date(dateString).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 const calculateSubtotal = () => {
-  if (!props.order) return 0
-  return props.order.products.reduce((sum:any, product:any) => sum + product.subtotal, 0)
-}
+  if (!props.order) return 0;
+  return props.order.products.reduce(
+    (sum: any, product: any) => sum + product.subtotal,
+    0
+  );
+};
 
 const calculateDiscount = () => {
-  if (!props.order || !props.order.discount) return 0
-  const subtotal = calculateSubtotal()
-  return subtotal * (props.order.discount / 100)
-}
+  if (!props.order || !props.order.discount) return 0;
+  const subtotal = calculateSubtotal();
+  return subtotal * (props.order.discount / 100);
+};
 
 const handleStatusChange = (newStatus: OrderStatus) => {
-  emit('status-change', newStatus)
-}
+  emit("status-change", newStatus);
+};
 
 const handleSave = () => {
   // Handle save logic
-  console.log('Saving changes...')
-}
+  console.log("Saving changes...");
+};
 </script>
 
 <style scoped>
-/* Keep the same styles as before */
 .details-header {
   display: flex;
   justify-content: space-between;
@@ -239,7 +238,8 @@ const handleSave = () => {
 .section-title {
   font-size: 16px;
   font-weight: 600;
-  color: #262626;
+  text-align: center;
+  color: #646464;
   margin-bottom: 16px;
 }
 
@@ -371,5 +371,24 @@ const handleSave = () => {
 .audit-time {
   font-size: 12px;
   color: #8c8c8c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .details-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .header-actions .ant-btn {
+    width: 100%;
+    margin-bottom: 8px;
+  }
 }
 </style>

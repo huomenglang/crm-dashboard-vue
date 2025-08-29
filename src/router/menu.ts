@@ -1,3 +1,4 @@
+import { ContainerOutlined } from '@ant-design/icons-vue';
 import { 
   UserOutlined, 
   DashboardOutlined,
@@ -36,7 +37,7 @@ export const menuData: ItemMenuProps[] = [
   {
     key: 'quotations',
     title: 'Quotations',
-    icon: ShoppingCartOutlined,
+    icon: ContainerOutlined,
     path: '/quotations',
 
   },

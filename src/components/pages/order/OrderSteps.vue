@@ -1,9 +1,6 @@
 <template>
   <div class="order-steps">
     <div class="steps-header">
-      <h3>Order Progress</h3>
-      
-      <!-- Single Verify Button -->
       <div class="verify-action" v-if="showVerifyButton">
         <a-button 
           type="primary" 
@@ -26,39 +23,31 @@
       </div>
     </div>
     
-    <div class="steps-container">
-      <div 
+    <!-- Ant Design Steps Component with Custom Styling -->
+    <a-steps :current="currentStepIndex" class="custom-steps">
+      <a-step 
         v-for="(step, index) in steps" 
         :key="step.status"
-        class="step"
-        :class="getStepStatusClass(index)"
-      >
-        <div class="step-content">
-          <div class="step-icon-container">
-            <component :is="getStepIcon(step.status)" class="step-icon" />
-          </div>
-          <div class="step-info">
-            <div class="step-title">{{ step.title }}</div>
-            <div class="step-description">{{ getStepDescription(index) }}</div>
-          </div>
-        </div>
-        
-        <div v-if="index < steps.length - 1" class="step-connector"></div>
-      </div>
-    </div>
+        :title="step.title"
+        :description="getStepDescription(index)"
+        :icon="getStepIcon(step.status)"
+        :status="getStepStatus(index)"
+        :class="{'step-finished': index < currentStepIndex}"
+      />
+    </a-steps>
   </div>
 </template>
 
 <script setup lang="ts">
 import { 
-  FileAddFilled, 
-  CheckCircleFilled, 
-  SafetyCertificateFilled,
-  RocketFilled,
-  CheckSquareFilled,
-  CloseCircleFilled
+  FileOutlined, 
+  CheckCircleOutlined, 
+  SafetyCertificateOutlined,
+  RocketOutlined,
+  CheckSquareOutlined,
+  CloseCircleOutlined
 } from '@ant-design/icons-vue'
-import { computed, ref } from 'vue'
+import { computed, ref,h } from 'vue'
 import type { OrderStatus } from './order'
 
 interface Step {
@@ -104,27 +93,27 @@ const showCancelButton = computed(() => {
 
 const getStepIcon = (status: OrderStatus) => {
   const iconMap: Record<OrderStatus, any> = {
-    CREATED: FileAddFilled,
-    STOCK_VERIFIED: CheckCircleFilled,
-    APPROVED: SafetyCertificateFilled,
-    SHIPPED: RocketFilled,
-    COMPLETED: CheckSquareFilled,
-    CANCELLED: CloseCircleFilled,
+    CREATED: h(FileOutlined),
+    STOCK_VERIFIED: h(CheckCircleOutlined),
+    APPROVED: h(SafetyCertificateOutlined),
+    SHIPPED: h(RocketOutlined),
+    COMPLETED: h(CheckSquareOutlined),
+    CANCELLED: h(CloseCircleOutlined),
   }
   return iconMap[status]
 }
 
-const getStepStatusClass = (index: number) => {
-  if (props.currentStatus === 'CANCELLED') return 'cancelled'
-  if (index < currentStepIndex.value) return 'completed'
-  if (index === currentStepIndex.value) return 'current'
-  return 'pending'
+const getStepStatus = (index: number) => {
+  if (props.currentStatus === 'CANCELLED') return 'error'
+  if (index < currentStepIndex.value) return 'finish'
+  if (index === currentStepIndex.value) return 'process'
+  return 'wait'
 }
 
 const getStepDescription = (index: number) => {
   if (props.currentStatus === 'CANCELLED') return 'Cancelled'
   if (index < currentStepIndex.value) return 'Completed'
-  if (index === currentStepIndex.value) return 'Current'
+  if (index === currentStepIndex.value) return 'In progress'
   return 'Pending'
 }
 
@@ -180,6 +169,7 @@ const cancelOrder = () => {
   margin: 0;
   color: #262626;
   font-weight: 600;
+  font-size: 16px;
 }
 
 .verify-action {
@@ -190,129 +180,214 @@ const cancelOrder = () => {
 
 .verify-btn, .cancel-btn {
   height: 32px;
-}
-
-.steps-container {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  position: relative;
-  z-index: 2;
-}
-
-.step:last-child {
-  flex: 0;
-}
-
-.step-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.step-icon-container {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-}
-
-.step.completed .step-icon-container {
-  background-color: #f6ffed;
-  border: 1px solid #b7eb8f;
-  color: #52c41a;
-}
-
-.step.current .step-icon-container {
-  background-color: #e6f7ff;
-  border: 1px solid #91d5ff;
-  color: #1890ff;
-}
-
-.step.pending .step-icon-container {
-  background-color: #fafafa;
-  border: 1px solid #d9d9d9;
-  color: #bfbfbf;
-}
-
-.step.cancelled .step-icon-container {
-  background-color: #fff2f0;
-  border: 1px solid #ffccc7;
-  color: #ff4d4f;
-}
-
-.step-icon {
-  font-size: 18px;
-}
-
-.step-info {
-  text-align: center;
-}
-
-.step-title {
-  font-weight: 500;
-  font-size: 14px;
-  margin-bottom: 4px;
-  transition: all 0.3s ease;
-}
-
-.step.completed .step-title {
-  color: #52c41a;
-}
-
-.step.current .step-title {
-  color: #1890ff;
-}
-
-.step.pending .step-title {
-  color: #bfbfbf;
-}
-
-.step.cancelled .step-title {
-  color: #ff4d4f;
-}
-
-.step-description {
   font-size: 12px;
+}
+
+/* Custom styles for Ant Design Steps with smaller fonts and rounded icons */
+.custom-steps {
+  padding: 12px 4px;
+  position: relative;
+}
+
+.custom-steps :deep(.ant-steps-item) {
+  position: relative;
+}
+
+.custom-steps :deep(.ant-steps-item.step-finished) {
+  background-color: #f6ffed;
+  border-radius: 8px;
+  padding: 6px;
+  margin: -6px -6px -6px -12px;
+}
+
+.custom-steps :deep(.ant-steps-item.step-finished .ant-steps-item-container) {
+  background-color: #f6ffed;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+/* Smaller font sizes */
+.custom-steps :deep(.ant-steps-item-title) {
+  font-size: 12px !important;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.custom-steps :deep(.ant-steps-item-description) {
+  font-size: 11px !important;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+.custom-steps :deep(.ant-steps-item-process .ant-steps-item-description) {
+  color: #1890ff !important;
+}
+.custom-steps :deep(.ant-step-item.step-processing .ant-steps-item-description){
+  color: #1890ff !important;
+}
+
+.custom-steps :deep(.ant-steps-item.step-finished .ant-steps-item-title) {
+  color: #389e0d !important;
+  font-weight: 600;
+}
+
+.custom-steps :deep(.ant-steps-item.step-finished .ant-steps-item-description) {
+  color: #52c41a !important;
+}
+
+/* Rounded icon backgrounds */
+.custom-steps :deep(.ant-steps-item-icon) {
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.custom-steps :deep(.ant-steps-item-icon .ant-steps-icon) {
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  top: 0 !important;
+  transform: none !important;
+}
+
+.custom-steps :deep(.ant-steps-item.step-finished .ant-steps-item-icon) {
+  background-color: #52c41a !important;
+  border-color: #52c41a !important;
+}
+
+.custom-steps :deep(.ant-steps-item.step-finished .ant-steps-item-icon .ant-steps-icon) {
+  color: white !important;
+}
+
+.custom-steps :deep(.ant-steps-item-finish .ant-steps-item-icon) {
+  background-color: #52c41a;
+  border-color: #52c41a;
+}
+
+.custom-steps :deep(.ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon) {
+  color: white;
+}
+
+.custom-steps :deep(.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title) {
+  color: #389e0d;
+  font-weight: 600;
+}
+
+.custom-steps :deep(.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after) {
+  background-color: #52c41a;
+}
+
+.custom-steps :deep(.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description) {
+  color: #52c41a;
+}
+
+.custom-steps :deep(.ant-steps-item-process .ant-steps-item-icon) {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.custom-steps :deep(.ant-steps-item-process .ant-steps-item-icon .ant-steps-icon) {
+  color: white;
+}
+
+.custom-steps :deep(.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title) {
+  color: #1890ff !important;
+  font-weight: 600;
+}
+
+.custom-steps :deep(.ant-steps-item-wait .ant-steps-item-icon) {
+  background-color: #f5f5f5;
+  border-color: #d9d9d9;
+}
+
+.custom-steps :deep(.ant-steps-item-wait .ant-steps-item-icon .ant-steps-icon) {
+  color: #bfbfbf;
+}
+
+.custom-steps :deep(.ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title) {
   color: #8c8c8c;
 }
 
-.step-connector {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  right: -50%;
-  height: 2px;
-  background-color: #f0f0f0;
-  z-index: 1;
+.custom-steps :deep(.ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description) {
+  color: #8c8c8c;
 }
 
-.step-connector::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0;
+.custom-steps :deep(.ant-steps-item-error .ant-steps-item-icon) {
+  background-color: #fff2f0;
+  border-color: #ffccc7;
+}
+
+.custom-steps :deep(.ant-steps-item-error .ant-steps-item-icon .ant-steps-icon) {
+  color: #ff4d4f;
+}
+
+.custom-steps :deep(.ant-steps-item-error > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title) {
+  color: #ff4d4f;
+}
+
+.custom-steps :deep(.ant-steps-item-error > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description) {
+  color: #ff4d4f;
+}
+
+/* Connector line styling */
+.custom-steps :deep(.ant-steps-item-finish .ant-steps-item-tail::after) {
   background-color: #52c41a;
-  transition: width 0.3s ease;
+  height: 2px;
 }
 
-.step.completed .step-connector::after {
-  width: 100%;
+.custom-steps :deep(.ant-steps-item-process .ant-steps-item-tail::after) {
+  background-color: #1890ff;
+  height: 2px;
+}
+
+.custom-steps :deep(.ant-steps-item-wait .ant-steps-item-tail::after) {
+  background-color: #f0f0f0;
+  height: 1px;
+}
+
+/* COMPLETELY REMOVE ALL HOVER EFFECTS */
+.custom-steps :deep(.ant-steps-item) {
+  cursor: default !important;
+}
+
+.custom-steps :deep(.ant-steps-item):hover {
+  background-color: transparent !important;
+}
+
+.custom-steps :deep(.ant-steps-item-container):hover {
+  background-color: transparent !important;
+}
+
+.custom-steps :deep(.ant-steps-item-title):hover {
+  color: inherit !important;
+}
+
+.custom-steps :deep(.ant-steps-item-description):hover {
+  color: inherit !important;
+}
+
+.custom-steps :deep(.ant-steps-item-icon):hover {
+  background-color: inherit !important;
+  border-color: inherit !important;
+}
+
+.custom-steps :deep(.ant-steps-item-icon .ant-steps-icon):hover {
+  color: inherit !important;
+}
+
+.custom-steps :deep(.ant-steps-item-tail):hover::after {
+  background-color: inherit !important;
+}
+
+/* Remove any pointer events that might trigger hover */
+.custom-steps :deep(.ant-steps-item *),
+.custom-steps :deep(.ant-steps-item-container *),
+.custom-steps :deep(.ant-steps-item-content *),
+.custom-steps :deep(.ant-steps-item-icon *) {
+  pointer-events: none !important;
 }
 
 /* Responsive design */
@@ -327,35 +402,44 @@ const cancelOrder = () => {
     justify-content: space-between;
   }
   
-  .steps-container {
+  .custom-steps {
     flex-direction: column;
-    gap: 24px;
   }
   
-  .step {
-    flex-direction: row;
-    align-items: flex-start;
+  .custom-steps :deep(.ant-steps-item) {
+    margin-bottom: 12px;
   }
   
-  .step-content {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-  }
-  
-  .step-info {
-    text-align: left;
-    flex: 1;
-  }
-  
-  .step-connector {
-    position: absolute;
-    top: 50%;
-    bottom: -50%;
-    left: 20px;
+  .custom-steps :deep(.ant-steps-item-tail) {
+    left: 14px;
+    top: 0;
+    height: 100%;
     width: 2px;
-    height: auto;
+  }
+  
+  .custom-steps :deep(.ant-steps-item.step-finished) {
+    margin: -6px -6px -6px -10px;
+  }
+  
+  .custom-steps :deep(.ant-steps-item-content) {
+    margin-left: 28px;
+  }
+  
+  .custom-steps :deep(.ant-steps-item-icon) {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .custom-steps :deep(.ant-steps-item-icon .ant-steps-icon) {
+    font-size: 12px !important;
+  }
+  
+  .custom-steps :deep(.ant-steps-item-title) {
+    font-size: 11px !important;
+  }
+  
+  .custom-steps :deep(.ant-steps-item-description) {
+    font-size: 10px !important;
   }
 }
 </style>
