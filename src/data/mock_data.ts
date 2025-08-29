@@ -1,4 +1,6 @@
 
+
+import type { StatItem } from "@/components/base/charts/StatisticCard.vue";
 import type { CategoryProps } from "@/components/pages/category/category";
 import type { Customer } from "@/components/pages/customer/customer";
 import type { ProductResponse } from "@/components/pages/product/product";
@@ -6,6 +8,8 @@ import { type OrderResponse } from "@/components/pages/quotation/quotation";
 import type { Supplier } from "@/components/pages/supplier/supplier";
 import type { UmsProps } from "@/components/pages/ums/ums";
 import type { WarehouseProps } from "@/components/pages/warehouse/warehouse";
+import { ContainerOutlined, DollarOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { BoxIcon } from "lucide-vue-next";
 
 export const customerData: Customer[] = [
   {
@@ -386,8 +390,156 @@ export const orderResponseData: OrderResponse = {
 };
 
 
+//dashboard data
+export const statsData: StatItem[] = [
+      {
+    key: "revenue",
+    title: "Revenue",
+    value: 45230,
+    bg: "bg-green-500",
+    icon: DollarOutlined,
+    trend: 5.7,
+    period: "vs last week",
+    format: "currency",
+  },
+  {
+    key: "customers",
+    title: "Customers",
+    value: 1240,
+    bg: "bg-blue-500",
+    icon: UserOutlined,
+    trend: 12.5,
+    period: "vs last week",
+    format: "number",
+  },
+  {
+    key: "orders",
+    title: "Orders",
+    value: 324,
+    bg: "bg-orange-500",
+    icon: ShoppingCartOutlined,
+    trend: 8.3,
+    period: "vs last week",
+    format: "number",
+  },
 
+  {
+    key: "quotaion",
+    title: "Quotaions",
+    value: 500,
+    bg: "bg-sky-500",
+    icon: ContainerOutlined,
+    trend: -2.1,
+    period: "vs last week",
+    format: "number",
+  },
+  {
+    key: "outofstock",
+    title: "Out Of Stock",
+    value: 12030,
+    bg: "bg-red-500",
+    icon: BoxIcon,
+    trend: 3.2,
+    period: "vs last week",
+    format: "number",
+    
+  },
+];
 
+export const timeRangeOptions = [
+  { value: "daily", label: "Daily" },
+  { value: "weekly", label: "Weekly" },
+  { value: "monthly", label: "Monthly" },
+];
+export const dayOfWeek:string[]=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const months:string[]=[
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ]
+export const workingHours=["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"]
+export const orderSeriesDaily=[
+      { name: "This Day", data: [35, 45, 55, 70, 65, 80, 75, 60, 50] },
+      { name: "Previous Day", data: [30, 40, 50, 60, 55, 70, 65, 55, 45] }
+    ];
+export const orderSeriesWeekly=[
+      { name: "This Week", data: [120, 200, 150, 80, 70, 110, 130] },
+      { name: "Last Week", data: [90, 170, 130, 70, 60, 100, 110] },
+    ]
+export const orderSerialYearly=[
+      {
+        name: "This Year",
+        data: [
+          1100, 1200, 1050, 1400, 1300, 1600, 1500, 1700, 1650, 1800, 1750,
+          1900,
+        ],
+      },
+      {
+        name: "Last Year",
+        data: [
+          900, 1000, 950, 1200, 1100, 1300, 1250, 1400, 1350, 1500, 1450, 1600,
+        ],
+      },
+    ]
 
+export const revenueSeriesDaily=[
+      {
+        name: "Revenue",
+        data: [1200, 1800, 2100, 2900, 2500, 3200, 2800, 2200, 1800],
+      },
+    ];
+export const revenueSeriesWeekly=[
+  { name: "Revenue", data: [5200, 8100, 7200, 6800, 9300, 10200, 9800] },
+]
+export const revenueSeriesMonthly=[
+      {
+        name: "Revenue",
+        data: [
+          45230, 48210, 50120, 53210, 56230, 59340, 61230, 64210, 67120, 70210,
+          73230, 76210,
+        ],
+      },
+    ];
+export const orderStatusSeriesData=[
+  {
+    name: "Shipped",
+    data: [4, 10, 40, 100, 30, 30, 20],
+  },
+  {
+    name: "Cancelled",
+    data: [2, 3, 4, 5, 10, 3, 6],
+  },
+  {
+    name: "Completed",
+    data: [200, 332, 400, 220, 100, 300, 60],
+  },
+  {
+    name: "Approved",
+    data: [2, 3, 4, 5, 10, 3, 6],
+  },
+]
 
+export const quotationSeriesData=[
+  {
+    name: "New",
+    data: [40, 100, 40, 120, 30, 50, 20],
+  },
+  {
+    name: "Moved",
+    data: [20, 200, 40, 50, 100, 130, 60],
+  },
+  {
+    name: "Dropped",
+    data: [10, 20, 5, 20, 10, 10, 30],
+  },
+]
 

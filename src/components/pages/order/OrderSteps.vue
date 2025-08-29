@@ -1,31 +1,50 @@
 <template>
   <div class="order-steps">
+    <div class="steps-header">
+      <h3>Order Progress</h3>
+      
+      <!-- Single Verify Button -->
+      <div class="verify-action" v-if="showVerifyButton">
+        <a-button 
+          type="primary" 
+          @click="verifyCurrentStep"
+          :loading="verificationLoading"
+          class="verify-btn"
+        >
+          Mark as {{ getVerifyButtonText() }}
+        </a-button>
+        
+        <!-- Cancel Button for specific steps -->
+        <a-button 
+          v-if="showCancelButton"
+          @click="cancelOrder"
+          danger
+          class="cancel-btn"
+        >
+          Cancel Order
+        </a-button>
+      </div>
+    </div>
+    
     <div class="steps-container">
       <div 
         v-for="(step, index) in steps" 
         :key="step.status"
         class="step"
-        :class="[
-          getStepStatusClass(index),
-          { clickable: index <= currentStepIndex || index === currentStepIndex + 1 }
-        ]"
-        @click="handleStepClick(index, step.status)"
+        :class="getStepStatusClass(index)"
       >
-        <div class="step-icon-container">
-          <component :is="getStepIcon(step.status)" class="step-icon" />
-        </div>
         <div class="step-content">
-          <div class="step-title">{{ step.title }}</div>
-          <div class="step-description">{{ getStepDescription(index) }}</div>
+          <div class="step-icon-container">
+            <component :is="getStepIcon(step.status)" class="step-icon" />
+          </div>
+          <div class="step-info">
+            <div class="step-title">{{ step.title }}</div>
+            <div class="step-description">{{ getStepDescription(index) }}</div>
+          </div>
         </div>
+        
         <div v-if="index < steps.length - 1" class="step-connector"></div>
       </div>
-    </div>
-    
-    <!-- Cancelled status (handled separately) -->
-    <div v-if="currentStatus === 'CANCELLED'" class="cancelled-status">
-      <close-circle-filled class="cancelled-icon" />
-      <span>Order Cancelled</span>
     </div>
   </div>
 </template>
@@ -39,8 +58,8 @@ import {
   CheckSquareFilled,
   CloseCircleFilled
 } from '@ant-design/icons-vue'
+import { computed, ref } from 'vue'
 import type { OrderStatus } from './order'
-import { computed } from 'vue';
 
 interface Step {
   status: OrderStatus
@@ -56,6 +75,8 @@ const emit = defineEmits<{
   (e: 'status-change', status: OrderStatus): void
 }>()
 
+const verificationLoading = ref(false)
+
 const steps: Step[] = [
   { status: 'CREATED', title: 'Created' },
   { status: 'STOCK_VERIFIED', title: 'Stock Verified' },
@@ -66,8 +87,19 @@ const steps: Step[] = [
 
 const currentStepIndex = computed(() => {
   if (props.currentStatus === 'CANCELLED') return -1
-  
   return steps.findIndex(step => step.status === props.currentStatus)
+})
+
+const showVerifyButton = computed(() => {
+  // Don't show button if order is cancelled or completed
+  if (props.currentStatus === 'CANCELLED' || props.currentStatus === 'COMPLETED') return false
+  return props.editable
+})
+
+const showCancelButton = computed(() => {
+  // Show cancel button only for CREATED, STOCK_VERIFIED, and APPROVED steps
+  const cancelableStatuses = ['CREATED', 'STOCK_VERIFIED', 'APPROVED']
+  return cancelableStatuses.includes(props.currentStatus)
 })
 
 const getStepIcon = (status: OrderStatus) => {
@@ -93,35 +125,71 @@ const getStepDescription = (index: number) => {
   if (props.currentStatus === 'CANCELLED') return 'Cancelled'
   if (index < currentStepIndex.value) return 'Completed'
   if (index === currentStepIndex.value) return 'Current'
-  return props.editable && index === currentStepIndex.value + 1 
-    ? 'Click to advance' 
-    : 'Pending'
+  return 'Pending'
 }
 
-const getStepColor = (index: number) => {
-  if (props.currentStatus === 'CANCELLED') return '#ff4d4f'
-  if (index < currentStepIndex.value) return '#52c41a'
-  if (index === currentStepIndex.value) return '#1890ff'
-  return '#d9d9d9'
+const getVerifyButtonText = () => {
+  if (props.currentStatus === 'CREATED') return 'Stock Verified'
+  if (props.currentStatus === 'STOCK_VERIFIED') return 'Approved'
+  if (props.currentStatus === 'APPROVED') return 'Shipped'
+  if (props.currentStatus === 'SHIPPED') return 'Completed'
+  return 'Verified'
 }
 
-const handleStepClick = (index: number, status: OrderStatus) => {
-  // Only allow clicking on the next step when editable
-  if (props.editable && index === currentStepIndex.value + 1) {
-    emit('status-change', status)
-  }
+const verifyCurrentStep = () => {
+  verificationLoading.value = true
   
-  // Allow clicking on previous steps to view their details
-  if (index <= currentStepIndex.value) {
-    // Emit an event or handle viewing previous state details
-    console.log(`Viewing details for step: ${status}`)
-  }
+  // Determine the next status
+  let nextStatus: OrderStatus = 'COMPLETED'
+  
+  if (props.currentStatus === 'CREATED') nextStatus = 'STOCK_VERIFIED'
+  else if (props.currentStatus === 'STOCK_VERIFIED') nextStatus = 'APPROVED'
+  else if (props.currentStatus === 'APPROVED') nextStatus = 'SHIPPED'
+  else if (props.currentStatus === 'SHIPPED') nextStatus = 'COMPLETED'
+  
+  // Simulate API call
+  setTimeout(() => {
+    emit('status-change', nextStatus)
+    verificationLoading.value = false
+  }, 500)
+}
+
+const cancelOrder = () => {
+  emit('status-change', 'CANCELLED')
 }
 </script>
 
 <style scoped>
 .order-steps {
-  padding: 16px 0;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.steps-header h3 {
+  margin: 0;
+  color: #262626;
+  font-weight: 600;
+}
+
+.verify-action {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.verify-btn, .cancel-btn {
+  height: 32px;
 }
 
 .steps-container {
@@ -132,6 +200,7 @@ const handleStepClick = (index: number, status: OrderStatus) => {
 
 .step {
   display: flex;
+  flex-direction: column;
   align-items: center;
   flex: 1;
   position: relative;
@@ -142,14 +211,21 @@ const handleStepClick = (index: number, status: OrderStatus) => {
   flex: 0;
 }
 
+.step-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .step-icon-container {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
+  margin-bottom: 8px;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
@@ -179,17 +255,17 @@ const handleStepClick = (index: number, status: OrderStatus) => {
 }
 
 .step-icon {
-  font-size: 16px;
+  font-size: 18px;
 }
 
-.step-content {
-  min-width: 0;
+.step-info {
+  text-align: center;
 }
 
 .step-title {
   font-weight: 500;
   font-size: 14px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   transition: all 0.3s ease;
 }
 
@@ -215,11 +291,13 @@ const handleStepClick = (index: number, status: OrderStatus) => {
 }
 
 .step-connector {
-  flex: 1;
-  height: 1px;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
   background-color: #f0f0f0;
-  margin: 0 12px;
-  position: relative;
+  z-index: 1;
 }
 
 .step-connector::after {
@@ -237,46 +315,47 @@ const handleStepClick = (index: number, status: OrderStatus) => {
   width: 100%;
 }
 
-.step.clickable {
-  cursor: pointer;
-}
-
-.step.clickable:hover .step-icon-container {
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.cancelled-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background-color: #fff2f0;
-  border: 1px solid #ffccc7;
-  border-radius: 6px;
-  margin-top: 16px;
-  color: #ff4d4f;
-  font-weight: 500;
-}
-
-.cancelled-icon {
-  font-size: 18px;
-  margin-right: 8px;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
-  .steps-container {
+  .steps-header {
     flex-direction: column;
-    gap: 16px;
+    align-items: flex-start;
   }
   
-  .step-connector {
-    display: none;
+  .verify-action {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .steps-container {
+    flex-direction: column;
+    gap: 24px;
   }
   
   .step {
-    flex: none;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  .step-content {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .step-info {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .step-connector {
+    position: absolute;
+    top: 50%;
+    bottom: -50%;
+    left: 20px;
+    width: 2px;
+    height: auto;
   }
 }
 </style>

@@ -16,7 +16,7 @@
 
     <order-steps 
       :current-status="order.status" 
-      @status-change="$emit('status-change', $event)"
+      @status-change="handleStatusChange"
       :editable="isEditable"
       class="order-steps-container"
     />
@@ -58,7 +58,7 @@
 
       <div class="content-section">
         <h3 class="section-title">Products</h3>
-        <TableProduct
+        <table-product
           :products="order.products" 
           :editable="isEditable"
           @product-update="$emit('product-update', $event)"
@@ -154,15 +154,14 @@ import {
 } from '@ant-design/icons-vue'
 import type { Order, OrderProduct, OrderStatus } from './order'
 import OrderSteps from './OrderSteps.vue'
-import TableProducts from './TableProducts.vue'
 import TableProduct from './TableProduct.vue'
 
 const props = defineProps<{
   order: Order
 }>()
 
-defineEmits<{
-  (e: 'status-change', status: OrderStatus): void
+const emit = defineEmits<{
+  (e: 'status-change', status: string): void
   (e: 'product-update', products: OrderProduct[]): void
 }>()
 
@@ -191,6 +190,10 @@ const calculateDiscount = () => {
   return subtotal * (props.order.discount / 100)
 }
 
+const handleStatusChange = (newStatus: OrderStatus) => {
+  emit('status-change', newStatus)
+}
+
 const handleSave = () => {
   // Handle save logic
   console.log('Saving changes...')
@@ -198,6 +201,7 @@ const handleSave = () => {
 </script>
 
 <style scoped>
+/* Keep the same styles as before */
 .details-header {
   display: flex;
   justify-content: space-between;
