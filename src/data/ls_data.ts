@@ -8,6 +8,7 @@ const getDataByKey = (key: string) => {
   if (key === KEY.SUPPLIER) return supplierData;
   if (key === KEY.WAREHOUSE) return warehouseData;
   if (key === KEY.PRODUCT) return productData;
+  if (key=== KEY.QUOTATION) return []
 };
 
 const DEFAULT_KEY = KEY.CUSTOMER;

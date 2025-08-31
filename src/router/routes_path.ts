@@ -6,6 +6,7 @@ const RoutePath = {
     PROFILE: 'profile',
     RESET: 'reset',
     QUOTATION: 'quotations',
+    QUOTATION_ACTION:'quotation_action',
     PRODUCT: 'products',
     ADMIN_USER: 'users',
     REPORT:'report',

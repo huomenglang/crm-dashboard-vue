@@ -230,7 +230,7 @@ export const supplierData: Supplier[] = [
 ];
 export const productData:ProductResponse[]=[
   {
-    id: "1",
+    id: "001",
     name: "Pepsi",
     sku: "PEP-001",
     description: "Description of Pepsi",
@@ -265,7 +265,7 @@ export const productData:ProductResponse[]=[
     createdBy: "Admin",
   },
   {
-    id: "2",
+    id: "0012",
     name: "Hanuman Beer",
     sku: "HNB-001",
     description: "Description of Hanuman Beer",
@@ -300,7 +300,7 @@ export const productData:ProductResponse[]=[
     createdBy: "Admin",
   },
   {
-    id: "1",
+    id: "003",
     name: "ABC Beer",
     sku: "ABC-001",
     description: "Description of ABC Beer",

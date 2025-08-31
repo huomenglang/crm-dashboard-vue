@@ -1,6 +1,7 @@
 <template>
   <div class="order-steps">
     <div class="steps-header">
+
       <div class="verify-action" v-if="showVerifyButton">
         <a-button 
           type="primary" 
@@ -8,7 +9,7 @@
           :loading="verificationLoading"
           class="verify-btn"
         >
-          Mark as {{ getVerifyButtonText() }}
+          Next {{ getVerifyButtonText() }}
         </a-button>
         
         <!-- Cancel Button for specific steps -->
@@ -18,7 +19,7 @@
           danger
           class="cancel-btn"
         >
-          Cancel Order
+          Cancel
         </a-button>
       </div>
     </div>

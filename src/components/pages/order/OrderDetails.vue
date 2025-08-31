@@ -1,31 +1,20 @@
 <template>
   <div class="order-details" v-if="order">
     <div class="pt-3 pl-3">
-      <div class="flex flex-col">
-        <div class="flex items-center justify-center">
-         <PhoneCallIcon class="text-gray-600 w-4 h-4" />
-        <span class="!mt-3 text-[10px] text-gray-600">
-          {{ order.customer.phone }}
-        </span>
-      </div>
-      <div class="flex items-center">
-         <MailCheckIcon class="text-gray-600" />
-        <span class="!mt-3 text-xl text-gray-600">
-          {{ order.customer.email }}
-        </span>
-      </div>
-      </div>
+     
       <div class="flex gap-x-0.5 justify-center items-center">
-        <ReceiptIcon class="text-gray-600" />
-        <h1 class="!mt-3 text-xl text-gray-600">
-          {{ order.orderNo }}
-          <span class="text-lg "> ({{ order.customer.name }})</span>
+        <ReceiptText class="text-gray-600 w-5 h-5" />
+
+        <h1 class="!mt-3 text-[17px] text-gray-600">
+          <span class="">No:</span> {{ order.orderNo }}
         </h1>
       </div>
-      <span class="text-[10px] flex justify-center -mt-2 text-gray-500">
+
+      <span class=" text-[10px] flex flex-col justify-center items-start -mt-2 text-gray-500">
+        <b>Customer: {{ order.customer.name }}</b>
+        <b>Phone: {{ order.customer.phone }}</b>
         <b> Ordered At: {{ formatDate(order.createdAt) }} </b>
-        </span
-      >
+      </span>
     </div>
 
     <order-steps
@@ -35,10 +24,7 @@
       class="order-steps-container"
     />
 
-
-
     <div class="details-content">
-
       <div class="content-section">
         <h3 class="section-title">Products</h3>
         <table-product
@@ -52,27 +38,27 @@
       <a-divider class="section-divider" />
 
       <div class="content-section">
-        <h3 class="section-title">Order Summary</h3>
+        <h3 class="text-center text-gray-500 font-semibold text-[15px]">Order Summary</h3>
         <div class="summary-grid">
-          <div class="summary-item">
-            <span class="summary-label">Subtotal:</span>
+          <div class="summary-item text-gray-500 font-medium text-[13px]">
+            <span class=" text-gray-500 text-[13px]">Subtotal:</span>
             <span class="summary-value"
               >${{ calculateSubtotal().toFixed(2) }}</span
             >
           </div>
-          <div class="summary-item" v-if="order.discount">
-            <span class="summary-label">Discount ({{ order.discount }}%):</span>
-            <span class="summary-value discount"
+          <div class="summary-item" >
+            <span class="text-gray-500 font-medium text-[13px]">Discount ({{ order.discount }}%):</span>
+            <span class="summary-value discount text-[13px]"
               >-${{ calculateDiscount().toFixed(2) }}</span
             >
           </div>
-          <div class="summary-item" v-if="order.tax">
-            <span class="summary-label">Tax:</span>
-            <span class="summary-value">${{ order.tax.toFixed(2) }}</span>
+          <div class="summary-item" >
+            <span class="text-gray-500 font-medium text-[13px]">Tax:</span>
+            <span class="summary-value text-[13px]">${{order?.tax? order?.tax.toFixed(2):0 }}</span>
           </div>
-          <a-divider class="summary-divider" />
-          <div class="summary-item total">
-            <span class="summary-label">Total Amount:</span>
+         
+          <div class="summary-item total text-[13px]">
+            <span class="text-gray-500 font-medium text-[13px]">Total Amount:</span>
             <span class="summary-value total"
               >${{ order.totalAmount.toFixed(2) }}</span
             >
@@ -82,47 +68,47 @@
 
       <a-divider class="section-divider" />
 
-      <div class="content-section">
-        <h3 class="section-title">Order History</h3>
-        <div class="audit-grid">
+      <div class="pb-6">
+        <div class="audit-grid border-[1px] border-dashed rounded-lg border-gray-300 p-2">
+             <h3 class=" text-center text-gray-500 text-[15px]">Order History</h3>
           <div class="audit-item" v-if="order.createdBy">
-            <user-outlined class="audit-icon" />
+            <user-outlined class="audit-icon !text-blue-500" />
             <div class="audit-details">
-              <span class="audit-action">Order Created</span>
-              <span class="audit-user">by {{ order.createdBy }}</span>
-              <span class="audit-time">{{ formatDate(order.createdAt) }}</span>
+              <span class=" text-gray-700 text-[13px] font-semibold">Order Created</span>
+              <span class=" text-gray-500 text-[12px] font-medium">by {{ order.createdBy }}</span>
+              <span class="text-[11px] text-gray-500">{{ formatDate(order.createdAt) }}</span>
             </div>
           </div>
           <div class="audit-item" v-if="order.approvedBy">
             <check-circle-outlined class="audit-icon approved" />
             <div class="audit-details">
-              <span class="audit-action">Order Approved</span>
-              <span class="audit-user">by {{ order.approvedBy }}</span>
-              <span class="audit-time">{{ formatDate(order.updatedAt) }}</span>
+              <span class=" text-gray-700 text-[13px] font-semibold">Order Approved</span>
+              <span class=" text-gray-500 text-[12px] font-medium">by {{ order.approvedBy }}</span>
+              <span class="text-[11px] text-gray-500">{{ formatDate(order.updatedAt) }}</span>
             </div>
           </div>
           <div class="audit-item" v-if="order.shippedBy">
             <car-outlined class="audit-icon shipped" />
             <div class="audit-details">
-              <span class="audit-action">Order Shipped</span>
-              <span class="audit-user">by {{ order.shippedBy }}</span>
-              <span class="audit-time">{{ formatDate(order.updatedAt) }}</span>
+              <span class=" text-gray-700 text-[13px] font-semibold">Order Shipped</span>
+              <span class=" text-gray-500 text-[12px] font-medium">by {{ order.shippedBy }}</span>
+              <span class="text-[11px] text-gray-500">{{ formatDate(order.updatedAt) }}</span>
             </div>
           </div>
           <div class="audit-item" v-if="order.completedBy">
             <check-circle-outlined class="audit-icon completed" />
             <div class="audit-details">
-              <span class="audit-action">Order Completed</span>
-              <span class="audit-user">by {{ order.completedBy }}</span>
-              <span class="audit-time">{{ formatDate(order.updatedAt) }}</span>
+              <span class=" text-gray-700 text-[13px] font-semibold">Order Completed</span>
+              <span class=" text-gray-500 text-[12px] font-medium">by {{ order.completedBy }}</span>
+              <span class="text-[11px] text-gray-500">{{ formatDate(order.updatedAt) }}</span>
             </div>
           </div>
           <div class="audit-item" v-if="order.cancelledBy">
             <close-circle-outlined class="audit-icon cancelled" />
             <div class="audit-details">
-              <span class="audit-action">Order Cancelled</span>
-              <span class="audit-user">by {{ order.cancelledBy }}</span>
-              <span class="audit-time">{{ formatDate(order.updatedAt) }}</span>
+              <span class=" text-gray-700 text-[13px] font-semibold">Order Cancelled</span>
+              <span class=" text-gray-500 text-[12px] font-medium">by {{ order.cancelledBy }}</span>
+              <span class="text-[11px] text-gray-500">{{ formatDate(order.updatedAt) }}</span>
             </div>
           </div>
         </div>
@@ -140,6 +126,7 @@ import {
   CheckCircleOutlined,
   CarOutlined,
   CloseCircleOutlined,
+  ContainerFilled,
 } from "@ant-design/icons-vue";
 import type { Order, OrderProduct, OrderStatus } from "./order";
 import OrderSteps from "./OrderSteps.vue";
@@ -148,9 +135,11 @@ import {
   BadgeInfoIcon,
   CalculatorIcon,
   CalendarCheck,
+  ContainerIcon,
   MailCheckIcon,
   PhoneCallIcon,
   ReceiptIcon,
+  ReceiptText,
 } from "lucide-vue-next";
 
 const props = defineProps<{
@@ -195,7 +184,7 @@ const handleStatusChange = (newStatus: OrderStatus) => {
 };
 
 const handleSave = () => {
-  // Handle save logic
+
   console.log("Saving changes...");
 };
 </script>
@@ -224,7 +213,7 @@ const handleSave = () => {
 }
 
 .section-divider {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 .details-content {
@@ -236,10 +225,9 @@ const handleSave = () => {
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   text-align: center;
-  color: #646464;
   margin-bottom: 16px;
 }
 
@@ -278,18 +266,19 @@ const handleSave = () => {
 .summary-item {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 3px 0;
+  
 }
 
 .summary-label {
   font-size: 14px;
-  color: #595959;
+  /* color: #595959; */
 }
 
 .summary-value {
-  font-size: 14px;
-  color: #262626;
-  font-weight: 500;
+  font-size: 13px;
+  color: #373737;
+  font-weight: 700;
 }
 
 .summary-value.discount {

@@ -12,6 +12,8 @@ import AntInput from "@/components/base/input/AntInput.vue";
 import RoundButton from "@/components/base/button/RoundButton.vue";
 import { message } from "ant-design-vue";
 import QuotationForm from "@/components/pages/quotation/QuotationForm.vue";
+import { useRouter } from "vue-router";
+const router=useRouter()
 const quotations = ref<Quotation[]>([
   {
     quotationId: "QUO-1001",
@@ -80,9 +82,10 @@ const closeModal = () => {
 
 // Open create modal
 const openCreateModal = () => {
-  isEdit.value = false;
-  selectedQuotation.value = null;
-  isModalVisible.value = true;
+  router.push('/quotation_action')
+  // isEdit.value = false;
+  // selectedQuotation.value = null;
+  // isModalVisible.value = true;
 };
 
 const openEditModal = (quotation: Quotation) => {

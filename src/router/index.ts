@@ -20,6 +20,7 @@ import Warehouse from '@/view/Warehouse.vue'
 import Quotation from '@/view/quotation/Quotation.vue'
 import Order from '@/view/order/Order.vue'
 import Dashboard from '@/view/dashboard/Dashboard.vue'
+import QuotationAction from '@/view/quotation/QuotationAction.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'Login', component: Login,meta: { layout: false } },
@@ -31,6 +32,7 @@ const routes: RouteRecordRaw[] = [
       { path: '/', redirect: '/dashboard' },
       { path:RoutePath.DASHBOARD, name: 'Dashboard', component: Dashboard },
       { path:RoutePath.QUOTATION, name: 'Quotations', component: Quotation },
+      { path:RoutePath.QUOTATION_ACTION, name: 'QuotationActions', component: QuotationAction },
       { path:RoutePath.CUSTOMER, name: 'Customers', component: Customer },
       { path:RoutePath.PRODUCT, name: 'Products', component: Product },
       { path:RoutePath.UNIT, name: 'Units', component: Ums },

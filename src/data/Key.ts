@@ -6,4 +6,5 @@ export const enum KEY {
   UNIT = "unit",
   SUPPLIER = "supplier",
   WAREHOUSE = "warehouse",
+  QUOTATION='quotation'
 }
