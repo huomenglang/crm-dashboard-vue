@@ -32,7 +32,7 @@ const emit = defineEmits<{
     }]"
       v-bind="props"
        type="text"
-    @click="emit('click', $event)"
+      @click="emit('click', $event)"
   >
   <slot />
 
