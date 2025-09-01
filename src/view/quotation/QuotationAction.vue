@@ -1,7 +1,8 @@
 <template>
   <div class="quotation-form">
+    <!-- Header -->
     <div class="flex items-center mb-6">
-      <div class="cursor-pointer text-gray-500" @click="() => router.push('/quotation_action')">
+      <div class="cursor-pointer text-gray-500" @click="router.push('/quotations')">
         <MoveLeftIcon />
       </div>
       <div class="flex-1">
@@ -12,23 +13,24 @@
       </div>
     </div>
 
-    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
-      <!-- Customer Section -->
-      <div class="customer-section mb-6">
-        <a-row :gutter="16">
-          <a-col :span="12">
+    <!-- Two-column layout -->
+    <div class="two-column-layout">
+      <!-- Left Side: Customer & Summary -->
+      <div class="left-side">
+        <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
+          <!-- Customer Section -->
+          <a-card title="Customer Information" class="mb-6">
             <div class="form-field">
               <label>Customer <span class="required">*</span></label>
-              <Field name="customerId" v-slot="{ field }">
+              <Field name="customerId" v-slot="{ value, errorMessage, handleChange }">
                 <a-select
-                  v-bind="field"
-                  v-model:value="formState.customerId"
+                  :value="value"
                   placeholder="Select customer"
                   show-search
                   option-filter-prop="label"
                   :filter-option="filterOption"
-                  :status="errors.customerId ? 'error' : ''"
-                  @change="handleCustomerChange"
+                  :status="errorMessage ? 'error' : ''"
+                  @update:value="(v:any) => { handleChange(v); formState.customerId = v; handleCustomerChange(v); }"
                 >
                   <a-select-option 
                     v-for="customer in customers" 
@@ -42,232 +44,25 @@
               </Field>
               <ErrorMessage name="customerId" class="error-message" />
             </div>
-          </a-col>
-        </a-row>
-      </div>
 
-      <!-- Products Section -->
-      <a-card title="Products" class="mb-6">
-        <div v-for="(product, index) in formState.products" :key="index" class="product-item mb-4 p-3 border rounded">
-          <a-row :gutter="16">
-            <a-col :span="6">
-              <div class="form-field">
-                <label>Product <span class="required">*</span></label>
-                <Field :name="`products[${index}].productId`" v-slot="{ field }">
-                  <a-select
-                    v-bind="field"
-                    v-model:value="product.id"
-                    placeholder="Select product"
-                    show-search
-                    option-filter-prop="label"
-                    :filter-option="filterOption"
-                    :status="errors[`products[${index}].productId`] ? 'error' : ''"
-                    @change="(value:any) => handleProductChange(value, index)"
-                  >
-                    <a-select-option 
-                      v-for="p in availableProducts" 
-                      :key="p.id" 
-                      :value="p.id"
-                      :label="`${p.name}`"
-                    >
-                      {{ p.name }}
-                    </a-select-option>
-                  </a-select>
-                </Field>
-                <ErrorMessage :name="`products[${index}].productId`" class="error-message" />
-              </div>
-            </a-col>
-            
-            <a-col :span="4">
-              <div class="form-field">
-                <label>Unit <span class="required">*</span></label>
-                <Field :name="`products[${index}].unitId`" v-slot="{ field }">
-                  <a-select
-                    v-bind="field"
-                    v-model:value="product.unitId"
-                    placeholder="Select unit"
-                    :status="errors[`products[${index}].unitId`] ? 'error' : ''"
-                    @change="(value:any) => handleUnitChange(value, index)"
-                  >
-                    <a-select-option 
-                      v-for="unit in getProductUnits(product.id)" 
-                      :key="unit.unitId" 
-                      :value="unit.unitId"
-                      :label="unit.unitName"
-                    >
-                      {{ unit.unitName }}
-                    </a-select-option>
-                  </a-select>
-                </Field>
-                <ErrorMessage :name="`products[${index}].unitId`" class="error-message" />
-                
-                <!-- Add Unit Button -->
-                <a-button 
-                  v-if="product.id && getProductUnits(product.id).length > 0"
-                  type="link" 
-                  size="small" 
-                  @click="addUnitToProduct(index)"
-                  class="add-unit-btn"
-                >
-                  + Add Another Unit
-                </a-button>
-              </div>
-            </a-col>
-            
-            <a-col :span="3">
-              <div class="form-field">
-                <label>Quantity <span class="required">*</span></label>
-                <Field :name="`products[${index}].quantity`" v-slot="{ field }">
-                  <a-input-number
-                    v-bind="field"
-                    v-model:value="product.quantity"
-                    :min="1"
-                    :precision="2"
-                    :status="errors[`products[${index}].quantity`] ? 'error' : ''"
-                    @change="calculateLineTotal(index)"
-                    style="width: 100%"
-                  />
-                </Field>
-                <ErrorMessage :name="`products[${index}].quantity`" class="error-message" />
-              </div>
-            </a-col>
-            
-            <a-col :span="3">
-              <div class="form-field">
-                <label>Price</label>
-                <a-input-number
-                  :value="product.price"
-                  :precision="2"
-                  disabled
-                  style="width: 100%; background: #f5f5f5"
+            <!-- Note Section -->
+            <div class="form-field">
+              <label>Note</label>
+              <Field name="note" v-slot="{ value, errorMessage, handleChange }">
+                <a-textarea
+                  :value="value ?? ''"
+                  @update:value="(v:string) => { handleChange(v); formState.note = v; }"
+                  placeholder="Add any additional information about this quotation"
+                  :rows="3"
+                  :status="errorMessage ? 'error' : ''"
                 />
-              </div>
-            </a-col>
-            
-            <a-col :span="3">
-              <div class="form-field">
-                <label>Discount %</label>
-                <Field :name="`products[${index}].discount`" v-slot="{ field }">
-                  <a-input-number
-                    v-bind="field"
-                    v-model:value="product.discount"
-                    :min="0"
-                    :max="100"
-                    :precision="2"
-                    @change="calculateLineTotal(index)"
-                    style="width: 100%"
-                  />
-                </Field>
-                <ErrorMessage :name="`products[${index}].discount`" class="error-message" />
-              </div>
-            </a-col>
-            
-            <a-col :span="3">
-              <div class="form-field">
-                <label>Total</label>
-                <div class="line-total">${{ product.total.toFixed(2) }}</div>
-              </div>
-            </a-col>
-            
-            <a-col :span="2">
-              <a-button 
-                type="link" 
-                danger 
-                @click="removeProduct(index)"
-                :disabled="formState.products.length === 1"
-                class="remove-btn"
-              >
-                <DeleteOutlined />
-              </a-button>
-            </a-col>
-          </a-row>
-          
-          <!-- Additional Units for this product -->
-          <div v-if="product.units && product.units.length > 0" class="additional-units mt-3">
-            <div v-for="(unit, unitIndex) in product.units" :key="unitIndex" class="unit-row mb-2 p-2 bg-gray-50 rounded">
-              <a-row :gutter="16" align="middle">
-                <a-col :span="6">
-                  <div class="form-field">
-                    <label>Unit</label>
-                    <a-select
-                      v-model:value="unit.unitId"
-                      placeholder="Select unit"
-                      @change="(value:any) => handleAdditionalUnitChange(value, index, unitIndex)"
-                    >
-                      <a-select-option 
-                        v-for="u in getProductUnits(product.id)" 
-                        :key="u.unitId" 
-                        :value="u.unitId"
-                        :label="u.unitName"
-                      >
-                        {{ u.unitName }}
-                      </a-select-option>
-                    </a-select>
-                  </div>
-                </a-col>
-                
-                <a-col :span="4">
-                  <div class="form-field">
-                    <label>Quantity</label>
-                    <a-input-number
-                      v-model:value="unit.quantity"
-                      :min="1"
-                      :precision="2"
-                      @change="calculateAdditionalUnitTotal(index, unitIndex)"
-                      style="width: 100%"
-                    />
-                  </div>
-                </a-col>
-                
-                <a-col :span="4">
-                  <div class="form-field">
-                    <label>Price</label>
-                    <a-input-number
-                      :value="unit.price"
-                      :precision="2"
-                      disabled
-                      style="width: 100%; background: #f5f5f5"
-                    />
-                  </div>
-                </a-col>
-                
-                <a-col :span="4">
-                  <div class="form-field">
-                    <label>Subtotal</label>
-                    <div>${{ unit.subtotal.toFixed(2) }}</div>
-                  </div>
-                </a-col>
-                
-                <a-col :span="2">
-                  <a-button 
-                    type="link" 
-                    danger 
-                    @click="removeUnit(index, unitIndex)"
-                    class="remove-unit-btn"
-                  >
-                    <DeleteOutlined />
-                  </a-button>
-                </a-col>
-              </a-row>
+              </Field>
+              <ErrorMessage name="note" class="error-message" />
             </div>
-          </div>
-        </div>
-        
-        <div class="text-center mt-4">
-          <a-button 
-            type="dashed" 
-            @click="addProduct" 
-            icon="plus"
-          >
-            Add Product
-          </a-button>
-        </div>
-      </a-card>
+          </a-card>
 
-      <!-- Summary Section -->
-      <a-card title="Summary" class="mb-6">
-        <a-row :gutter="16">
-          <a-col :span="8" :offset="16">
+          <!-- Summary Section -->
+          <a-card title="Summary" class="mb-6">
             <div class="summary-row">
               <span>Subtotal:</span>
               <span>${{ subtotal.toFixed(2) }}</span>
@@ -276,14 +71,13 @@
             <div class="summary-row">
               <span>Discount:</span>
               <div class="summary-input-container">
-                <Field name="discount" v-slot="{ field }">
+                <Field name="discount" v-slot="{ value, handleChange }">
                   <a-input-number
-                    v-bind="field"
-                    v-model:value="formState.discount"
+                    :value="value ?? 0"
                     :min="0"
                     :max="100"
                     :precision="2"
-                    @change="calculateTotal"
+                    @update:value="(v:number) => { handleChange(v ?? 0); formState.discount = Number(v||0); calculateTotal(); }"
                     style="width: 100px"
                     addon-after="%"
                   />
@@ -294,15 +88,14 @@
             <div class="summary-row">
               <span>Tax:</span>
               <div class="summary-input-container">
-                <Field name="tax" v-slot="{ field }">
+                <Field name="tax" v-slot="{ value, errorMessage, handleChange }">
                   <a-input-number
-                    v-bind="field"
-                    v-model:value="formState.tax"
+                    :value="value ?? 0"
                     :min="0"
                     :max="100"
                     :precision="2"
-                    :status="errors.tax ? 'error' : ''"
-                    @change="calculateTotal"
+                    :status="errorMessage ? 'error' : ''"
+                    @update:value="(v:number) => { handleChange(v ?? 0); formState.tax = Number(v||0); calculateTotal(); }"
                     style="width: 100px"
                     addon-after="%"
                   />
@@ -317,36 +110,285 @@
               <span>Total Amount:</span>
               <span>${{ formState.totalAmount.toFixed(2) }}</span>
             </div>
-          </a-col>
-        </a-row>
-      </a-card>
+          </a-card>
 
-      <!-- Note Section -->
-      <a-card title="Additional Information" class="mb-6">
-        <div class="form-field">
-          <label>Note</label>
-          <Field name="note" v-slot="{ field }">
-            <a-textarea
-              v-bind="field"
-              v-model:value="formState.note"
-              placeholder="Add any additional information about this quotation"
-              :rows="3"
-              :status="errors.note ? 'error' : ''"
-            />
-          </Field>
-          <ErrorMessage name="note" class="error-message" />
-        </div>
-      </a-card>
+          <!-- Add Product Button -->
+          <div class="text-center mb-6">
+            <a-button type="primary" @click="showProductModal">
+              <template #icon>
+                <PlusOutlined />
+              </template>
+              Add Product
+            </a-button>
+          </div>
 
-      <div class="form-actions">
-        <a-button class="mr-2" @click="router.push('/quotation_action')">
-          Cancel
-        </a-button>
-        <a-button type="primary" html-type="submit" :loading="submitting">
-          {{ isEditing ? 'Update' : 'Create' }} Quotation
-        </a-button>
+          <div class="form-actions">
+            <a-button class="mr-2" @click="router.push('/quotations')">
+              Cancel
+            </a-button>
+            <a-button type="primary" html-type="submit" :loading="submitting">
+              {{ isEditing ? 'Update' : 'Create' }} Quotation
+            </a-button>
+          </div>
+        </Form>
       </div>
-    </Form>
+
+      <!-- Right Side: Products Table -->
+      <div class="right-side">
+        <a-card title="Products" class="products-card">
+          <a-table 
+            :dataSource="formState.products" 
+            :columns="productColumns" 
+            :pagination="false"
+            size="small"
+            :scroll="{ y: 400 }"
+          >
+            <template #bodyCell="{ column, record, index }">
+              <template v-if="column.key === 'actions'">
+                <a-space>
+                  <a-button type="link" size="small" @click="editProduct(index)">
+                    Edit
+                  </a-button>
+                  <a-button 
+                    type="link" 
+                    danger 
+                    size="small"
+                    @click="removeProduct(index)"
+                  >
+                    Remove
+                  </a-button>
+                </a-space>
+              </template>
+              
+              <template v-else-if="column.key === 'details'">
+                <div class="product-details">
+                  <div class="main-unit">
+                    <div>{{ record.unitName }}: {{ record.quantity }} × ${{ record.price.toFixed(2) }}</div>
+                    <div v-if="record.discount">Discount: {{ record.discount }}%</div>
+                  </div>
+                  <div v-for="(unit, unitIndex) in record.units" :key="unitIndex" class="additional-unit">
+                    <div>{{ unit.unitName }}: {{ unit.quantity }} × ${{ unit.price.toFixed(2) }}</div>
+                    <a-button 
+                      type="link" 
+                      danger 
+                      size="small"
+                      @click="removeUnit(index, unitIndex)"
+                    >
+                      Remove
+                    </a-button>
+                  </div>
+                  <a-button 
+                    v-if="record.id && getProductUnits(record.id).length > 0"
+                    type="link" 
+                    size="small" 
+                    @click="addUnitToProduct(index)"
+                  >
+                    + Add Unit
+                  </a-button>
+                </div>
+              </template>
+              
+              <template v-else-if="column.key === 'total'">
+                ${{ calculateProductTotal(record).toFixed(2) }}
+              </template>
+            </template>
+            
+            <template #emptyText>
+              <div class="empty-state">
+                <p>No products added yet</p>
+                <p class="text-gray-500">Click "Add Product" to get started</p>
+              </div>
+            </template>
+          </a-table>
+        </a-card>
+      </div>
+    </div>
+
+    <!-- Product Selection Modal -->
+    <a-modal 
+      v-model:open="productModalVisible" 
+      :title="editingProductIndex !== null ? 'Edit Product' : 'Add Product'" 
+      width="800px"
+      :footer="null"
+    >
+      <div class="product-modal">
+        <div class="modal-section">
+          <h4>Select Product</h4>
+          <a-select
+            v-model:value="selectedProductId"
+            placeholder="Select product"
+            show-search
+            option-filter-prop="label"
+            :filter-option="filterOption"
+            style="width: 100%"
+            @change="handleProductSelect"
+            :disabled="editingProductIndex !== null"
+          >
+            <a-select-option 
+              v-for="p in availableProducts" 
+              :key="p.id" 
+              :value="p.id"
+              :label="`${p.name}`"
+            >
+              {{ p.name }}
+            </a-select-option>
+          </a-select>
+        </div>
+
+        <div class="modal-section" v-if="selectedProduct">
+          <h4>Product Details</h4>
+          <a-row :gutter="16">
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Unit <span class="required">*</span></label>
+                <a-select
+                  v-model:value="newProduct.unitId"
+                  placeholder="Select unit"
+                  @change="handleUnitSelect"
+                >
+                  <a-select-option 
+                    v-for="unit in getProductUnits(selectedProductId)" 
+                    :key="unit.unitId" 
+                    :value="unit.unitId"
+                    :label="unit.unitName"
+                  >
+                    {{ unit.unitName }}
+                  </a-select-option>
+                </a-select>
+              </div>
+            </a-col>
+            
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Quantity <span class="required">*</span></label>
+                <a-input-number
+                  v-model:value="newProduct.quantity"
+                  :min="0.01"
+                  :precision="2"
+                  style="width: 100%"
+                  @update:value="calculateNewProductTotal"
+                />
+              </div>
+            </a-col>
+            
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Price</label>
+                <a-input-number
+                  :value="newProduct.price"
+                  :precision="2"
+                  disabled
+                  style="width: 100%; background: #f5f5f5"
+                />
+              </div>
+            </a-col>
+          </a-row>
+          
+          <a-row :gutter="16" class="mt-3">
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Discount %</label>
+                <a-input-number
+                  v-model:value="newProduct.discount"
+                  :min="0"
+                  :max="100"
+                  :precision="2"
+                  style="width: 100%"
+                  @update:value="calculateNewProductTotal"
+                />
+              </div>
+            </a-col>
+            
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Total</label>
+                <div class="line-total">${{ newProductTotal.toFixed(2) }}</div>
+              </div>
+            </a-col>
+          </a-row>
+        </div>
+
+        <div class="modal-actions">
+          <a-button @click="closeProductModal">Cancel</a-button>
+          <a-button 
+            type="primary" 
+            @click="editingProductIndex !== null ? updateProduct() : addNewProduct()"
+            :disabled="!newProduct.unitId || !newProduct.quantity"
+          >
+            {{ editingProductIndex !== null ? 'Update' : 'Add' }} Product
+          </a-button>
+        </div>
+      </div>
+    </a-modal>
+
+    <!-- Add Unit Modal -->
+    <a-modal 
+      v-model:open="unitModalVisible" 
+      title="Add Unit" 
+      width="600px"
+      :footer="null"
+    >
+      <div class="unit-modal">
+        <div class="modal-section">
+          <h4>Add Another Unit</h4>
+          <a-row :gutter="16">
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Unit <span class="required">*</span></label>
+                <a-select
+                  v-model:value="newUnit.unitId"
+                  placeholder="Select unit"
+                >
+                  <a-select-option 
+                    v-for="unit in getProductUnits(selectedProductForUnit)" 
+                    :key="unit.unitId" 
+                    :value="unit.unitId"
+                    :label="unit.unitName"
+                  >
+                    {{ unit.unitName }}
+                  </a-select-option>
+                </a-select>
+              </div>
+            </a-col>
+            
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Quantity <span class="required">*</span></label>
+                <a-input-number
+                  v-model:value="newUnit.quantity"
+                  :min="0.01"
+                  :precision="2"
+                  style="width: 100%"
+                />
+              </div>
+            </a-col>
+            
+            <a-col :span="8">
+              <div class="form-field">
+                <label>Price</label>
+                <a-input-number
+                  :value="newUnitPrice"
+                  :precision="2"
+                  disabled
+                  style="width: 100%; background: #f5f5f5"
+                />
+              </div>
+            </a-col>
+          </a-row>
+        </div>
+
+        <div class="modal-actions">
+          <a-button @click="unitModalVisible = false">Cancel</a-button>
+          <a-button 
+            type="primary" 
+            @click="addNewUnit"
+            :disabled="!newUnit.unitId || !newUnit.quantity"
+          >
+            Add Unit
+          </a-button>
+        </div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -354,28 +396,57 @@
 import { reactive, ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
-import { DeleteOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import { MoveLeftIcon, BadgeInfoIcon } from 'lucide-vue-next';
-import type { Customer, QuotationProduct } from '@/components/pages/quotation/type';
-import { getAll } from '@/data/ls_data';
+import { QuoteStatus, type Customer, type Quotation, type QuotationProduct, type Status } from '@/components/pages/quotation/type';
+import { getAll, createOne,updateOne,saveAll } from '@/data/ls_data';
 import { KEY } from '@/data/Key';
 import type { ProductResponse } from '@/components/pages/product/product';
-
+import { status } from '@/constant';
 
 const router = useRouter();
-const props = defineProps({
-  id: String // For edit mode
-});
-
-const isEditing = !!props.id;
+const props = defineProps<{ id?: string }>();
+const isEditing = computed(() => !!props.id);
 const submitting = ref(false);
+const productModalVisible = ref(false);
+const unitModalVisible = ref(false);
+const selectedProductId = ref('');
+const selectedProduct = ref<ProductResponse | null>(null);
+const editingProductIndex = ref<number | null>(null);
+const selectedProductForUnit = ref('');
+const selectedProductIndexForUnit = ref(-1);
+
+// Table columns for products
+const productColumns = [
+  {
+    title: 'Product',
+    dataIndex: 'productName',
+    key: 'productName',
+    width: '30%'
+  },
+  {
+    title: 'Details',
+    key: 'details',
+    width: '50%'
+  },
+  {
+    title: 'Total',
+    key: 'total',
+    width: '10%'
+  },
+  {
+    title: 'Actions',
+    key: 'actions',
+    width: '10%'
+  }
+];
 
 interface FormState {
   customerId: string;
   products: Array<{
-    id: string;
+    id: string; // productId
     productName?: string;
     unitId: string;
     unitName?: string;
@@ -395,20 +466,57 @@ interface FormState {
   tax?: number;
   totalAmount: number;
   note?: string;
+  status?: string;
+  quoteNo?: string;
 }
 
 const formState = reactive<FormState>({
   customerId: '',
-  products: [{
-    id: '',
-    unitId: '',
-    quantity: 1,
-    price: 0,
-    total: 0,
-    units: []
-  }],
+  products: [],
+  discount: 0,
+  tax: 0,
   totalAmount: 0,
-  note: ''
+  note: '',
+  status: 'PENDING'
+});
+
+// New product object for modal
+const newProduct = reactive({
+  id: '',
+  productName: '',
+  unitId: '',
+  unitName: '',
+  quantity: 1,
+  price: 0,
+  discount: 0,
+  total: 0
+});
+
+// New unit object for modal
+const newUnit = reactive({
+  unitId: '',
+  unitName: '',
+  quantity: 1,
+  price: 0,
+  subtotal: 0
+});
+
+const newProductTotal = computed(() => {
+  const quantity = Number(newProduct.quantity) || 0;
+  const price = Number(newProduct.price) || 0;
+  const discount = Number(newProduct.discount) || 0;
+  
+  return quantity * price * (1 - discount / 100);
+});
+
+const newUnitPrice = computed(() => {
+  if (!selectedProductForUnit.value) return 0;
+  
+  const product = products.value.find(p => p.id === selectedProductForUnit.value);
+  if (!product || !newUnit.unitId) return 0;
+  
+  const unit = product.units.find(u => u.unitId === newUnit.unitId);
+  return unit ? unit.sellingPrice : 0;
 });
 
 // Validation schema
@@ -417,14 +525,14 @@ const schema = yup.object({
   discount: yup.number().min(0).max(100),
   tax: yup.number().min(0).max(100).required('Tax is required'),
   note: yup.string().max(500, 'Note cannot exceed 500 characters'),
-  // products: yup.array().of(
-  //   yup.object().shape({
-  //     productId: yup.string().required('Product is required'),
-  //     unitId: yup.string().required('Unit is required'),
-  //     quantity: yup.number().required('Quantity is required').min(1, 'Quantity must be at least 1'),
-  //     discount: yup.number().min(0).max(100),
-  //   })
-  // ).min(1, 'At least one product is required')
+  products: yup.array().of(
+    yup.object({
+      id: yup.string().required('Product is required'),
+      unitId: yup.string().required('Unit is required'),
+      quantity: yup.number().required('Quantity is required').min(0.01, 'Quantity must be at least 0.01'),
+      discount: yup.number().min(0).max(100).optional(),
+    })
+  ).min(1, 'At least one product is required')
 });
 
 const customers = ref<Customer[]>([]);
@@ -433,10 +541,10 @@ const selectedCustomer = reactive<Partial<Customer>>({});
 
 // Computed values
 const subtotal = computed(() => {
-  const mainProductsTotal = formState.products.reduce((sum, product) => sum + product.total, 0);
+  const mainProductsTotal = formState.products.reduce((sum, product) => sum + (product.total || 0), 0);
   const additionalUnitsTotal = formState.products.reduce((sum, product) => {
     if (product.units && product.units.length > 0) {
-      return sum + product.units.reduce((unitSum, unit) => unitSum + unit.subtotal, 0);
+      return sum + product.units.reduce((unitSum, unit) => unitSum + (unit.subtotal || 0), 0);
     }
     return sum;
   }, 0);
@@ -444,10 +552,9 @@ const subtotal = computed(() => {
 });
 
 const availableProducts = computed(() => {
-  // Filter out already selected products
-  const selectedProductIds = formState.products.map(p => p.id).filter(id => id);
-  console.log("selected product: {}",selectedProductIds)
-  return products.value.filter(product => !selectedProductIds.includes(product.id));
+  const selectedIds = formState.products.map(p => p.id).filter(Boolean);
+  return products.value.filter(p => !selectedIds.includes(p.id) || 
+    (editingProductIndex.value !== null && p.id === formState.products[editingProductIndex.value!].id));
 });
 
 onMounted(async () => {
@@ -455,8 +562,12 @@ onMounted(async () => {
     customers.value = await getAll(KEY.CUSTOMER);
     products.value = await getAll(KEY.PRODUCT);
     
-    if (isEditing && props.id) {
+    if (isEditing.value && props.id) {
       await loadQuotation(props.id);
+    } else {
+      // Generate quote number for new quotations
+      const quotations = await getAll(KEY.QUOTATION) || [];
+      formState.quoteNo = `QT-${String(quotations.length + 1).padStart(4, '0')}`;
     }
   } catch (error) {
     message.error('Failed to load data');
@@ -465,35 +576,19 @@ onMounted(async () => {
 
 async function loadQuotation(id: string) {
   try {
-    // In a real app, you would fetch the quotation by ID
-    // const quotation = await quotationService.getQuotation(id);
+    const quotations = await getAll(KEY.QUOTATION) || [];
+    const quotation = quotations.find((q: Quotation) => q.id === id);
     
-    // For demo purposes, we'll create a mock quotation
-    const mockQuotation = {
-      customer: customers.value[0],
-      products: [{
-        product: products.value[0],
-        units: [{
-          unitId: products.value[0].units[0].unitId,
-          unitName: products.value[0].units[0].unitName,
-          quantity: 2,
-          price: products.value[0].units[0].sellingPrice,
-          subtotal: 2 * products.value[0].units[0].sellingPrice
-        }],
-        discount: 0,
-        subtotal: 2 * products.value[0].units[0].sellingPrice
-      }],
-      discount: 5,
-      tax: 10,
-      totalAmount: (2 * products.value[0].units[0].sellingPrice * 0.95) * 1.10,
-      note: 'Sample quotation note'
-    };
+    if (!quotation) {
+      message.error('Quotation not found');
+      router.push('/quotations');
+      return;
+    }
     
-    // Populate form with existing quotation data
-    formState.customerId = mockQuotation.customer.id;
-    Object.assign(selectedCustomer, mockQuotation.customer);
+    formState.customerId = quotation.customer.id;
+    Object.assign(selectedCustomer, quotation.customer);
     
-    formState.products = mockQuotation.products.map((p: any) => {
+    formState.products = quotation.products.map((p: QuotationProduct) => {
       const firstUnit = p.units[0];
       return {
         id: p.product.id,
@@ -503,82 +598,234 @@ async function loadQuotation(id: string) {
         quantity: firstUnit.quantity,
         price: firstUnit.price,
         discount: p.discount,
-        total: p.subtotal,
-        units: p.units
+        total: firstUnit.subtotal,
+        units: p.units.slice(1) // All units except the first one
       };
     });
     
-    formState.discount = mockQuotation.discount;
-    formState.tax = mockQuotation.tax;
-    formState.totalAmount = mockQuotation.totalAmount;
-    formState.note = mockQuotation.note;
+    formState.discount = quotation.discount;
+    formState.tax = quotation.tax;
+    formState.totalAmount = quotation.totalAmount;
+    formState.note = quotation.note;
+    formState.status = quotation.status;
+    formState.quoteNo = quotation.quoteNo;
   } catch (error) {
     message.error('Failed to load quotation');
-    router.push('/quotation_action');
+    router.push('/quotations');
   }
 }
 
 function filterOption(input: string, option: any) {
-  return option.label.toLowerCase().includes(input.toLowerCase());
+  return (option?.label || '').toLowerCase().includes((input || '').toLowerCase());
 }
 
-function addProduct() {
-  formState.products.push({
+function showProductModal() {
+  // Reset new product form
+  selectedProductId.value = '';
+  selectedProduct.value = null;
+  editingProductIndex.value = null;
+  Object.assign(newProduct, {
     id: '',
+    productName: '',
     unitId: '',
+    unitName: '',
     quantity: 1,
     price: 0,
-    total: 0,
+    discount: 0,
+    total: 0
+  });
+  
+  productModalVisible.value = true;
+}
+
+function editProduct(index: number) {
+  const product = formState.products[index];
+  selectedProductId.value = product.id;
+  selectedProduct.value = products.value.find(p => p.id === product.id) || null;
+  editingProductIndex.value = index;
+  
+  Object.assign(newProduct, {
+    id: product.id,
+    productName: product.productName,
+    unitId: product.unitId,
+    unitName: product.unitName,
+    quantity: product.quantity,
+    price: product.price,
+    discount: product.discount || 0,
+    total: product.total
+  });
+  
+  productModalVisible.value = true;
+}
+
+function closeProductModal() {
+  productModalVisible.value = false;
+  editingProductIndex.value = null;
+}
+
+function handleProductSelect(value: string) {
+  const product = products.value.find(p => p.id === value);
+  
+  if (product) {
+    selectedProduct.value = product;
+    newProduct.id = value;
+    newProduct.productName = product.name;
+    
+    // Auto-select the first unit and set its price
+    if (product.units.length > 0) {
+      const firstUnit = product.units[0];
+      newProduct.unitId = firstUnit.unitId;
+      newProduct.unitName = firstUnit.unitName;
+      newProduct.price = firstUnit.sellingPrice;
+    } else {
+      newProduct.unitId = '';
+      newProduct.unitName = '';
+      newProduct.price = 0;
+    }
+    
+    calculateNewProductTotal();
+  }
+}
+
+function handleUnitSelect(value: string) {
+  if (selectedProduct.value) {
+    const unit = selectedProduct.value.units.find(u => u.unitId === value);
+    if (unit) {
+      newProduct.unitId = unit.unitId;
+      newProduct.unitName = unit.unitName;
+      newProduct.price = unit.sellingPrice;
+      calculateNewProductTotal();
+    }
+  }
+}
+
+function calculateNewProductTotal() {
+  const quantity = Number(newProduct.quantity) || 0;
+  const price = Number(newProduct.price) || 0;
+  const discount = Number(newProduct.discount) || 0;
+  
+  newProduct.total = quantity * price * (1 - discount / 100);
+}
+
+function addNewProduct() {
+  if (!newProduct.unitId || !newProduct.quantity) {
+    message.error('Please select a unit and enter quantity');
+    return;
+  }
+  
+  formState.products.push({
+    id: newProduct.id,
+    productName: newProduct.productName,
+    unitId: newProduct.unitId,
+    unitName: newProduct.unitName,
+    quantity: newProduct.quantity,
+    price: newProduct.price,
+    discount: newProduct.discount,
+    total: newProduct.total,
     units: []
   });
+  
+  productModalVisible.value = false;
+  calculateTotal();
+}
+
+function updateProduct() {
+  if (editingProductIndex.value === null || !newProduct.unitId || !newProduct.quantity) {
+    message.error('Please select a unit and enter quantity');
+    return;
+  }
+  
+  const index = editingProductIndex.value;
+  formState.products[index] = {
+    ...formState.products[index],
+    unitId: newProduct.unitId,
+    unitName: newProduct.unitName,
+    quantity: newProduct.quantity,
+    price: newProduct.price,
+    discount: newProduct.discount,
+    total: newProduct.total
+  };
+  
+  productModalVisible.value = false;
+  editingProductIndex.value = null;
+  calculateTotal();
 }
 
 function removeProduct(index: number) {
-  if (formState.products.length > 1) {
-    formState.products.splice(index, 1);
-    calculateTotal();
-  }
+  formState.products.splice(index, 1);
+  calculateTotal();
 }
 
 function addUnitToProduct(index: number) {
-  if (!formState.products[index].units) {
-    formState.products[index].units = [];
+  const product = formState.products[index];
+  selectedProductForUnit.value = product.id;
+  selectedProductIndexForUnit.value = index;
+  
+  // Reset new unit form
+  Object.assign(newUnit, {
+    unitId: '',
+    unitName: '',
+    quantity: 1,
+    price: 0,
+    subtotal: 0
+  });
+  
+  unitModalVisible.value = true;
+}
+
+function addNewUnit() {
+  if (!newUnit.unitId || !newUnit.quantity) {
+    message.error('Please select a unit and enter quantity');
+    return;
   }
   
-  const productId = formState.products[index].id;
-  const product = products.value.find(p => p.id === productId);
-  
-  if (product && product.units.length > 0) {
-    const firstUnit = product.units[0];
-    formState.products[index].units.push({
-      unitId: firstUnit.unitId,
-      unitName: firstUnit.unitName,
-      quantity: 1,
-      price: firstUnit.sellingPrice,
-      subtotal: firstUnit.sellingPrice
-    });
-  } else {
-    formState.products[index].units.push({
-      unitId: '',
-      unitName: '',
-      quantity: 1,
-      price: 0,
-      subtotal: 0
-    });
+  const product = products.value.find(p => p.id === selectedProductForUnit.value);
+  if (!product) {
+    message.error('Product not found');
+    return;
   }
+  
+  const unit = product.units.find(u => u.unitId === newUnit.unitId);
+  if (!unit) {
+    message.error('Unit not found');
+    return;
+  }
+  
+  newUnit.unitName = unit.unitName;
+  newUnit.price = unit.sellingPrice;
+  newUnit.subtotal = newUnit.quantity * newUnit.price;
+  
+  if (!formState.products[selectedProductIndexForUnit.value].units) {
+    formState.products[selectedProductIndexForUnit.value].units = [];
+  }
+  
+  formState.products[selectedProductIndexForUnit.value].units!.push({ ...newUnit });
+  unitModalVisible.value = false;
+  calculateTotal();
 }
 
 function removeUnit(productIndex: number, unitIndex: number) {
-  if (formState.products[productIndex].units && formState.products[productIndex].units.length > 0) {
-    formState.products[productIndex].units.splice(unitIndex, 1);
+  const units = formState.products[productIndex].units;
+  if (units && units.length > 0) {
+    units.splice(unitIndex, 1);
     calculateTotal();
   }
 }
 
 function getProductUnits(productId: string) {
-  if (!productId) return [];
+  if (!productId) return [] as any[];
   const product = products.value.find(p => p.id === productId);
   return product ? product.units : [];
+}
+
+function calculateProductTotal(product: any) {
+  let total = product.total || 0;
+  
+  if (product.units && product.units.length > 0) {
+    total += product.units.reduce((sum: number, unit: any) => sum + (unit.subtotal || 0), 0);
+  }
+  
+  return total;
 }
 
 function handleCustomerChange(value: string) {
@@ -588,83 +835,20 @@ function handleCustomerChange(value: string) {
   }
 }
 
-function handleProductChange(value: string, index: number) {
-  const product = products.value.find(p => p.id === value);
-  
-  if (product) {
-    formState.products[index].id = value;
-    formState.products[index].productName = product.name;
-    
-    // Auto-select the first unit and set its price
-    if (product.units.length > 0) {
-      const firstUnit = product.units[0];
-      formState.products[index].unitId = firstUnit.unitId;
-      formState.products[index].unitName = firstUnit.unitName;
-      formState.products[index].price = firstUnit.sellingPrice;
-      calculateLineTotal(index);
-    }
-  }
-}
-
-function handleUnitChange(value: string, index: number) {
-  const productId = formState.products[index].id;
-  const product = products.value.find(p => p.id === productId);
-  
-  if (product) {
-    const unit = product.units.find(u => u.unitId === value);
-    if (unit) {
-      formState.products[index].unitId = unit.unitId;
-      formState.products[index].unitName = unit.unitName;
-      formState.products[index].price = unit.sellingPrice;
-      calculateLineTotal(index);
-    }
-  }
-}
-
-function handleAdditionalUnitChange(value: string, productIndex: number, unitIndex: number) {
-  const productId = formState.products[productIndex].id;
-  const product = products.value.find(p => p.id === productId);
-  
-  if (product && formState.products[productIndex].units) {
-    const unit = product.units.find(u => u.unitId === value);
-    if (unit) {
-      formState.products[productIndex].units[unitIndex].unitId = unit.unitId;
-      formState.products[productIndex].units[unitIndex].unitName = unit.unitName;
-      formState.products[productIndex].units[unitIndex].price = unit.sellingPrice;
-      calculateAdditionalUnitTotal(productIndex, unitIndex);
-    }
-  }
-}
-
-function calculateLineTotal(index: number) {
-  const product = formState.products[index];
-  const quantity = product.quantity || 0;
-  const price = product.price || 0;
-  const discount = product.discount || 0;
-  
-  product.total = quantity * price * (1 - discount / 100);
-  calculateTotal();
-}
-
-function calculateAdditionalUnitTotal(productIndex: number, unitIndex: number) {
-  if (formState.products[productIndex].units && formState.products[productIndex].units.length > unitIndex) {
-    const unit = formState.products[productIndex].units[unitIndex];
-    const quantity = unit.quantity || 0;
-    const price = unit.price || 0;
-    
-    unit.subtotal = quantity * price;
-    calculateTotal();
-  }
-}
-
 function calculateTotal() {
-  const discount = formState.discount || 0;
-  const tax = formState.tax || 0;
+  const discount = Number(formState.discount) || 0;
+  const tax = Number(formState.tax) || 0;
   
-  formState.totalAmount = subtotal.value * (1 - discount / 100) * (1 + tax / 100);
+  // Calculate total from all products and units
+  let productsTotal = 0;
+  formState.products.forEach(product => {
+    productsTotal += calculateProductTotal(product);
+  });
+  
+  formState.totalAmount = productsTotal * (1 - discount / 100) * (1 + tax / 100);
 }
 
-async function onSubmit(values: any) {
+async function onSubmit() {
   submitting.value = true;
   
   try {
@@ -673,8 +857,7 @@ async function onSubmit(values: any) {
     const quotationProducts: QuotationProduct[] = formState.products.map(p => {
       const product = products.value.find(prod => prod.id === p.id);
       
-      // Combine main unit and additional units
-      const allUnits = [];
+      const allUnits: Array<{ unitId: string; unitName: string; quantity: number; price: number; subtotal: number; }> = [];
       
       // Add main unit
       if (p.unitId) {
@@ -716,34 +899,44 @@ async function onSubmit(values: any) {
     
     if (!customer) {
       message.error('Please select a valid customer');
+      submitting.value = false;
       return;
     }
     
-    const quotationData = {
-      customer: customer,
+    const quotationData: Quotation = {
+      id: isEditing.value && props.id ? props.id : `q-${Date.now()}`,
+      customer,
       products: quotationProducts,
       totalAmount: formState.totalAmount,
-      discount: formState.discount,
-      tax: formState.tax,
+      discount: formState.discount || 0,
+      tax: formState.tax || 0,
       note: formState.note,
-      status: 'PENDING',
-      quoteNo: `QT-${Date.now()}`,
-      id: `q-${Date.now()}`
+      status: formState.status as QuoteStatus || QuoteStatus.PENDING,
+      quoteNo: formState.quoteNo || `QT-${Date.now()}`,
+      createdAt: isEditing.value ? undefined : new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
+    console.log("quotationDAta",quotationData)
     
-    console.log("Quotation data to submit: ", quotationData);
+    // Save to localStorage
+    const quotations = await getAll(KEY.QUOTATION) || [];
     
-    if (isEditing && props.id) {
-      // await quotationService.updateQuotation(props.id, quotationData);
-      message.success('Quotation updated successfully');
+    if (isEditing.value) {
+      const index = quotations.findIndex((q: Quotation) => q.id === props.id);
+      if (index !== -1) {
+        quotations[index] = quotationData;
+        await updateOne(KEY.QUOTATION, quotations);
+        message.success('Quotation updated successfully');
+      }
     } else {
-      // await quotationService.createQuotation(quotationData);
+      quotations.push(quotationData);
+      await createOne(quotations,KEY.QUOTATION);
       message.success('Quotation created successfully');
     }
     
-    router.push('/quotation_action');
+    router.push('/quotations');
   } catch (error) {
-    message.error(isEditing ? 'Failed to update quotation' : 'Failed to create quotation');
+    message.error(isEditing.value ? 'Failed to update quotation' : 'Failed to create quotation');
   } finally {
     submitting.value = false;
   }
@@ -752,8 +945,24 @@ async function onSubmit(values: any) {
 
 <style scoped>
 .quotation-form {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+}
+
+.two-column-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 24px;
+}
+
+.left-side, .right-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.products-card {
+  flex: 1;
+  height: fit-content;
 }
 
 .form-field {
@@ -778,33 +987,31 @@ async function onSubmit(values: any) {
   display: block;
 }
 
-.add-unit-btn {
-  font-size: 12px;
-  padding: 0;
-  margin-top: 4px;
-  height: auto;
-}
-
 .line-total {
   font-weight: 500;
   padding: 4px 0;
 }
 
-.remove-btn {
-  margin-top: 24px;
+.product-details {
+  font-size: 13px;
 }
 
-.additional-units {
+.product-details .main-unit {
+  margin-bottom: 8px;
+}
+
+.product-details .additional-unit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
   border-top: 1px dashed #f0f0f0;
-  padding-top: 12px;
 }
 
-.unit-row {
-  background-color: #f9f9f9;
-}
-
-.remove-unit-btn {
-  margin-top: 24px;
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8c8c8c;
 }
 
 .summary-row {
@@ -827,6 +1034,29 @@ async function onSubmit(values: any) {
 .form-actions {
   text-align: right;
   margin-top: 24px;
+}
+
+/* Modal Styles */
+.product-modal, .unit-modal {
+  padding: 10px;
+}
+
+.modal-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-section h4 {
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
 }
 
 .mb-6 {
@@ -880,5 +1110,11 @@ async function onSubmit(values: any) {
 
 .bg-gray-50 {
   background-color: #fafafa;
+}
+
+@media (max-width: 992px) {
+  .two-column-layout {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

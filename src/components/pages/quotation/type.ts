@@ -35,15 +35,21 @@ export type Status =
   | "DROP"
   | "APPROVE";
 
+export enum QuoteStatus{
+  PENDING='PENDING',
+  DROP='DROP',
+  APPROVED='APPROVE'
+}
 export interface Quotation {
   id: string;
   quoteNo: string;
   customer: Customer;
-  status: Status;
+  status: QuoteStatus;
   products: QuotationProduct[];
   totalAmount: number;
   discount?: number;
   tax?: number;
+  note?:string;
   createdAt?: string;
   droppedBy?:string
   updatedAt?: string;

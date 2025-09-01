@@ -226,16 +226,6 @@ const statusColor = (status: string) => {
       </a-table-column>
     </a-table>
 
-
-    <QuotationForm
-      :open="isModalVisible"
-      :quotation="selectedQuotation"
-      :is-edit="isEdit"
-      
-      @cancel="closeModal"
-      @submit="handleSubmit"
-    />
-
     <a-modal
       v-model:open="open"
       title="Quotation Details"
