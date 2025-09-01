@@ -68,6 +68,7 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   approvedBy?: string;
+  verifiedBy?:string;
   shippedBy?: string;
   completedBy?: string;
   cancelledBy?: string;

@@ -1,29 +1,6 @@
 <template>
   <div class="order-steps">
-    <div class="steps-header">
 
-      <div class="verify-action" v-if="showVerifyButton">
-        <a-button 
-          type="primary" 
-          @click="verifyCurrentStep"
-          :loading="verificationLoading"
-          class="verify-btn"
-        >
-          Next {{ getVerifyButtonText() }}
-        </a-button>
-        
-        <!-- Cancel Button for specific steps -->
-        <a-button 
-          v-if="showCancelButton"
-          @click="cancelOrder"
-          danger
-          class="cancel-btn"
-        >
-          Cancel
-        </a-button>
-      </div>
-    </div>
-    
     <!-- Ant Design Steps Component with Custom Styling -->
     <a-steps :current="currentStepIndex" class="custom-steps">
       <a-step 
@@ -61,11 +38,6 @@ const props = defineProps<{
   editable?: boolean
 }>()
 
-const emit = defineEmits<{
-  (e: 'status-change', status: OrderStatus): void
-}>()
-
-const verificationLoading = ref(false)
 
 const steps: Step[] = [
   { status: 'CREATED', title: 'Created' },
@@ -76,21 +48,24 @@ const steps: Step[] = [
 ]
 
 const currentStepIndex = computed(() => {
+  // console.log("current status: ",steps.findIndex(step => step.status === props.currentStatus))
   if (props.currentStatus === 'CANCELLED') return -1
-  return steps.findIndex(step => step.status === props.currentStatus)
+  return steps.findIndex(step => step.status === props.currentStatus)+1
 })
 
-const showVerifyButton = computed(() => {
-  // Don't show button if order is cancelled or completed
-  if (props.currentStatus === 'CANCELLED' || props.currentStatus === 'COMPLETED') return false
-  return props.editable
-})
+// const showVerifyButton = computed(() => {
+//   // Don't show button if order is cancelled or completed
+//   if (props.currentStatus === 'CANCELLED'||props.currentStatus==='COMPLETED' ) return false
+//   console.log("ediable: ",props.editable)
+//   // return props.editable
+//   return true;
+// })
 
-const showCancelButton = computed(() => {
-  // Show cancel button only for CREATED, STOCK_VERIFIED, and APPROVED steps
-  const cancelableStatuses = ['CREATED', 'STOCK_VERIFIED', 'APPROVED']
-  return cancelableStatuses.includes(props.currentStatus)
-})
+// const showCancelButton = computed(() => {
+//   // Show cancel button only for CREATED, STOCK_VERIFIED, and APPROVED steps
+//   const cancelableStatuses = ['CREATED', 'STOCK_VERIFIED', 'APPROVED']
+//   return cancelableStatuses.includes(props.currentStatus)
+// })
 
 const getStepIcon = (status: OrderStatus) => {
   const iconMap: Record<OrderStatus, any> = {
@@ -118,43 +93,41 @@ const getStepDescription = (index: number) => {
   return 'Pending'
 }
 
-const getVerifyButtonText = () => {
-  if (props.currentStatus === 'CREATED') return 'Stock Verified'
-  if (props.currentStatus === 'STOCK_VERIFIED') return 'Approved'
-  if (props.currentStatus === 'APPROVED') return 'Shipped'
-  if (props.currentStatus === 'SHIPPED') return 'Completed'
-  return 'Verified'
-}
+// const getVerifyButtonText = () => {
+//   if (props.currentStatus === 'CREATED') return 'Stock Verified'
+//   if (props.currentStatus === 'STOCK_VERIFIED') return 'Approved'
+//   if (props.currentStatus === 'APPROVED') return 'Shipped'
+//   if (props.currentStatus === 'SHIPPED') return 'Completed'
+//   return 'Verified'
+// }
 
-const verifyCurrentStep = () => {
-  verificationLoading.value = true
+// const verifyCurrentStep = () => {
+//   verificationLoading.value = true
   
-  // Determine the next status
-  let nextStatus: OrderStatus = 'COMPLETED'
+//   // Determine the next status
+//   let nextStatus: OrderStatus = 'COMPLETED'
   
-  if (props.currentStatus === 'CREATED') nextStatus = 'STOCK_VERIFIED'
-  else if (props.currentStatus === 'STOCK_VERIFIED') nextStatus = 'APPROVED'
-  else if (props.currentStatus === 'APPROVED') nextStatus = 'SHIPPED'
-  else if (props.currentStatus === 'SHIPPED') nextStatus = 'COMPLETED'
+//   if (props.currentStatus === 'CREATED') nextStatus = 'STOCK_VERIFIED'
+//   else if (props.currentStatus === 'STOCK_VERIFIED') nextStatus = 'APPROVED'
+//   else if (props.currentStatus === 'APPROVED') nextStatus = 'SHIPPED'
+//   else if (props.currentStatus === 'SHIPPED') nextStatus = 'COMPLETED'
   
-  // Simulate API call
-  setTimeout(() => {
-    emit('status-change', nextStatus)
-    verificationLoading.value = false
-  }, 500)
-}
+//   // Simulate API call
+//   setTimeout(() => {
+//     emit('status-change', nextStatus)
+//     verificationLoading.value = false
+//   }, 500)
+// }
 
-const cancelOrder = () => {
-  emit('status-change', 'CANCELLED')
-}
+// const cancelOrder = () => {
+//   emit('status-change', 'CANCELLED')
+// }
 </script>
 
 <style scoped>
 .order-steps {
   padding: 16px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
 }
 
 .steps-header {
@@ -186,7 +159,7 @@ const cancelOrder = () => {
 
 /* Custom styles for Ant Design Steps with smaller fonts and rounded icons */
 .custom-steps {
-  padding: 12px 4px;
+  /* padding: 12px 4px; */
   position: relative;
 }
 

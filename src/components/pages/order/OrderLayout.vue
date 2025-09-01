@@ -135,6 +135,7 @@ const handleOrderClick = (order: Order) => {
 }
 
 const handleStatusChange = (newStatus: OrderStatus) => {
+  console.log("status: ",newStatus)
   if (selectedOrder.value) {
     // Update the selected order
     selectedOrder.value.status = newStatus
@@ -151,7 +152,11 @@ const handleStatusChange = (newStatus: OrderStatus) => {
       if (newStatus === 'APPROVED') {
         selectedOrder.value.approvedBy = user
         mockOrders[index].approvedBy = user
-      } else if (newStatus === 'SHIPPED') {
+      }else if(newStatus ==='STOCK_VERIFIED'){
+        console.log("stock verify")
+        selectedOrder.value.verifiedBy=user
+        mockOrders[index].verifiedBy=user
+      }else if (newStatus === 'SHIPPED') {
         selectedOrder.value.shippedBy = user
         mockOrders[index].shippedBy = user
       } else if (newStatus === 'COMPLETED') {
@@ -227,7 +232,6 @@ onMounted(() => {
 }
 
 .content {
-  padding: 24px;
   background-color: #f5f7fa;
   height: calc(100vh - 64px);
 }

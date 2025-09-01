@@ -2,6 +2,7 @@ import type { Customer, Order, Product } from "./order";
 
 
 import type { OrderProduct, OrderUnit } from './order'
+import { productData } from "@/data/mock_data";
 
 export const mockCustomer: Customer = {
   customerId: 'CUST-001',
@@ -13,40 +14,40 @@ export const mockCustomer: Customer = {
 
 export const mockProducts: Product[] = [
   {
-    productId: 'PROD-001',
-    sku: 'SKU-001',
-    name: 'Premium Coffee Beans'
+    productId: "001",
+    name: "Pepsi",
+    sku: "PEP-001",
   },
   {
-    productId: 'PROD-002',
-    sku: 'SKU-002',
-    name: 'Tea Selection Box'
+    productId: "0012",
+    name: "Hanuman Beer",
+    sku: "HNB-001",
   },
   {
-    productId: 'PROD-003',
-    sku: 'SKU-003',
-    name: 'Ceramic Coffee Mug'
+    productId: "003",
+    name: "ABC Beer",
+    sku: "ABC-001",
   }
 ]
 
 export const mockOrderUnits: OrderUnit[] = [
   {
-    unitId: 'UNIT-001',
-    unitName: 'Bag',
+    unitId: '1',
+    unitName: 'Can',
     quantity: 2,
-    price: 12.99,
-    baseUnitId: 'UNIT-BAG',
-    baseUnitQuantity: 2,
-    subtotal: 25.98
+    price: 1,
+    baseUnitId: '',
+    baseUnitQuantity: 1,
+    subtotal: 2.00
   },
   {
-    unitId: 'UNIT-002',
-    unitName: 'Box',
-    quantity: 1,
-    price: 24.99,
-    baseUnitId: 'UNIT-BOX',
-    baseUnitQuantity: 1,
-    subtotal: 24.99
+    unitId: '3',
+    unitName: 'Case',
+    quantity: 10,
+    price: 6.0,
+    baseUnitId: 'UNIT-001',
+    baseUnitQuantity: 6,
+    subtotal: 60.00
   }
 ]
 
@@ -59,7 +60,8 @@ export const mockOrderProducts: OrderProduct[] = [
   },
   {
     product: mockProducts[1],
-    units: [mockOrderUnits[1]],
+    units: [mockOrderUnits[0]],
+    discount:0,
     subtotal: 24.99
   }
 ]
@@ -92,21 +94,14 @@ export const mockOrders: Order[] = [
     products: [
       {
         product: mockProducts[2],
-        units: [{
-          unitId: 'UNIT-003',
-          unitName: 'Piece',
-          quantity: 4,
-          price: 8.99,
-          baseUnitId: 'UNIT-PIECE',
-          baseUnitQuantity: 4,
-          subtotal: 35.96
-        }],
+        units: [mockOrderUnits[0]],
         subtotal: 35.96
       }
     ],
     totalAmount: 35.96,
     createdAt: '2023-05-16T14:45:00Z',
     updatedAt: '2023-05-16T15:30:00Z',
+    verifiedBy:"user777",
     createdBy: 'user456',
     approvedBy: 'admin001'
   },
@@ -128,6 +123,7 @@ export const mockOrders: Order[] = [
     createdAt: '2023-05-14T09:15:00Z',
     updatedAt: '2023-05-17T11:20:00Z',
     createdBy: 'user789',
+    verifiedBy:"user777",
     approvedBy: 'admin001',
     shippedBy: 'shipper002'
   },
@@ -182,6 +178,7 @@ export const mockOrders: Order[] = [
     totalAmount: 24.99,
     createdAt: '2023-05-18T10:00:00Z',
     updatedAt: '2023-05-18T11:30:00Z',
+    verifiedBy:'user777',
     createdBy: 'user123'
   }
 ]

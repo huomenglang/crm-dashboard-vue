@@ -16,6 +16,7 @@ export interface ProductUnit {
   unitName: string;
   conversionToBase: number;
   sellingPrice: number;
+  baseUnitId?:string|null
 }
 
 export interface ProductResponse extends Product {

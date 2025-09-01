@@ -1,10 +1,8 @@
 <template>
   <div class="order-details" v-if="order">
     <div class="pt-3 pl-3">
-     
       <div class="flex gap-x-0.5 justify-center items-center">
         <ReceiptText class="text-gray-600 w-5 h-5" />
-
         <h1 class="!mt-3 text-[17px] text-gray-600">
           <span class="">No:</span> {{ order.orderNo }}
         </h1>
@@ -26,7 +24,7 @@
 
     <div class="details-content">
       <div class="content-section">
-        <h3 class="section-title">Products</h3>
+        <h3 class="section-title text-gray-600">Products Ordered</h3>
         <table-product
           :products="order.products"
           :editable="isEditable"
@@ -39,7 +37,7 @@
 
       <div class="content-section">
         <h3 class="text-center text-gray-500 font-semibold text-[15px]">Order Summary</h3>
-        <div class="summary-grid">
+        <div class="summary-grid px-3">
           <div class="summary-item text-gray-500 font-medium text-[13px]">
             <span class=" text-gray-500 text-[13px]">Subtotal:</span>
             <span class="summary-value"
@@ -47,18 +45,18 @@
             >
           </div>
           <div class="summary-item" >
-            <span class="text-gray-500 font-medium text-[13px]">Discount ({{ order.discount }}%):</span>
-            <span class="summary-value discount text-[13px]"
-              >-${{ calculateDiscount().toFixed(2) }}</span
+            <span class="text-gray-500 font-medium text-[12px]">Discount ({{ order.discount }}%):</span>
+            <span class="summary-value discount text-[12px]"
+              >${{ calculateDiscount().toFixed(2) }}</span
             >
           </div>
           <div class="summary-item" >
-            <span class="text-gray-500 font-medium text-[13px]">Tax:</span>
+            <span class="text-gray-500 font-medium text-[12px]">Tax:</span>
             <span class="summary-value text-[13px]">${{order?.tax? order?.tax.toFixed(2):0 }}</span>
           </div>
          
           <div class="summary-item total text-[13px]">
-            <span class="text-gray-500 font-medium text-[13px]">Total Amount:</span>
+            <span class="text-gray-500 font-medium text-[12px]">Total Amount:</span>
             <span class="summary-value total"
               >${{ order.totalAmount.toFixed(2) }}</span
             >
@@ -66,6 +64,17 @@
         </div>
       </div>
 
+      <div class="flex gap-x-1 justify-end mr-3" v-if="showVerifyButton">
+        <a-button 
+        @click="cancelOrder"
+        danger
+        v-if="props.order.status!=='SHIPPED' "
+
+        >Cancel</a-button>
+         <a-button type="primary " 
+         @click="verifyCurrentStep"
+          :loading="verificationLoading">Approve</a-button>
+      </div>
       <a-divider class="section-divider" />
 
       <div class="pb-6">
@@ -79,8 +88,16 @@
               <span class="text-[11px] text-gray-500">{{ formatDate(order.createdAt) }}</span>
             </div>
           </div>
-          <div class="audit-item" v-if="order.approvedBy">
+          <div class="audit-item" v-if="order.verifiedBy">
             <check-circle-outlined class="audit-icon approved" />
+            <div class="audit-details">
+              <span class=" text-gray-700 text-[13px] font-semibold"> Stock Verified</span>
+              <span class=" text-gray-500 text-[12px] font-medium">by {{ order.approvedBy }}</span>
+              <span class="text-[11px] text-gray-500">{{ formatDate(order.updatedAt) }}</span>
+            </div>
+          </div>
+          <div class="audit-item" v-if="order.approvedBy">
+            <ShieldCheckIcon class="audit-icon approved" />
             <div class="audit-details">
               <span class=" text-gray-700 text-[13px] font-semibold">Order Approved</span>
               <span class=" text-gray-500 text-[12px] font-medium">by {{ order.approvedBy }}</span>
@@ -88,7 +105,7 @@
             </div>
           </div>
           <div class="audit-item" v-if="order.shippedBy">
-            <car-outlined class="audit-icon shipped" />
+            <ShipIcon class="audit-icon shipped" />
             <div class="audit-details">
               <span class=" text-gray-700 text-[13px] font-semibold">Order Shipped</span>
               <span class=" text-gray-500 text-[12px] font-medium">by {{ order.shippedBy }}</span>
@@ -118,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import {
   SaveOutlined,
   PrinterOutlined,
@@ -140,7 +157,10 @@ import {
   PhoneCallIcon,
   ReceiptIcon,
   ReceiptText,
+  ShieldCheckIcon,
+  ShipIcon,
 } from "lucide-vue-next";
+import RoundButton from "@/components/base/button/RoundButton.vue";
 
 const props = defineProps<{
   order: Order;
@@ -187,6 +207,42 @@ const handleSave = () => {
 
   console.log("Saving changes...");
 };
+
+const verificationLoading = ref(false)
+
+const verifyCurrentStep = () => {
+  verificationLoading.value = true
+  
+  // Determine the next status
+  let nextStatus: OrderStatus = 'COMPLETED'
+  
+  if (props.order.status === 'CREATED') nextStatus = 'STOCK_VERIFIED'
+  else if (props.order.status === 'STOCK_VERIFIED') nextStatus = 'APPROVED'
+  else if (props.order.status === 'APPROVED') nextStatus = 'SHIPPED'
+  else if (props.order.status === 'SHIPPED') nextStatus = 'COMPLETED'
+  
+  // Simulate API call
+  setTimeout(() => {
+    emit('status-change', nextStatus)
+    verificationLoading.value = false
+  }, 500)
+}
+
+const showVerifyButton = computed(() => {
+  // Don't show button if order is cancelled or completed
+  if (props.order.status === 'CANCELLED'||props.order.status==='COMPLETED' ) return false
+  
+  return true;
+})
+const showCancelButton = computed(() => {
+  // Show cancel button only for CREATED, STOCK_VERIFIED, and APPROVED steps
+  const cancelableStatuses = ['CREATED', 'STOCK_VERIFIED', 'APPROVED']
+  return cancelableStatuses.includes(props.order.status)
+})
+
+const cancelOrder = () => {
+  emit('status-change', 'CANCELLED')
+}
 </script>
 
 <style scoped>
@@ -209,7 +265,7 @@ const handleSave = () => {
 }
 
 .order-steps-container {
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 
 .section-divider {
@@ -225,10 +281,9 @@ const handleSave = () => {
 }
 
 .section-title {
-  font-size: 15px;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
 }
 
 .info-grid {
@@ -276,7 +331,7 @@ const handleSave = () => {
 }
 
 .summary-value {
-  font-size: 13px;
+  font-size: 12px;
   color: #373737;
   font-weight: 700;
 }
@@ -297,12 +352,12 @@ const handleSave = () => {
 
 .summary-item.total .summary-label {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .summary-item.total .summary-value {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   color: #389e0d;
 }
 

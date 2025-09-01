@@ -150,32 +150,32 @@ export const warehouseData: WarehouseProps[] = [
 export const UmsData: UmsProps[] = [
   {
     id: "1",
-    name: "កំប៉ុង",
+    name: "Can",
     description: "ខ្នាតទូទៅ",
   },
   {
     id: "2",
-    name: "កញ្ចប់",
+    name: "Package",
     description: "ខ្នាតទូទៅ",
   },
   {
     id: "6",
-    name: "ឡូ",
+    name: "Lo",
     description: "ខ្នាតទូទៅ",
   },
   {
     id: "3",
-    name: "ដុំ",
+    name: "Box",
     description: "ខ្នាតទូទៅ",
   },
   {
     id: "4",
-    name: "កេស",
+    name: "Case",
     description: "ខ្នាតទូទៅ",
   },
   {
     id: "5",
-    name: "យួរ",
+    name: "Bag",
     description: "ខ្នាតទូទៅ",
   },
 ];
@@ -242,15 +242,24 @@ export const productData:ProductResponse[]=[
     units: [
       {
         unitId: "1",
-        unitName: "កំប៉ុង",
+        unitName: "Can",
         conversionToBase: 1,
         sellingPrice: 1.00,
+        baseUnitId:null,
       },
       {
         unitId: "2",
-        unitName: "កេស",
-        conversionToBase: 1,
-        sellingPrice: 22.00,
+        unitName: "Box",
+        conversionToBase: 6,
+        sellingPrice: 6.00,
+        baseUnitId:"1"
+      },
+       {
+        unitId: "3",
+        unitName: "Case",
+        conversionToBase: 4,
+        sellingPrice: 20.00,
+        baseUnitId:"2"
       },
     ],
     quantity: 1000,
@@ -277,15 +286,24 @@ export const productData:ProductResponse[]=[
     units: [
       {
         unitId: "1",
-        unitName: "កំប៉ុង",
+        unitName: "Can",
         conversionToBase: 1,
-        sellingPrice: 1.00,
+        sellingPrice: 2.00,
+        baseUnitId:null,
       },
       {
         unitId: "2",
-        unitName: "កេស",
-        conversionToBase: 1,
-        sellingPrice: 22.00,
+        unitName: "Box",
+        conversionToBase: 6,
+        sellingPrice: 12.00,
+        baseUnitId:"1"
+      },
+       {
+        unitId: "3",
+        unitName: "Case",
+        conversionToBase: 4,
+        sellingPrice: 40.00,
+        baseUnitId:"2"
       },
     ],
     quantity: 1000,
@@ -312,15 +330,17 @@ export const productData:ProductResponse[]=[
     units: [
       {
         unitId: "1",
-        unitName: "កំប៉ុង",
+        unitName: "Can",
         conversionToBase: 1,
         sellingPrice: 1.5,
+        baseUnitId:null
       },
       {
         unitId: "2",
-        unitName: "កេស",
+        unitName: "Case",
         conversionToBase: 1,
         sellingPrice: 32.00,
+        baseUnitId:'1'
       },
     ],
     quantity: 1000,
