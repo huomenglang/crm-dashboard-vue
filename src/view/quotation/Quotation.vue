@@ -1,8 +1,8 @@
 <template>
-  <div class="quotations-page">
+  <div class="quotations-page px-4">
     <div class="page-header">
 
-      <a-button type="primary" @click="router.push('/quotation_action')" class="!flex justify-center items-center">
+      <a-button type="primary" @click="router.push('/quotation-action')" class="!flex justify-center items-center">
         <template #icon>
           <PlusOutlined />
         </template>
@@ -17,6 +17,8 @@
         :columns="columns" 
         :loading="loading"
         :pagination="{ pageSize: 10, showSizeChanger: true }"
+        bordered
+        size="small"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'customer'">
@@ -38,19 +40,22 @@
           </template>
           
           <template v-else-if="column.key === 'actions'">
-            <a-space>
-              <a-button   size="small" @click="viewQuotation(record)" class="flex justify-center items-center !text-sky-500 !border-sky-600">
+            <a-space class="!flex !items-center" >
+              <a-button type="primary"  size="small" @click="viewQuotation(record)" class="!flex justify-center items-center !bg-sky-500">
                 <Eye class="w-4 h-4"/>
+
               </a-button>
-              <a-button  size="small" @click="editQuotation(record)" class="!text-sky-600 !border-sky-600">
-                <EditIcon class="w-4 h-4"/>
+                 <a-button type="primary"  size="small"@click="editQuotation(record)" class="!flex justify-center items-center !bg-cyan-500">
+                <EditOutlined class="w-4 h-4"/>
               </a-button>
+             
               <a-dropdown v-if="record.status === QuoteStatus.PENDING">
-                <a-button type="link" size="small">
-                  Change Status <DownOutlined />
+                <a-button size="small" type="primary"  class="!flex justify-center items-center" >
+                  <span class="text-[12px]">Status</span> 
+                  <ChevronDown class="w-4 h-4"/>
                 </a-button>
                 <template #overlay>
-                  <a-menu @click="({ key }:{key:any}) => changeStatus(record, key)">
+                  <a-menu @click="({ key }:{key:any}) => changeStatus(record, key)" >
                     <a-menu-item key="APPROVE">Approve</a-menu-item>
                     <a-menu-item key="DROP">Drop</a-menu-item>
                   </a-menu>
@@ -75,15 +80,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted} from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
-import { PlusOutlined, DownOutlined, EyeOutlined } from '@ant-design/icons-vue';
+import { PlusOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getAll, updateOne } from '@/data/ls_data';
 import { KEY } from '@/data/Key';
 import { QuoteStatus, type Quotation } from '@/components/pages/quotation/type';
 import QuotationDetails from './QuotationDetails.vue';
-import { EditIcon, Eye, EyeClosedIcon } from 'lucide-vue-next';
+import { ChevronDown, Eye } from 'lucide-vue-next';
 
 const router = useRouter();
 const quotations = ref<Quotation[]>([]);
@@ -133,7 +138,7 @@ async function loadQuotations() {
   try {
     loading.value = true;
     const data = getAll(KEY.QUOTATION);
-    console.log("data quote: ",data)
+    
     quotations.value = Array.isArray(data) ? data : [];
   } catch (error) {
     message.error('Failed to load quotations');
@@ -190,6 +195,7 @@ async function changeStatus(quotation: Quotation, statusKey: string) {
     });
     
     await updateOne(quotation.id, updatedQuotations,KEY.QUOTATION);
+
     quotations.value = updatedQuotations;
     message.success(`Quotation ${statusKey.toLowerCase()}d successfully`);
   } catch (error) {

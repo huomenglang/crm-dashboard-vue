@@ -1,32 +1,36 @@
 <template>
   <div class="quotation-detail" v-if="quotation">
+    <h1 class="text-gray-700 font-bold text-[19px] text-center">QUOTATION</h1>
     <!-- Header Section -->
-    <div class="header-section">
+    <div class="header-section px-3">
       <div class="quotation-info">
-        <h1 class="quotation-title">QUOTATION</h1>
-        <div class="quote-details">
-          <p class="quote-no"><strong>Quote No:</strong> {{ quotation.quoteNo }}</p>
-          <p class="quote-date"><strong>Date:</strong> {{ formatDate(quotation.createdAt) }}</p>
+        <div class="flex flex-col">
+          <span class="text-[12px] font-medium text-gray-600"
+            >Quote No: <span class="">{{ quotation.quoteNo }}</span>
+          </span>
+          <span class="text-[12px] font-medium text-gray-600"
+            >Date:
+            <span class="tracking-wider">{{
+              formatDate(quotation.createdAt)
+            }}</span></span
+          >
         </div>
       </div>
-      
+
       <!-- Customer Information -->
       <div class="customer-section">
-        <h3 class="customer-title">BILL TO:</h3>
-        <div class="customer-details">
-          <p class="customer-name">{{ quotation.customer.name }}</p>
-          <p v-if="quotation.customer.email" class="customer-contact">{{ quotation.customer.email }}</p>
-          <p v-if="quotation.customer.phone" class="customer-contact">{{ quotation.customer.phone }}</p>
-          <p v-if="quotation.customer.address" class="customer-address">{{ quotation.customer.address }}</p>
+        <div class="flex flex-col -mt-2">
+          <span class="customer-contact">{{ quotation.customer.name }}</span>
+          <span v-if="quotation.customer.phoneNumber" class="customer-contact">
+            {{ quotation?.customer?.phoneNumber }}</span
+          >
         </div>
       </div>
     </div>
 
-    <a-divider />
-
     <!-- Products Table -->
-    <div class="products-section">
-      <h3 class="products-title">PRODUCTS & SERVICES</h3>
+    <div class="products-section mt-4">
+      <!-- <h3 class="products-title">PRODUCTS</h3> -->
       <div class="table-container">
         <table class="clean-products-table">
           <thead>
@@ -39,68 +43,95 @@
           </thead>
           <tbody>
             <tr v-for="(product, index) in quotation.products" :key="index">
-              <td class="product-name">{{ product.product.name }}</td>
+              <td class="product-name text-[11px]">
+                {{ product.product.name }}
+              </td>
               <td class="unit-details">
-                <div v-for="(unit, unitIndex) in product.units" :key="unitIndex" class="unit-row">
-                  {{ unit.unitName }} ({{ unit.quantity }} × ${{ unit.price.toFixed(2) }})
+                <div
+                  v-for="(unit, unitIndex) in product.units"
+                  :key="unitIndex"
+                  class="unit-row tracking-wide"
+                >
+                  {{ unit.unitName }} ({{ unit.quantity }} × ${{
+                    unit.price.toFixed(2)
+                  }})
                 </div>
               </td>
-              <td class="text-right">{{ product.discount || 0 }}%</td>
-              <td class="text-right">${{ product.subtotal.toFixed(2) }}</td>
+              <td class="text-right text-[12px]">
+                {{ product.discount || 0 }}%
+              </td>
+              <td class="text-right text-[12px]">
+                ${{ product.subtotal.toFixed(2) }}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-
     <!-- Quotation Summary -->
-    <div class="flex flex-col">
-      <h3 class="">Quotation Summary</h3>
-      <div class="summary-items">
-        <div class="summary-item">
-          <span class="summary-label">Subtotal:</span>
-          <span class="summary-value">${{ calculateSubtotal().toFixed(2) }}</span>
+    <div class="flex gap-x-3 mt-3">
+      <div class="flex-1 mr-3">
+        <div class="border border-gray-200 rounded-xl px-4 py-2 h-[110px]">
+          <div v-if="quotation.note">
+            <p class="text-[12px]"><b>Note: </b> {{ quotation.note }}</p>
+          </div>
         </div>
-        <div class="summary-item" v-if="quotation.tax">
-          <span class="summary-label">Tax ({{ quotation.tax }}%):</span>
-          <span class="summary-value">${{ calculateTax().toFixed(2) }}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Status:</span>
-          <span class="summary-value">
-            <a-tag :color="getStatusColor(quotation.status)" class="status-tag">
-              {{ quotation.status }}
-            </a-tag>
-          </span>
+      </div>
+      <div class="flex-1 -mt-1">
+        <span class="font-bold">Summary</span>
+        <div class="">
+          <div class="summary-item flex justify-between">
+            <span class="summary-label">Subtotal:</span>
+            <span class="summary-value"
+              >${{ calculateSubtotal().toFixed(2) }}</span
+            >
+          </div>
+          <div class="summary-item flex justify-between">
+            <span class="summary-label">Discount:</span>
+            <span class="summary-value">${{ quotation.discount }}</span>
+          </div>
+          <div class="summary-item flex justify-between">
+            <span class="summary-label">Tax ({{ quotation.tax }}%):</span>
+            <span class="summary-value">${{ calculateTax().toFixed(2) }}</span>
+          </div>
+          <div class="summary-item flex justify-between">
+            <span class="summary-label">Status:</span>
+            <span class="summary-value">
+              <a-tag
+                :color="getStatusColor(quotation.status)"
+                class="status-tag"
+              >
+                {{ quotation.status }}
+              </a-tag>
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Action Buttons -->
-    <div class="action-buttons" v-if="quotation.status === QuoteStatus.PENDING">
-      <a-button type="primary" size="large" @click="approveQuotation">
-        Approve
-      </a-button>
-      <a-button type="primary" danger size="large" @click="dropQuotation">
+    <div class="flex gap-x-2 mt-3 justify-end " v-if="quotation.status === QuoteStatus.PENDING">
+      <a-button type="primary" class="gap-x-0.5 !flex justify-center items-center" danger  @click="dropQuotation">
+        <XIcon class="w-4 h-4"/>
         Drop
+       
       </a-button>
-    </div>
-
-    <!-- Note Section -->
-    <div class="note-section" v-if="quotation.note">
-      <a-divider />
-      <h3 class="note-title">NOTES</h3>
-      <p class="note-content">{{ quotation.note }}</p>
+        <a-button type="primary" class="gap-x-0.5 !flex justify-center items-center" @click="approveQuotation">
+          <CheckCircle class="h-3 w-3"/>
+           <span>Approve</span>
+            
+      </a-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-import { message } from 'ant-design-vue';
-import { getAll, updateOne } from '@/data/ls_data';
-import { KEY } from '@/data/Key';
-import { QuoteStatus, type Quotation } from '@/components/pages/quotation/type';
+import { defineProps } from "vue";
+import { message } from "ant-design-vue";
+import { getAll, updateOne } from "@/data/ls_data";
+import { KEY } from "@/data/Key";
+import { QuoteStatus, type Quotation } from "@/components/pages/quotation/type";
+import { CheckCheck, CheckCheckIcon, CheckCircle, XCircleIcon, XIcon } from "lucide-vue-next";
 
 const props = defineProps<{
   quotation: Quotation;
@@ -108,21 +139,24 @@ const props = defineProps<{
 
 function getStatusColor(status: QuoteStatus) {
   const statusColors: Record<QuoteStatus, string> = {
-    [QuoteStatus.PENDING]: 'orange',
-    [QuoteStatus.APPROVED]: 'green',
-    [QuoteStatus.DROP]: 'red'
+    [QuoteStatus.PENDING]: "orange",
+    [QuoteStatus.APPROVED]: "green",
+    [QuoteStatus.DROP]: "red",
   };
-  
-  return statusColors[status] || 'default';
+
+  return statusColors[status] || "default";
 }
 
 function formatDate(dateString?: string) {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   return new Date(dateString).toLocaleDateString();
 }
 
 function calculateSubtotal() {
-  return props.quotation.products.reduce((sum, product) => sum + product.subtotal, 0);
+  return props.quotation.products.reduce(
+    (sum, product) => sum + product.subtotal,
+    0
+  );
 }
 
 function calculateTax() {
@@ -138,54 +172,54 @@ function calculateDiscount() {
 
 async function approveQuotation() {
   try {
-    const quotations = await getAll(KEY.QUOTATION) || [];
+    const quotations = (getAll(KEY.QUOTATION)) || [];
     const updatedQuotations = quotations.map((q: Quotation) => {
       if (q.id === props.quotation.id) {
-        return { 
-          ...q, 
-          status: QuoteStatus.APPROVED, 
+        return {
+          ...q,
+          status: QuoteStatus.APPROVED,
           updatedAt: new Date().toISOString(),
-          approvedBy: 'Current User'
+          approvedBy: "Current User",
         };
       }
       return q;
     });
-    
-   await updateOne(props.quotation.id,updatedQuotations,KEY.QUOTATION);
-    message.success('Quotation approved successfully');
+
+    await updateOne(props.quotation.id, updatedQuotations, KEY.QUOTATION);
+    message.success("Quotation approved successfully");
   } catch (error) {
-    message.error('Failed to approve quotation');
+    message.error("Failed to approve quotation");
   }
 }
 
 async function dropQuotation() {
   try {
-    const quotations = await getAll(KEY.QUOTATION) || [];
+    const quotations = (await getAll(KEY.QUOTATION)) || [];
     const updatedQuotations = quotations.map((q: Quotation) => {
       if (q.id === props.quotation.id) {
-        return { 
-          ...q, 
-          status: QuoteStatus.DROP, 
+        return {
+          ...q,
+          status: QuoteStatus.DROP,
           updatedAt: new Date().toISOString(),
-          droppedBy: 'Current User'
+          droppedBy: "Current User",
         };
       }
       return q;
     });
-    
-    await updateOne(props.quotation.id,updatedQuotations,KEY.QUOTATION);
-    message.success('Quotation dropped successfully');
+
+    await updateOne(props.quotation.id, updatedQuotations, KEY.QUOTATION);
+    message.success("Quotation dropped successfully");
   } catch (error) {
-    message.error('Failed to drop quotation');
+    message.error("Failed to drop quotation");
   }
 }
 </script>
 
 <style scoped>
 .quotation-detail {
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
-  color: #333;
+  /* padding: 5px; */
+  font-family: "kantumruy", sans-serif;
+  color: #444444;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -195,30 +229,19 @@ async function dropQuotation() {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 15px;
-  flex-shrink: 0;
+  margin-top: -20px;
+  /* margin-bottom: 10px; */
+  /* flex-shrink: 0; */
 }
 
 .quotation-info {
   flex: 1;
 }
 
-.quotation-title {
-  color: #333;
-  margin: 0 0 10px 0;
-  font-size: 24px;
-  font-weight: 600;
-}
-
 .quote-details {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
-.quote-no, .quote-date {
-  margin: 3px 0;
-  font-size: 13px;
-  color: #666;
-}
 
 .customer-section {
   text-align: right;
@@ -244,7 +267,8 @@ async function dropQuotation() {
   color: #333;
 }
 
-.customer-contact, .customer-address {
+.customer-contact,
+.customer-address {
   margin: 2px 0;
   font-size: 12px;
   color: #666;
@@ -253,20 +277,19 @@ async function dropQuotation() {
 
 .products-section {
   flex: 1;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   min-height: 0; /* Important for flex child to respect overflow */
 }
 
 .products-title {
   color: #333;
-  margin-bottom: 12px;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .table-container {
-  height: 70vh; /* 70% of viewport height */
+  height: 60vh; /* 70% of viewport height */
   overflow-y: auto;
   border: 1px solid #e8e8e8;
   border-radius: 4px;
@@ -288,7 +311,7 @@ async function dropQuotation() {
 }
 
 .clean-products-table td {
-  padding: 10px;
+  padding: 7px;
   border-bottom: 1px solid #e8e8e8;
 }
 
@@ -301,28 +324,22 @@ async function dropQuotation() {
 }
 
 .product-name {
-  font-weight: 500;
+  font-weight: 600;
   min-width: 120px;
 }
 
 .unit-details {
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .unit-row {
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .unit-row:not(:last-child) {
   border-bottom: 1px dashed #f0f0f0;
-  margin-bottom: 4px;
+  /* margin-bottom: 4px; */
 }
-
-.summary-section {
-  /* margin: 20px 0; */
-  /* flex-shrink: 0; */
-}
-
 
 .summary-items {
   display: flex;
@@ -340,12 +357,14 @@ async function dropQuotation() {
 
 .summary-label {
   /* color: #666; */
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .summary-value {
   /* color: #333; */
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 12px;
+
   /* font-size: 14px; */
 }
 

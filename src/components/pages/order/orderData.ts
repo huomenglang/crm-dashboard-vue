@@ -34,20 +34,20 @@ export const mockOrderUnits: OrderUnit[] = [
   {
     unitId: '1',
     unitName: 'Can',
-    quantity: 2,
-    price: 1,
+    quantity: 20,
+    price: 2,
     baseUnitId: '',
     baseUnitQuantity: 1,
-    subtotal: 2.00
+    subtotal: 40.00
   },
   {
     unitId: '3',
     unitName: 'Case',
     quantity: 10,
-    price: 6.0,
-    baseUnitId: 'UNIT-001',
-    baseUnitQuantity: 6,
-    subtotal: 60.00
+    price: 20.0,
+    baseUnitId: '2',
+    baseUnitQuantity: 4,
+    subtotal: 200.00
   }
 ]
 
@@ -56,13 +56,13 @@ export const mockOrderProducts: OrderProduct[] = [
     product: mockProducts[0],
     units: mockOrderUnits,
     discount: 10,
-    subtotal: 23.38
+    subtotal: 216.00
   },
   {
     product: mockProducts[1],
     units: [mockOrderUnits[0]],
     discount:0,
-    subtotal: 24.99
+    subtotal: 40.00
   }
 ]
 

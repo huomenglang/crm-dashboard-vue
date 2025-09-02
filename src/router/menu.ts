@@ -1,24 +1,20 @@
-import { ContainerOutlined } from '@ant-design/icons-vue';
+// menu.ts
 import { 
-  UserOutlined, 
   DashboardOutlined,
-  TeamOutlined,
-  FileOutlined,
-  SettingOutlined,
-  ShoppingOutlined,
-  BarChartOutlined,
-  CalendarOutlined,
-  MessageOutlined,
-  BoxPlotFilled,
+  ContainerOutlined,
+  ShoppingCartOutlined,
   UserAddOutlined,
+  ShoppingOutlined,
+  ApartmentOutlined,
   BoxPlotOutlined,
   ShopOutlined,
-  ShoppingCartOutlined,
   UsergroupAddOutlined,
-  ApartmentOutlined,
-  
+  BarChartOutlined,
+  SettingOutlined,
+  FileTextOutlined,
+  ExportOutlined
 } from '@ant-design/icons-vue';
-// import { Boxes, ContactRound, ShoppingBasket, ShoppingCart, Warehouse } from 'lucide-vue-next';
+import { RoutePath } from './routes_path';
 
 export interface ItemMenuProps {
   key: string;
@@ -27,94 +23,107 @@ export interface ItemMenuProps {
   path?: string;
   children?: ItemMenuProps[];
 }
+
 export const menuData: ItemMenuProps[] = [
   {
     key: 'dashboard',
     title: 'Dashboard',
     icon: DashboardOutlined,
-    path: '/dashboard'
+    path: RoutePath.DASHBOARD
   },
   {
     key: 'quotations',
     title: 'Quotations',
     icon: ContainerOutlined,
-    path: '/quotations',
-
+    path: RoutePath.QUOTATION
   },
-    {
+  {
     key: 'orders',
     title: 'Orders',
     icon: ShoppingCartOutlined,
-    path: '/orders',
-
+    path: RoutePath.ORDER
   },
-
   {
     key: 'customers',
     title: 'Customers',
     icon: UserAddOutlined,
-    path: '/customers'
+    path: RoutePath.CUSTOMER
   },
   {
     key: 'categories',
     title: 'Categories',
     icon: ShoppingOutlined,
-    path: '/categories',
-
+    path: RoutePath.CATEGORY
   },
   {
     key: 'units',
     title: 'Units',
     icon: ApartmentOutlined,
-    path: '/units',
+    path: RoutePath.UNIT
   },
   {
     key: 'products',
     title: 'Products',
     icon: BoxPlotOutlined,
-    path: '/products',
-
+    path: RoutePath.PRODUCT
   },
   {
     key: 'warehouses',
-    title: 'Warehouse',
+    title: 'Warehouses',
     icon: ShopOutlined,
-    path: '/warehouses',
-
+    path: RoutePath.WAREHOUSE
   },
-
-    {
+  {
     key: 'purchase-orders',
-    title: 'Purchase',
+    title: 'Purchase Orders',
     icon: ShoppingOutlined,
-    path: '/purchase-orders',
-
+    path: RoutePath.PURCHASE_ORDER
   },
   {
     key: 'suppliers',
-    title: 'Supplier',
+    title: 'Suppliers',
     icon: UsergroupAddOutlined,
-    path: '/suppliers',
-
+    path: RoutePath.SUPPLIER
   },
   {
     key: 'reports',
-    title: 'Report',
+    title: 'Reports',
     icon: BarChartOutlined,
     children: [
       {
-        key: '/customer/orders',
-        title: 'Reports',
-        icon: BarChartOutlined,
-        path: '/analytics/reports'
+        key: 'customer-reports',
+        title: 'Customer Reports',
+        icon: FileTextOutlined, // Different icon for child items
+        path: RoutePath.REPORT_CUSTOMER
       },
       {
-        key: '/suppliers/purchase-orders',
-        title: 'Statistics',
-        icon: BarChartOutlined,
-        path: '/analytics/statistics'
+        key: 'export-reports',
+        title: 'Export Reports',
+        icon: ExportOutlined, // Different icon for child items
+        path: RoutePath.REPORT_EXPORT
       }
     ]
+  },
+  {
+    key: 'administration',
+    title: 'Administration',
+    icon: SettingOutlined,
+    path: RoutePath.ADMINISTRATION
   }
+];
 
-  ];
+// Helper to generate full path
+export const generatePath = (path: string): string => {
+  return `/${path}`;
+};
+
+// Helper to check if menu item is active
+export const isMenuActive = (currentPath: string, menuPath?: string): boolean => {
+  if (!menuPath) return false;
+  
+  // Remove parameters for comparison
+  const cleanCurrentPath = currentPath.replace(/\/:[^/]+/g, '');
+  const cleanMenuPath = menuPath.replace(/\/:[^/]+/g, '');
+  
+  return cleanCurrentPath === generatePath(cleanMenuPath);
+};
