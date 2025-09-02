@@ -18,11 +18,11 @@ export interface OrderRequest extends Omit<BaseModel,'id'>{
 // --------------------------new test ui----------------------------
 // types.ts
 export interface Customer {
-  customerId: string;
+  id: string;
   name: string;
   email: string;
   phone: string;
-  address: string;
+  address?: string;
 }
 
 export interface OrderUnit {
@@ -36,7 +36,7 @@ export interface OrderUnit {
 }
 
 export interface Product {
-  productId: string;
+  id: string;
   sku: string;
   name: string;
 }

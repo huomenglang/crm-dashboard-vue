@@ -1,5 +1,5 @@
 <template>
-  <div class="quotation-form">
+  <div class="max-w-[1400px] my-0 mx-auto">
     <!-- Header -->
     <div class="flex items-center mb-6 px-4">
       <div
@@ -12,7 +12,7 @@
         <div class="flex gap-x-1 items-center justify-center">
           <BadgeInfoIcon class="text-gray-500 w-5 h-5" />
           <p class="text-gray-600 text-lg font-medium pt-3">
-            {{ isEditing ? "Edit Quotation" : "Create Quotation" }}
+            {{ quotationId ? "Edit Quotation" : "Create Quotation" }}
           </p>
         </div>
       </div>
@@ -22,138 +22,122 @@
     <div class="two-column-layout gap-x-2 px-4 -mt-7">
       <!-- Left Side: Customer & Summary -->
       <div class="left-side">
-        <Form
-          @submit="onSubmit"
-          :validation-schema="schema"
-          v-slot="{ errors }"
-        >
-          <!-- Customer Section -->
-          <a-card title="Customer Information" size="small" class="mb-4">
-            <div class="form-field">
-              <label class="text-gray-600"
-                >Customer <span class="required">*</span></label
-              >
-              <Field
-                name="customerId"
-                v-slot="{ value, errorMessage, handleChange }"
-              >
-                <a-select
-                  :value="value"
-                  placeholder="Select customer"
-                  show-search
-                  option-filter-prop="label"
-                  :filter-option="filterOption"
-                  :status="errorMessage ? 'error' : ''"
-                  style="width: 100%"
-                  @update:value="(v:any) => { handleChange(v); formState.customerId = v; handleCustomerChange(v); }"
-                >
-                  <a-select-option
-                    v-for="customer in customers"
-                    :key="customer.id"
-                    :value="customer.id"
-                    :label="customer.name"
-                  >
-                    {{ customer.name }}
-                  </a-select-option>
-                </a-select>
-              </Field>
-              <ErrorMessage name="customerId" class="error-message" />
-            </div>
-
-            <!-- Note Section -->
-            <div class="form-field">
-              <label class="text-gray-600">Note</label>
-              <Field name="note" v-slot="{ value, errorMessage, handleChange }">
-                <a-textarea
-                  :value="value ?? ''"
-                  @update:value="(v:string) => { handleChange(v); formState.note = v; }"
-                  placeholder="Leave Note"
-                  :rows="3"
-                  :status="errorMessage ? 'error' : ''"
-                />
-              </Field>
-              <ErrorMessage name="note" class="error-message" />
-            </div>
-            <!-- Add Product Button -->
-            <div class="">
-              <a-button
-                type="primary"
-                @click="showProductModal"
-                class="!flex justify-center items-center"
-              >
-                <!-- <template #icon> -->
-                <PlusOutlined />
-                <!-- </template> -->
-                Add Product
-              </a-button>
-            </div>
-          </a-card>
-
-          <!-- Summary Section -->
-          <a-card title="Summary" size="small" class="mb-6">
-            <div class="summary-row text-gray-600 text-[14px]">
-              <span>Subtotal:</span>
-              <span>${{ subtotal.toFixed(2) }}</span>
-            </div>
-
-            <div class="summary-row text-gray-600">
-              <span>Discount:</span>
-              <div class="summary-input-container">
-                <Field name="discount" v-slot="{ value, handleChange }">
-                  <a-input-number
-                    :value="value ?? 0"
-                    :min="0"
-                    :max="100"
-                    :precision="2"
-                    @update:value="(v:number) => { handleChange(v ?? 0); formState.discount = Number(v||0); calculateTotal(); }"
-                    style="width: 100px"
-                    addon-after="%"
-                  />
-                </Field>
-              </div>
-            </div>
-
-            <div class="summary-row text-gray-600">
-              <span>Tax:</span>
-              <div class="summary-input-container">
-                <Field
-                  name="tax"
-                  v-slot="{ value, errorMessage, handleChange }"
-                >
-                  <a-input-number
-                    :value="value ?? 0"
-                    :min="0"
-                    :max="100"
-                    :precision="2"
-                    :status="errorMessage ? 'error' : ''"
-                    @update:value="(v:number) => { handleChange(v ?? 0); formState.tax = Number(v||0); calculateTotal(); }"
-                    style="width: 100px"
-                    addon-after="%"
-                  />
-                </Field>
-                <ErrorMessage name="tax" class="error-message" />
-              </div>
-            </div>
-
-            <div class="summary-row text-[15px] font-semibold text-gray-700">
-              <span>Total Amount:</span>
-              <span>${{ formState.totalAmount.toFixed(2) }}</span>
-            </div>
-          </a-card>
-
-          <div class="-mt-4 flex justify-end gap-x-3">
-            <a-button
-              class="mr-2"
-              :is-danger="true"
-              @click="router.push('/quotations')"
+         <a-card title="Customer Information" size="small" class="mb-4">
+          <div class="form-field">
+            <label class="text-gray-600"
+              >Customer <span class="required">*</span></label
             >
-              Cancel
-            </a-button>
-            <a-button type="primary" html-type="submit" :loading="submitting">
-              {{ isEditing ? "Update" : "Create" }} Quotation
+            <a-select
+              v-model:value="formState.customerId"
+              placeholder="Select customer"
+              show-search
+              option-filter-prop="label"
+              :filter-option="filterOption"
+              :status="errors.customerId ? 'error' : ''"
+              style="width: 100%"
+              @update:value="handleCustomerChange"
+            >
+              <a-select-option
+                v-for="customer in customers"
+                :key="customer.id"
+                :value="customer.id"
+                :label="customer.name"
+              >
+                {{ customer.name }}
+              </a-select-option>
+            </a-select>
+            <span v-if="errors.customerId" class="error-message">
+              {{ errors.customerId }}
+            </span>
+          </div>
+
+          <!-- Note Section -->
+          <div class="form-field">
+            <label class="text-gray-600">Note</label>
+            <a-textarea
+              v-model:value="formState.note"
+              placeholder="Leave Note"
+              :rows="3"
+              :status="errors.note ? 'error' : ''"
+            />
+            <span v-if="errors.note" class="error-message">
+              {{ errors.note }}
+            </span>
+          </div>
+          
+          <!-- Add Product Button -->
+          <div class="">
+            <a-button
+              type="primary"
+              @click="showProductModal"
+              class="!flex justify-center items-center"
+            >
+              <PlusOutlined />
+              Add Product
             </a-button>
           </div>
-        </Form>
+        </a-card>
+
+        <!-- Summary Section -->
+        <a-card title="Summary" size="small" class="mb-6">
+          <div class="summary-row text-gray-600 text-[14px]">
+            <span>Subtotal:</span>
+            <span>${{ subtotal.toFixed(2) }}</span>
+          </div>
+
+          <div class="summary-row text-gray-600">
+            <span>Discount:</span>
+            <div class="summary-input-container">
+              <a-input-number
+                v-model:value="formState.discount"
+                :min="0"
+                :max="100"
+                :precision="2"
+                @update:value="calculateTotal"
+                style="width: 100px"
+                addon-after="%"
+                :status="errors.discount ? 'error' : ''"
+              />
+            </div>
+          </div>
+
+          <div class="summary-row text-gray-600">
+            <span>Tax:</span>
+            <div class="summary-input-container">
+              <a-input-number
+                v-model:value="formState.tax"
+                :min="0"
+                :max="100"
+                :precision="2"
+                @update:value="calculateTotal"
+                style="width: 100px"
+                addon-after="%"
+                :status="errors.tax ? 'error' : ''"
+              />
+              <span v-if="errors.tax" class="error-message">
+                {{ errors.tax }}
+              </span>
+            </div>
+          </div>
+
+          <div class="summary-row text-[15px] font-semibold text-gray-700">
+            <span>Total Amount:</span>
+            <span>${{ formState.totalAmount.toFixed(2) }}</span>
+          </div>
+        </a-card>
+
+        <div class="-mt-4 flex justify-end gap-x-3">
+          <a-button
+            class="mr-2"
+            :is-danger="true"
+            @click="router.push('/quotations')"
+          >
+            Cancel
+          </a-button>
+          <a-button type="primary" @click="onSubmit" :loading="submitting">
+            {{ quotationId ? "Update" : "Create" }} Quotation
+          </a-button>
+          </div>
       </div>
 
       <!-- Right Side: Products Table -->
@@ -175,14 +159,14 @@
                   >
                     <EditIcon class="w-3 h-3" />
                   </a-button> -->
-                   <a-button
-                      v-if="record.id && getProductUnits(record.id).length > 0"
-                      type="link"
-                      size="small"
-                      @click="addUnitToProduct(index)"
-                    >
-                      <PlusCircleIcon />
-                    </a-button>
+                  <a-button
+                    v-if="record.id && getProductUnits(record.id).length > 0"
+                    type="link"
+                    size="small"
+                    @click="addUnitToProduct(index)"
+                  >
+                    <PlusCircleIcon />
+                  </a-button>
 
                   <a-button
                     size="small"
@@ -196,14 +180,15 @@
               </template>
 
               <template v-else-if="column.key === 'details'">
-                <div class="product-details bg-gray-50 px-3 py-1 rounded-sm text-600 font-semibold">
+                <div
+                  class="product-details bg-gray-50 px-3 py-1 rounded-sm text-600 font-semibold"
+                >
                   <div class="main-unit flex items-center">
                     <div class="text-gray-600 font-semibold">
                       {{ record.unitName }}: {{ record.quantity }} × ${{
                         record.price.toFixed(2)
                       }}
                     </div>
-                   
                   </div>
                   <div
                     v-for="(unit, unitIndex) in record.units"
@@ -442,11 +427,9 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
-import {  PlusOutlined } from "@ant-design/icons-vue";
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
+import { PlusOutlined } from "@ant-design/icons-vue";
 import {
   MoveLeftIcon,
   BadgeInfoIcon,
@@ -455,17 +438,17 @@ import {
 } from "lucide-vue-next";
 import {
   QuoteStatus,
-  type Customer,
   type Quotation,
   type QuotationProduct,
 } from "@/components/pages/quotation/type";
 import { getAll, createOne, updateOne } from "@/data/ls_data";
 import { KEY } from "@/data/Key";
 import type { ProductResponse } from "@/components/pages/product/product";
+import type { Customer } from "@/components/pages/order/order";
 
 const router = useRouter();
-const props = defineProps<{ id?: string }>();
-const isEditing = computed(() => !!props.id);
+// const props = defineProps<{ id?: string }>();
+// const isEditing = computed(() => !!props.id);
 const submitting = ref(false);
 const productModalVisible = ref(false);
 const unitModalVisible = ref(false);
@@ -474,6 +457,8 @@ const selectedProduct = ref<ProductResponse | null>(null);
 const editingProductIndex = ref<number | null>(null);
 const selectedProductForUnit = ref("");
 const selectedProductIndexForUnit = ref(-1);
+const route = useRoute();
+const quotationId = route.params.id;
 
 // Table columns for products
 const productColumns = [
@@ -584,25 +569,25 @@ const newUnitPrice = computed(() => {
 });
 
 // Validation schema
-const schema = yup.object({
-  customerId: yup.string().required("Customer is required"),
-  discount: yup.number().min(0).max(100),
-  note: yup.string().max(500, "Note cannot exceed 500 characters"),
-  products: yup
-    .array()
-    .of(
-      yup.object({
-        id: yup.string().required("Product is required"),
-        unitId: yup.string().required("Unit is required"),
-        quantity: yup
-          .number()
-          .required("Quantity is required")
-          .min(0.01, "Quantity must be at least 0.01"),
-        discount: yup.number().min(0).max(100).optional(),
-      })
-    )
-    .min(1, "At least one product is required"),
-});
+// const schema = yup.object({
+//   customerId: yup.string().required("Customer is required"),
+//   discount: yup.number().min(0).max(100),
+//   note: yup.string().max(500, "Note cannot exceed 500 characters"),
+//   products: yup
+//     .array()
+//     .of(
+//       yup.object({
+//         id: yup.string().required("Product is required"),
+//         unitId: yup.string().required("Unit is required"),
+//         quantity: yup
+//           .number()
+//           .required("Quantity is required")
+//           .min(0.01, "Quantity must be at least 0.01"),
+//         discount: yup.number().min(0).max(100).optional(),
+//       })
+//     )
+//     .min(1, "At least one product is required"),
+// });
 
 const customers = ref<Customer[]>([]);
 const products = ref<ProductResponse[]>([]);
@@ -641,14 +626,15 @@ const availableProducts = computed(() => {
 
 onMounted(async () => {
   try {
-    customers.value =  getAll(KEY.CUSTOMER);
-    products.value =  getAll(KEY.PRODUCT);
-
-    if (isEditing.value && props.id) {
-      await loadQuotation(props.id);
+    customers.value = getAll(KEY.CUSTOMER);
+    products.value = getAll(KEY.PRODUCT);
+    
+    if (quotationId) {
+    
+      await loadQuotation(quotationId as string);
     } else {
       // Generate quote number for new quotations
-      const quotations = ( getAll(KEY.QUOTATION)) || [];
+      const quotations = getAll(KEY.QUOTATION) || [];
       formState.quoteNo = `QT-${String(quotations.length + 1).padStart(
         4,
         "0"
@@ -661,7 +647,7 @@ onMounted(async () => {
 
 async function loadQuotation(id: string) {
   try {
-    const quotations = ( getAll(KEY.QUOTATION)) || [];
+    const quotations = getAll(KEY.QUOTATION) || [];
     const quotation = quotations.find((q: Quotation) => q.id === id);
 
     if (!quotation) {
@@ -671,6 +657,14 @@ async function loadQuotation(id: string) {
     }
 
     formState.customerId = quotation.customer.id;
+    formState.note = quotation.note || "";
+    formState.discount = quotation.discount || 0;
+    formState.tax = quotation.tax || 0;
+    formState.totalAmount = quotation.totalAmount;
+    formState.status = quotation.status;
+    formState.quoteNo = quotation.quoteNo;
+
+    // Set customer for display
     Object.assign(selectedCustomer, quotation.customer);
 
     formState.products = quotation.products.map((p: QuotationProduct) => {
@@ -688,17 +682,13 @@ async function loadQuotation(id: string) {
       };
     });
 
-    formState.discount = quotation.discount;
-    formState.tax = quotation.tax;
-    formState.totalAmount = quotation.totalAmount;
-    formState.note = quotation.note;
-    formState.status = quotation.status;
-    formState.quoteNo = quotation.quoteNo;
   } catch (error) {
     message.error("Failed to load quotation");
     router.push("/quotations");
   }
 }
+
+
 
 function filterOption(input: string, option: any) {
   return (option?.label || "")
@@ -729,7 +719,7 @@ function editProduct(index: number) {
   const product = formState.products[index];
   selectedProductId.value = product.id;
   selectedProduct.value =
-    products.value.find((p) => p.id === product.id) || null;
+  products.value.find((p) => p.id === product.id) || null;
   editingProductIndex.value = index;
 
   Object.assign(newProduct, {
@@ -948,7 +938,61 @@ function calculateTotal() {
     productsTotal * (1 - discount / 100) * (1 + tax / 100);
 }
 
+// Manual errors object
+const errors = reactive<any>({
+  customerId: '',
+  discount: '',
+  tax: '',
+  note: '',
+  products: ''
+});
+
+const validateForm = (): boolean => {
+  let isValid = true;
+  
+  // Reset errors
+  Object.keys(errors).forEach(key => errors[key] = '');
+
+  // Validate customer
+  if (!formState.customerId) {
+    errors.customerId = 'Customer is required';
+    isValid = false;
+  }
+
+  // Validate discount
+  if (formState.discount !== undefined && (formState.discount < 0 || formState.discount > 100)) {
+    errors.discount = 'Discount must be between 0 and 100';
+    isValid = false;
+  }
+
+  // Validate tax
+  if (formState.tax !== undefined && (formState.tax < 0 || formState.tax > 100)) {
+    errors.tax = 'Tax must be between 0 and 100';
+    isValid = false;
+  }
+
+  // Validate note
+  if (formState.note && formState.note.length > 500) {
+    errors.note = 'Note cannot exceed 500 characters';
+    isValid = false;
+  }
+
+  // Validate products
+  if (formState.products.length === 0) {
+    errors.products = 'At least one product is required';
+    isValid = false;
+  }
+
+  return isValid;
+};
+  
+
 async function onSubmit() {
+   
+   if (!validateForm()) {
+    message.error("Incorrect FIelds Input!");
+    return;
+  }
   submitting.value = true;
 
   try {
@@ -1011,8 +1055,9 @@ async function onSubmit() {
       return;
     }
 
+    const quoteId: string = quotationId as string;
     const quotationData: Quotation = {
-      id: isEditing.value && props.id ? props.id : `q-${Date.now()}`,
+      id: quoteId && quoteId ? quoteId : `q-${Date.now()}`,
       customer,
       products: quotationProducts,
       totalAmount: formState.totalAmount,
@@ -1021,23 +1066,26 @@ async function onSubmit() {
       note: formState.note,
       status: (formState.status as QuoteStatus) || QuoteStatus.PENDING,
       quoteNo: formState.quoteNo || `QT-${Date.now()}`,
-      createdAt: isEditing.value ? undefined : new Date().toISOString(),
+      createdAt: quotationId ? undefined : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
     console.log("quotationDAta", quotationData);
 
     // Save to localStorage
-    const quotations = (getAll(KEY.QUOTATION)) || [];
+    const quotations = getAll(KEY.QUOTATION) || [];
 
-    if (isEditing.value) {
-      const index = quotations.findIndex((q: Quotation) => q.id === props.id);
+    if (quotationId) {
+      const index = quotations.findIndex(
+        (q: Quotation) => q.id === quotationId
+      );
       if (index !== -1) {
-        quotations[index] = quotationData;
-        await updateOne(KEY.QUOTATION, quotations);
+       
+        await updateOne(quotationId as string, quotations,KEY.QUOTATION);
         message.success("Quotation updated successfully");
       }
     } else {
-     // quotations.push(quotationData);
+      // quotations.push(quotationData);
       await createOne(quotationData, KEY.QUOTATION);
       message.success("Quotation created successfully");
     }
@@ -1045,9 +1093,7 @@ async function onSubmit() {
     router.push("/quotations");
   } catch (error) {
     message.error(
-      isEditing.value
-        ? "Failed to update quotation"
-        : "Failed to create quotation"
+      quotationId ? "Failed to update quotation" : "Failed to create quotation"
     );
   } finally {
     submitting.value = false;
@@ -1056,10 +1102,7 @@ async function onSubmit() {
 </script>
 
 <style scoped>
-.quotation-form {
-  max-width: 1400px;
-  margin: 0 auto;
-}
+
 
 .two-column-layout {
   display: grid;
@@ -1106,7 +1149,6 @@ async function onSubmit() {
 
 .product-details {
   font-size: 13px;
-  
 }
 
 .product-details .main-unit {

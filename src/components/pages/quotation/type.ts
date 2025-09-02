@@ -1,11 +1,5 @@
+import type { Customer, Product } from "../order/order";
 
-export interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-}
 
 export interface Unit {
   unitId: string;
@@ -15,12 +9,6 @@ export interface Unit {
   baseUnitId: string;
   baseUnitQuantity: number;
   subtotal: number;
-}
-
-export interface Product {
-  id: string;
-  sku: string;
-  name: string;
 }
 
 export interface QuotationProduct {

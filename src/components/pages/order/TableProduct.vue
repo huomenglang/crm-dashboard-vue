@@ -313,7 +313,7 @@ const editUnit = (product: OrderProduct, unit: OrderUnit) => {
   open.value = true;
 
   const foundProduct: any = productData.find(
-    (p: any) => p?.id === product.product.productId
+    (p: any) => p?.id === product.product.id
   );
   productEdit.value = foundProduct;
 
@@ -344,7 +344,7 @@ function getProductUnits(product: any) {
 const addUnit = (product: OrderProduct) => {
   // In a real app, you would show a modal to add a new unit
   const foundProduct: any = productData.find(
-    (p: any) => p?.id === product.product.productId
+    (p: any) => p?.id === product.product.id
   );
   isEditQty.value=false
   productEdit.value = foundProduct;
@@ -522,7 +522,7 @@ const updateProductSubtotal = (product: OrderProduct) => {
 }
 
 .discount-input {
-  width: 80px;
+  width: 90px;
 }
 
 .discount-value {
@@ -534,8 +534,9 @@ const updateProductSubtotal = (product: OrderProduct) => {
 .subtotal {
   font-weight: 600;
   font-size: 12px;
+  width: 100px;
   color: #389e0d;
-  text-align: right;
+  text-align: left;
 }
 
 .remove-product-btn {

@@ -19,6 +19,7 @@
               :placeholder="searchPlaceholder"
               :value="searchValue"
               @update:value="handleSearch"
+            
             />
             <round-button
               :class="searchButtonClass"
@@ -237,7 +238,8 @@ const mergedScroll = computed(() => ({
 
 // Handle search input
 const handleSearch = (value: string) => {
-  emit("update:searchValue", value);
+  console.log(value)
+  emit("search", value);
 };
 
 const handleConfirm = (record: any, index: any) => {

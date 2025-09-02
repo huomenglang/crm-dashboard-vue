@@ -4,7 +4,6 @@ import type { StatItem } from "@/components/base/charts/StatisticCard.vue";
 import type { CategoryProps } from "@/components/pages/category/category";
 import type { Customer } from "@/components/pages/customer/customer";
 import type { ProductResponse } from "@/components/pages/product/product";
-import { type OrderResponse } from "@/components/pages/quotation/quotation";
 import type { Supplier } from "@/components/pages/supplier/supplier";
 import type { UmsProps } from "@/components/pages/ums/ums";
 import type { WarehouseProps } from "@/components/pages/warehouse/warehouse";
@@ -357,57 +356,116 @@ export const productData:ProductResponse[]=[
 
 ]
 
-export const orderResponseData: OrderResponse = {
-  orderId: "ORD-1001",
-  customerId: "CUST-001",
-  orderDate: "2025-08-28",
-  paymentMethod: "CASH",
-  note: "Urgent delivery",
-  totalAmount: 66.0,
-  products: [
-    {
-      productId: "PROD-001",
-      productName: "Coca Cola",
-      subtotal: 21.0,
-      units: [
-        {
-          unitId: "UNIT-BOX",
-          unitName: "Box",
-          quantity: 2,
-          unitPrice: 9.0,
-          subtotal: 18.0,
-          baseUnitId: "UNIT-BOTTLE",
-          baseUnitQuantity: 20
-        },
-        {
-          unitId: "UNIT-BOTTLE",
-          unitName: "Bottle",
-          quantity: 3,
-          unitPrice: 1.0,
-          subtotal: 3.0,
-          baseUnitId: "UNIT-BOTTLE",
-          baseUnitQuantity: 3
-        }
-      ]
+
+export const quotationData=[
+  {
+    id: "q-1756793587315",
+    customer: {
+      id: "3",
+      name: "John Doe",
+      gender: "Male",
+      email: "john@gmail.com",
+      age: 28,
+      address: "789 Oak St",
+      phoneNumber: "092 119 333",
+      image: "https://randomuser.me/api/portraits/men/3.jpg"
     },
-    {
-      productId: "PROD-002",
-      productName: "Pepsi",
-      subtotal: 45.0,
-      units: [
-        {
-          unitId: "UNIT-MIDDLE",
-          unitName: "Middle",
-          quantity: 1,
-          unitPrice: 45.0,
-          subtotal: 45.0,
-          baseUnitId: "UNIT-BOTTLE",
-          baseUnitQuantity: 40
-        }
-      ]
-    }
-  ]
-};
+    products: [
+      {
+        product: {
+          id: "0012",
+          sku: "HNB-001",
+          name: "Hanuman Beer"
+        },
+        units: [
+          {
+            unitId: "3",
+            unitName: "Case",
+            quantity: 50,
+            price: 40,
+            subtotal: 2000
+          }
+        ],
+        discount: 0,
+        subtotal: 2000
+      }
+    ],
+    totalAmount: 2000,
+    discount: 0,
+    tax: 0,
+    note: "General Customer",
+    status: "PENDING",
+    quoteNo: "QT-0002",
+    createdAt: "2025-09-02T06:13:07.315Z",
+    updatedAt: "2025-09-02T06:13:07.315Z"
+  },
+  {
+    id: "q-1756793568418",
+    customer: {
+      id: "1",
+      name: "Sam Toal",
+      gender: "Male",
+      email: "toa@gmail.com",
+      age: 30,
+      address: "123 Main St",
+      phoneNumber: "092 119 111",
+      image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIj48L3BhdGg+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ij48L2NpcmNsZT48L3N2Zz4="
+    },
+    products: [
+      {
+        product: {
+          id: "003",
+          sku: "ABC-001",
+          name: "ABC Beer"
+        },
+        units: [
+          {
+            unitId: "1",
+            unitName: "Can",
+            quantity: 100,
+            price: 1.5,
+            subtotal: 150
+          }
+        ],
+        discount: 0,
+        subtotal: 150
+      },
+      {
+        product: {
+          id: "0012",
+          sku: "HNB-001",
+          name: "Hanuman Beer"
+        },
+        units: [
+          {
+            unitId: "2",
+            unitName: "Box",
+            quantity: 100,
+            price: 12,
+            subtotal: 1200
+          },
+          {
+            unitId: "3",
+            unitName: "Case",
+            quantity: 100,
+            price: 40,
+            subtotal: 4000
+          }
+        ],
+        discount: 0,
+        subtotal: 5200
+      }
+    ],
+    totalAmount: 5350,
+    discount: 0,
+    tax: 0,
+    note: "Dealer Customer",
+    status: "PENDING",
+    quoteNo: "QT-0001",
+    createdAt: "2025-09-02T06:12:48.418Z",
+    updatedAt: "2025-09-02T06:12:48.418Z"
+  }
+]
 
 
 //dashboard data
@@ -466,11 +524,15 @@ export const statsData: StatItem[] = [
   },
 ];
 
+
 export const timeRangeOptions = [
   { value: "daily", label: "Daily" },
   { value: "weekly", label: "Weekly" },
   { value: "monthly", label: "Monthly" },
 ];
+
+
+
 export const dayOfWeek:string[]=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const months:string[]=[
       "Jan",

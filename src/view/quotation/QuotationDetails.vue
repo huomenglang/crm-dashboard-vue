@@ -21,8 +21,8 @@
       <div class="customer-section">
         <div class="flex flex-col -mt-2">
           <span class="customer-contact">{{ quotation.customer.name }}</span>
-          <span v-if="quotation.customer.phoneNumber" class="customer-contact">
-            {{ quotation?.customer?.phoneNumber }}</span
+          <span v-if="quotation.customer.phone" class="customer-contact">
+            {{ quotation?.customer?.phone }}</span
           >
         </div>
       </div>

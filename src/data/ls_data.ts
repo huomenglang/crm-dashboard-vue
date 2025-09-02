@@ -1,5 +1,6 @@
+import { mockOrders } from "@/components/pages/order/orderData";
 import { KEY } from "./Key";
-import { categoryData, customerData, productData, supplierData, UmsData, warehouseData } from "./mock_data";
+import { categoryData, customerData, productData, quotationData, supplierData, UmsData, warehouseData } from "./mock_data";
 
 const getDataByKey = (key: string) => {
   if (key === KEY.CUSTOMER) return customerData;
@@ -8,7 +9,8 @@ const getDataByKey = (key: string) => {
   if (key === KEY.SUPPLIER) return supplierData;
   if (key === KEY.WAREHOUSE) return warehouseData;
   if (key === KEY.PRODUCT) return productData;
-  if (key=== KEY.QUOTATION) return []
+  if (key=== KEY.QUOTATION) return quotationData;
+  if(key===KEY.ORDER) return mockOrders;
 };
 
 const DEFAULT_KEY = KEY.CUSTOMER;

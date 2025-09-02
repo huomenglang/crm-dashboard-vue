@@ -2,29 +2,28 @@ import type { Customer, Order, Product } from "./order";
 
 
 import type { OrderProduct, OrderUnit } from './order'
-import { productData } from "@/data/mock_data";
 
 export const mockCustomer: Customer = {
-  customerId: 'CUST-001',
+  id: 'CUST-001',
   name: 'John Doe',
   email: 'john.doe@example.com',
-  phone: '+1 (555) 123-4567',
+  phone: '012 123-4567',
   address: '123 Main St, Anytown, USA'
 }
 
 export const mockProducts: Product[] = [
   {
-    productId: "001",
+    id: "001",
     name: "Pepsi",
     sku: "PEP-001",
   },
   {
-    productId: "0012",
+    id: "0012",
     name: "Hanuman Beer",
     sku: "HNB-001",
   },
   {
-    productId: "003",
+    id: "003",
     name: "ABC Beer",
     sku: "ABC-001",
   }
@@ -84,10 +83,10 @@ export const mockOrders: Order[] = [
     orderId: 'ORDER-002',
     orderNo: 'INV-2023-002',
     customer: {
-      customerId: 'CUST-002',
+      id: 'CUST-002',
       name: 'Jane Smith',
       email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
+      phone: '098 987 6543',
       address: '456 Oak Ave, Somewhere, USA'
     },
     status: 'APPROVED',
@@ -109,10 +108,10 @@ export const mockOrders: Order[] = [
     orderId: 'ORDER-003',
     orderNo: 'INV-2023-003',
     customer: {
-      customerId: 'CUST-003',
+      id: 'CUST-003',
       name: 'Bob Johnson',
       email: 'bob.johnson@example.com',
-      phone: '+1 (555) 456-7890',
+      phone: '099 456 7890',
       address: '789 Pine Rd, Nowhere, USA'
     },
     status: 'SHIPPED',
@@ -147,10 +146,10 @@ export const mockOrders: Order[] = [
     orderId: 'ORDER-005',
     orderNo: 'INV-2023-005',
     customer: {
-      customerId: 'CUST-004',
+      id: 'CUST-004',
       name: 'Alice Williams',
       email: 'alice.williams@example.com',
-      phone: '+1 (555) 321-6547',
+      phone: '099 321 6547',
       address: '321 Elm St, Anywhere, USA'
     },
     status: 'CANCELLED',
@@ -167,10 +166,10 @@ export const mockOrders: Order[] = [
     orderId: 'ORDER-006',
     orderNo: 'INV-2023-006',
     customer: {
-      customerId: 'CUST-005',
+      id: 'CUST-005',
       name: 'Charlie Brown',
       email: 'charlie.brown@example.com',
-      phone: '+1 (555) 654-9870',
+      phone: '099 654-9870',
       address: '654 Maple Dr, Elsewhere, USA'
     },
     status: 'STOCK_VERIFIED',

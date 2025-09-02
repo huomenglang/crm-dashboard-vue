@@ -75,8 +75,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { 
-  UserOutlined, 
+import {
   ReloadOutlined, 
   SearchOutlined, 
   FilterOutlined,
@@ -87,6 +86,8 @@ import { mockOrders } from './orderData'
 import type { Order, OrderProduct, OrderStatus } from './order'
 import OrderCard from './OrderCard.vue'
 import OrderDetails from './OrderDetails.vue'
+import { getAll } from '@/data/ls_data'
+import { KEY } from '@/data/Key'
 
 
 const searchTerm = ref('')
@@ -106,8 +107,7 @@ const statusOptions = [
 
 // Filter orders based on search term and status
 const filteredOrders = computed(() => {
-  let result = mockOrders
-
+  let result = getAll(KEY.ORDER)
   if (searchTerm.value) {
     const term = searchTerm.value.toLowerCase()
     result = result.filter((order:any) => 
