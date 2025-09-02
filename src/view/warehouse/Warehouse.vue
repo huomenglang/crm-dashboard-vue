@@ -4,7 +4,7 @@
       :data="dataTable"
       :pagination="{ pageSize: pageSize, showSizeChanger: true }"
       :loading="loading"
-      :row-key="record => record.id"
+      :row-key="(record:any) => record.id"
       :scroll="{ x: 1200, y: 600 }"
       size="small"
       search-placeholder="Search..."
@@ -30,10 +30,12 @@
 import TableAnt from '@/components/base/table/TableAnt.vue';
 
 import { computed, ref } from 'vue';
-import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
+// import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
 import WarehouseForm from '@/components/pages/warehouse/WarehouseForm.vue';
-import { warehouseColumns, type WarehouseProps } from '@/components/pages/warehouse/warehouse';
 import { KEY } from '@/data/Key';
+import { warehouseColumns, type WarehouseProps } from '@/components/pages/warehouse/warehouse';
+import { createOne, deleteOne, getAll, updateOne } from '../../data/ls_data';
+
 
 // Modal state
 const showModal = ref(false);
@@ -87,8 +89,8 @@ const filtered = computed(() => {
   const s = searchTerm.value.trim().toLowerCase();
   return s 
     ? list.value.filter((c) => 
-        c.name.toLowerCase().includes(s)||
-        c.location.toLowerCase().includes(s)
+        c.name.toLowerCase().includes(s)|| c.location&&
+        c?.location.toLowerCase().includes(s)
       ) 
     : list.value;
 });

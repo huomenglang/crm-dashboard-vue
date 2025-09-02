@@ -3,8 +3,12 @@
     ref="inputRef"
     v-bind="adaptedProps"
     :class="customClasses"
-    
     :style="customStyles"
+    @change="handleChange"
+    @pressEnter="handlePressEnter"
+    @input="handleInput"
+    @blur="handleBlur"
+    @focus="handleFocus"
   >
     <!-- Pass through slots -->
     <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -17,6 +21,7 @@
 import { ref, computed, type CSSProperties } from 'vue';
 import type { InputProps } from 'ant-design-vue';
 import type { InputRef } from 'ant-design-vue/es/vc-input/inputProps';
+import type { FocusEventHandler,KeyboardEventHandler } from 'ant-design-vue/es/_util/EventInterface';
 
 // Define props with TypeScript interface
 interface CustomInputProps extends /* @vue-ignore */ Omit<InputProps, 'class' | 'style' | 'size'> {
@@ -39,9 +44,12 @@ const props = withDefaults(defineProps<CustomInputProps>(), {
 // Define emits for events
 const emit = defineEmits<{
   (e: 'update:value', value: string): void;
-  (e: 'change', event: Event): void;
-  (e: 'pressEnter', event: KeyboardEvent): void;
-  // Add other events as needed
+  (e: 'update:modelValue', value: string): void;
+  (e: 'change', value: string, event: Event): void;
+  (e: 'pressEnter', event: KeyboardEventHandler): void;
+  (e: 'input', value: string, event: Event): void;
+  (e: 'blur', event: FocusEventHandler): void;
+  (e: 'focus', event: FocusEventHandler): void;
 }>();
 
 // Expose ref for parent component access
@@ -63,6 +71,33 @@ const adaptedProps = computed(() => ({
   ...props,
   size: antdSize.value
 }));
+
+// Event handlers
+const handleChange = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  emit('update:value', value);
+  emit('update:modelValue', value);
+  emit('change', value, event);
+};
+
+const handlePressEnter = (event: KeyboardEventHandler) => {
+  emit('pressEnter', event);
+};
+
+const handleInput = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  emit('update:value', value);
+  emit('update:modelValue', value);
+  emit('input', value, event);
+};
+
+const handleBlur = (event: FocusEventHandler) => {
+  emit('blur', event);
+};
+
+const handleFocus = (event: FocusEventHandler) => {
+  emit('focus', event);
+};
 
 // Computed classes based on props
 const customClasses = computed(() => {

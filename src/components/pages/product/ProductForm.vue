@@ -4,12 +4,10 @@ import { Form as VForm, Field, useFieldArray, useForm } from "vee-validate";
 import * as yup from "yup";
 import RoundButton from "@/components/base/button/RoundButton.vue";
 import Upload from "@/components/base/upload/Upload.vue";
-import type { ProductRequest, ProductResponse, ProductUnit } from "./product";
 import type { CategoryProps } from "../category/category";
 import { getAll } from "@/data/ls_data";
 import { ref, toRaw, watch } from "vue";
 import { KEY } from "@/data/Key";
-import { type UmsProps } from "../ums/ums";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
 
 const props = defineProps<{
@@ -18,7 +16,7 @@ const props = defineProps<{
   initialValues?: any;
 }>();
 
-const { setFieldValue, resetField,resetForm } = useForm({
+const { setFieldValue,resetForm } = useForm({
   initialValues: props.initialValues || {
     name: "",
     categoryId: undefined,
@@ -270,7 +268,7 @@ const handleRemoveUnit = (idx: any,data:any) => {
         </div>
 
         <!-- Validation error -->
-        <div class="text-red-500 text-xs">{{ errors.units }}</div>
+        <div class="text-red-500 text-xs">{{ errors&& errors?.units }}</div>
 
         <!-- Add Unit Button -->
         <Button

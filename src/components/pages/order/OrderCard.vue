@@ -60,12 +60,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-  UserOutlined,
-  CalendarOutlined,
-  ShoppingCartOutlined,
-  ArrowRightOutlined,
-} from "@ant-design/icons-vue";
 import type { Order } from "./order";
 import {
   ArrowRightCircleIcon,
@@ -73,16 +67,8 @@ import {
   BookmarkCheckIcon,
   BoxIcon,
   CalendarCheck,
-  CircleMinusIcon,
-  DropletIcon,
-  ShieldCheck,
-  ShieldMinus,
-  ShipIcon,
-  ShoppingBagIcon,
-  ShoppingCartIcon,
-  User,
-  UserStarIcon,
-  VerifiedIcon,
+  CircleMinusIcon, ShieldCheck, ShipIcon, ShoppingCartIcon,
+  User, VerifiedIcon
 } from "lucide-vue-next";
 
 defineProps<{

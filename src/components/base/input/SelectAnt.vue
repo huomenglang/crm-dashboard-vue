@@ -12,7 +12,8 @@
   ></a-select>
 </template>
 <script lang="ts" setup>
-import { KEY } from '@/data/Key';
+
+import { KEY } from '../../../data/Key';
 import { getAll } from '@/data/ls_data';
 import type { SelectProps } from 'ant-design-vue';
 import { ref } from 'vue';
@@ -21,11 +22,7 @@ const newOptions=ref<SelectProps['options']>(getAll(KEY.UNIT)).value?.map(unit =
   label: unit.name,
   id: unit.id,
 }));
-const options = ref<SelectProps['options']>([
-  { value: 'jack', label: 'Jack' },
-  { value: 'lucy', label: 'Lucy' },
-  { value: 'tom', label: 'Tom' },
-]);
+
 const handleChange = (value: string) => {
   console.log(`selected ${value}`);
 };

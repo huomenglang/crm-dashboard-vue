@@ -6,7 +6,7 @@
       :data="quotations"
       :pagination="{ pageSize: 10, showSizeChanger: true }"
       :loading="loading"
-      :row-key="(record) => record.id"
+      :row-key="(record:any) => record.id"
       :scroll="{ x: 1200, y: 600 }"
       size="small"
       search-placeholder="Search..."
@@ -261,7 +261,7 @@ const moveQuotationToOrder=(data:Quotation)=>{
     updatedAt: '',
     createdBy: 'user123'
     }
-    console.log("order data: ",order)
+   
     createOne(order,KEY.ORDER);
 }
 
@@ -270,11 +270,17 @@ const handleCreate = () => {
   router.push("/quotation-action");
 };
 
-const handleEdit = (record: any) => {};
+const handleEdit = (record: any) => {
+  console.log("value edit:  ",record)
+};
 
-const handleView = (record: any) => {};
+const handleView = (record: any) => {
+  console.log("value edit:  ",record)
+};
 
-const handleDelete = (record: any) => {};
+const handleDelete = (record: any) => {
+  console.log("value edit:  ",record)
+};
 
 const handleSearch = (value: string) => {
   console.log("data search: ",value)

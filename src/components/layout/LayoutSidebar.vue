@@ -134,7 +134,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import { generatePath, isMenuActive, menuData, type ItemMenuProps } from "@/router/menu"; // Adjust path as needed
+import { generatePath, isMenuActive, menuData } from "@/router/menu"; // Adjust path as needed
 import { useRoute } from "vue-router";
 
 
@@ -142,16 +142,6 @@ import { useRoute } from "vue-router";
 // const openKeys = ref<string[]>(["customers"]);
 const collapsed = defineModel<boolean>("collapsed", { default: false });
 
-
-const handleMenuClick = (item:any) => {
- let key=''
- if(item.key){
-   key=item.key.replace('item-','')
- }
-
-  console.log("Menu item clicked:", item);
-  // route.push(key);
-};
 
 
 const route = useRoute();
@@ -170,13 +160,13 @@ watch(() => route.path, (newPath) => {
 const selectedKeys = computed(() => {
   const keys: string[] = [];
   
-  menuData.forEach(item => {
+  menuData.forEach((item:any) => {
     if (isMenuItemActive(item)) {
       keys.push(item.key);
     }
     
     if (item.children) {
-      const activeChild = item.children.find(child => isChildMenuItemActive(child));
+      const activeChild = item.children.find((child:any) => isChildMenuItemActive(child));
       if (activeChild) {
         keys.push(activeChild.key);
       }

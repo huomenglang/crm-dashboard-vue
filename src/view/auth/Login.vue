@@ -11,7 +11,8 @@
            <AntInput v-model:value="formState.password" placeholder="Password" size="large"  type="password"/>
         </a-form-item>
         <a-form-item>
-          <submit-button @submit="handleSubmit" class="w-full" > Submit </submit-button>
+          <!-- <a-button @submit="handleSubmit" class="w-full" > Submit </a-button> -->
+           <Button @submit="handleSubmit" class="w-full">submit</Button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -20,11 +21,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { message } from "ant-design-vue";
+import { Button, message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "../stores/auth";
-import SubmitButton from "@/components/base/button/SubmitButton.vue";
-import RoundButton from "@/components/base/button/RoundButton.vue";
+import { useAuthStore } from "@/stores/auth";
 import AntInput from "@/components/base/input/AntInput.vue";
 
 

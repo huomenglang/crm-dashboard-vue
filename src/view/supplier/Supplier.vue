@@ -5,7 +5,7 @@
       :data="dataTable"
       :pagination="{ pageSize: pageSize, showSizeChanger: true }"
       :loading="loading"
-      :row-key="record => record.id"
+      :row-key="(record:any) => record.id"
       :scroll="{ x: 1200, y: 600 }"
       size="small"
       search-placeholder="Search..."
@@ -30,8 +30,8 @@
 
 <script lang="ts" setup>
 import TableAnt from "@/components/base/table/TableAnt.vue";
-import { computed, ref, watch } from "vue"
-import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
+import { computed, ref, watch } from "vue";
+import { getAll, createOne, deleteOne, updateOne } from '@/data/ls_data';
 import { columns, type Supplier } from "@/components/pages/supplier/supplier";
 import SupplierForm from "@/components/pages/supplier/SupplierForm.vue";
 import { KEY } from "@/data/Key";
@@ -40,7 +40,6 @@ import { KEY } from "@/data/Key";
 const showModal = ref(false);
 const supplier = ref<Supplier | null>(null);
 const isEditing = ref(false)
-const mode = ref<"create" | "edit">("create");
 
 // Table data
 const loading = ref(false);
@@ -96,13 +95,13 @@ const handleSubmit = (values: Omit<Supplier, "id">) => {
   showModal.value = false
 }
 
-const handleCancel = () => {
-  showModal.value = false;
-};
+// const handleCancel = () => {
+//   showModal.value = false;
+// };
 
-const handleModalCancel = () => {
-  showModal.value = false;
-};
+// const handleModalCancel = () => {
+//   showModal.value = false;
+// };
 
 // Filter and paginate data
 const filtered = computed(() => {

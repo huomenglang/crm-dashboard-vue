@@ -4,20 +4,20 @@ import type { RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import ContentWrapper from '@/components/layout/ContentWrapper.vue'
 import { RoutePath } from './routes_path'
-import Login from '@/view/Login.vue'
 import Dashboard from '@/view/dashboard/Dashboard.vue'
 import Quotation from '@/view/quotation/Quotation.vue'
 import QuotationAction from '@/view/quotation/QuotationAction.vue'
-import Customer from '@/view/Customer.vue'
-import Product from '@/view/Product.vue'
-import Ums from '@/view/Ums.vue'
-import Warehouse from '@/view/Warehouse.vue'
+import Customer from '@/view/customer/Customer.vue'
+import Product from '@/view/Product/Product.vue'
+import Ums from '@/view/units/Ums.vue'
+import Warehouse from '@/view/warehouse/Warehouse.vue'
 import Order from '@/view/order/Order.vue'
-import PurchaseOrder from '@/view/PurchaseOrder.vue'
-import Category from '@/view/Category.vue'
-import Supplier from '@/view/Supplier.vue'
-import CustomerReport from '@/view/CustomerReport.vue'
-import ExportReports from '@/view/ExportReports.vue'
+import PurchaseOrder from '@/view/purchase-order/PurchaseOrder.vue'
+import Category from '@/view/category/Category.vue'
+import Supplier from '@/view/supplier/Supplier.vue'
+import CustomerReport from '@/view/reports/CustomerReport.vue'
+import ExportReports from '@/view/reports/ExportReports.vue'
+import Login from '@/view/auth/Login.vue'
 
 
 // Import all views
@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: `/${RoutePath.REPORT}`,
         name: 'Reports',
-        component: () => import('@/view/Reports.vue'),
+        // component: () => import('@/view/reports/Reports.vue'),
         children: [
           { path: RoutePath.REPORT_CUSTOMER.split('/')[1], name: 'CustomerReports', component: () => CustomerReport},
           { path: RoutePath.REPORT_CUSTOMER_DETAIL.split('/')[2], name: 'CustomerReportDetail', component: () => CustomerReport},

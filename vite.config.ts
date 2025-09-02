@@ -1,18 +1,19 @@
-import path from 'node:path'
+// vite.config.ts
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import compression from 'vite-plugin-compression' // for Brotli
+import compression from 'vite-plugin-compression'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'path'  // Use path instead of node:url
 
 export default defineConfig({
   plugins: [
     vue(),
     tailwindcss(),
     compression({
-      algorithm: 'brotliCompress', // use Brotli
-      ext: '.br', // output file extension
-      threshold: 10240, // only compress files bigger than 10kb
-      deleteOriginFile: false, // keep original files
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 10240,
+      deleteOriginFile: false,
     }),
   ],
   resolve: {
@@ -23,7 +24,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/styles/variables.scss";` // optional global SCSS
+        additionalData: `@import "@/styles/variables.scss";`
       },
     },
   },

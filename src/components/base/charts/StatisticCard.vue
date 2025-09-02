@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
     <a-card
-      v-for="item in stats"
+      v-for="item in props.stats"
       :key="item.key"
       class="rounded-2xl shadow-md bg-white p-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
     >
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { UserOutlined, ShoppingCartOutlined, DollarOutlined, CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons-vue"
+import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons-vue"
 
 export interface StatItem {
   key: string

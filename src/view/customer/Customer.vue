@@ -5,7 +5,7 @@
       :data="dataTable"
       :pagination="{ pageSize: pageSize, showSizeChanger: true }"
       :loading="loading"
-      :row-key="record => record.id"
+      :row-key="(record:any) => record.id"
       :scroll="{ x: 1200, y: 600 }"
       size="small"
       search-placeholder="Search..."
@@ -29,12 +29,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableColumnsType } from "ant-design-vue";
 import TableAnt from "@/components/base/table/TableAnt.vue";
-import { computed, ref, watch } from "vue"
+import { computed, ref, watch } from "vue";
 import CustomerForm from "@/components/pages/customer/CustomerForm.vue";
-import AntModal from "@/components/base/modal/AntModal.vue";
-import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
+import { getAll, createOne, deleteOne, updateOne } from '@/data/ls_data';
 import { columns, type Customer } from "@/components/pages/customer/customer";
 
 // Modal state
@@ -108,21 +106,20 @@ const handleSubmit = (values: Omit<Customer, "id">) => {
   showModal.value = false
 }
 
-const handleCancel = () => {
-  showModal.value = false;
-};
+// const handleCancel = () => {
+//   showModal.value = false;
+// };
 
-const handleModalCancel = () => {
-  showModal.value = false;
-};
+// const handleModalCancel = () => {
+//   showModal.value = false;
+// };
 
 // Filter and paginate data
 const filtered = computed(() => {
   const s = searchTerm.value.trim().toLowerCase();
   return s 
     ? list.value.filter((c) => 
-        c.firstname.toLowerCase().includes(s) || 
-        c.lastname.toLowerCase().includes(s) ||
+        c.name.toLowerCase().includes(s) || 
         c.email.toLowerCase().includes(s)
       ) 
     : list.value;

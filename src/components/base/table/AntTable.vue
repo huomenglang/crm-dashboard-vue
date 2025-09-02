@@ -36,9 +36,9 @@
     <!-- AntD Table -->
     <a-table
       v-bind="attrs"
-      :columns="columns"
-      :data-source="dataSource"
-      :class="['rounded-lg border border-gray-200', tableClass]"
+      :columns="props.columns"
+      :data-source="props.dataSource"
+      :class="['rounded-lg border border-gray-200', props.tableClass]"
       
     >
       <!-- Default body cell override for operation column -->

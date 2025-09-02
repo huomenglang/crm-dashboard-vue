@@ -1,10 +1,10 @@
 <template>
     <TableAnt
-      :columns="umsColumns"
+      :columns="categoryColums"
       :data="dataTable"
       :pagination="{ pageSize: pageSize, showSizeChanger: true }"
       :loading="loading"
-      :row-key="record => record.id"
+      :row-key="(record:any) => record.id"
       :scroll="{ x: 1200, y: 600 }"
       size="small"
       search-placeholder="Search..."
@@ -17,10 +17,10 @@
       @delete="handleDelete"
       @filter="handleFilter"
     />
-    <UmsForm
+    <category-form
       :open="showModal"
       :isEditing="isEditing"
-      :initialValues="ums || {}"
+      :initialValues="category || {}"
       @close="showModal = false"
       @submit="handleSubmit"
     />
@@ -30,14 +30,14 @@
 import TableAnt from '@/components/base/table/TableAnt.vue';
 
 import { computed, ref } from 'vue';
-import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
-import UmsForm from '@/components/pages/ums/UmsForm.vue';
-import { type UmsProps ,umsColumns} from '@/components/pages/ums/ums';
+import { getAll, createOne, deleteOne, updateOne } from '@/data/ls_data';
+import CategoryForm from '@/components/pages/category/CategoryForm.vue';
+import { categoryColums, type CategoryProps } from '@/components/pages/category/category';
 import { KEY } from '@/data/Key';
 
 // Modal state
 const showModal = ref(false);
-const ums = ref<UmsProps | null>(null);
+const category = ref<CategoryProps | null>(null);
 const isEditing = ref(false)
 
 // Table data
@@ -45,31 +45,31 @@ const loading = ref(false);
 const searchTerm = ref('');
 const page = ref(1);
 const pageSize = ref(6);
-const list = ref<UmsProps[]>(getAll(KEY.UNIT));
+const list = ref<CategoryProps[]>(getAll(KEY.CATEGORY));
 console.log('list; ',list)
 
 // Event handlers
 const handleCreate = () => {
   showModal.value = true;
 isEditing.value = false;
-  ums.value = null;
+  category.value = null;
 };
 
-const handleEdit = (record: UmsProps) => {
+const handleEdit = (record: CategoryProps) => {
   showModal.value = true;
   isEditing.value = true;
-  ums.value = { ...record };
-
+  category.value = { ...record };
+  
 };
 
-const handleView = (record: UmsProps) => {
+const handleView = (record: CategoryProps) => {
   showModal.value = true;
-  ums.value = { ...record };
+  category.value = { ...record };
 };
 
-const handleDelete = (record: UmsProps) => {
-  deleteOne(record.id, KEY.UNIT);
-  list.value = getAll(KEY.UNIT); // Refresh the list
+const handleDelete = (record: CategoryProps,) => {
+  deleteOne(record.id,'category');
+  list.value = getAll('category'); // Refresh the list
 };
 
 const handleSearch = (value: string) => {
@@ -97,13 +97,13 @@ const dataTable = computed(() => {
   return filtered.value.slice(start, start + pageSize.value);
 });
 
-const handleSubmit = (values: Omit<UmsProps, "id">) => {
-  if (isEditing.value && ums.value) {
-    updateOne(ums.value.id, values, KEY.UNIT);
-    list.value = getAll(KEY.UNIT);
+const handleSubmit = (values: Omit<CategoryProps, "id">) => {
+  if (isEditing.value && category.value) {
+    updateOne(category.value.id, values,'category');
+    list.value = getAll('category'); 
   } else {
-    createOne({ id: Date.now().toString(), ...values }, KEY.UNIT);
-    list.value = getAll(KEY.UNIT);
+    createOne({ id: Date.now().toString(), ...values },'category');
+    list.value = getAll('category'); 
   }
   showModal.value = false
 }

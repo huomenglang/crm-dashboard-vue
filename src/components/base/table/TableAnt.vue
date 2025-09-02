@@ -154,7 +154,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, type CSSProperties, useAttrs } from "vue";
+import { computed, ref, useAttrs } from "vue";
 import type { TableColumnsType, TableProps } from "ant-design-vue";
 import {
   DeleteOutlined,

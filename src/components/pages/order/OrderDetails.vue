@@ -137,30 +137,17 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import {
-  SaveOutlined,
-  PrinterOutlined,
   UserOutlined,
-  CheckCircleOutlined,
-  CarOutlined,
-  CloseCircleOutlined,
-  ContainerFilled,
+  CheckCircleOutlined, CloseCircleOutlined
 } from "@ant-design/icons-vue";
 import type { Order, OrderProduct, OrderStatus } from "./order";
 import OrderSteps from "./OrderSteps.vue";
 import TableProduct from "./TableProduct.vue";
 import {
-  BadgeInfoIcon,
-  CalculatorIcon,
-  CalendarCheck,
-  ContainerIcon,
-  MailCheckIcon,
-  PhoneCallIcon,
-  ReceiptIcon,
   ReceiptText,
   ShieldCheckIcon,
-  ShipIcon,
+  ShipIcon
 } from "lucide-vue-next";
-import RoundButton from "@/components/base/button/RoundButton.vue";
 
 const props = defineProps<{
   order: Order;
@@ -203,10 +190,10 @@ const handleStatusChange = (newStatus: OrderStatus) => {
   emit("status-change", newStatus);
 };
 
-const handleSave = () => {
+// const handleSave = () => {
 
-  console.log("Saving changes...");
-};
+//   console.log("Saving changes...");
+// };
 
 const verificationLoading = ref(false)
 
@@ -234,11 +221,11 @@ const showVerifyButton = computed(() => {
   
   return true;
 })
-const showCancelButton = computed(() => {
-  // Show cancel button only for CREATED, STOCK_VERIFIED, and APPROVED steps
-  const cancelableStatuses = ['CREATED', 'STOCK_VERIFIED', 'APPROVED']
-  return cancelableStatuses.includes(props.order.status)
-})
+// const showCancelButton = computed(() => {
+//   // Show cancel button only for CREATED, STOCK_VERIFIED, and APPROVED steps
+//   const cancelableStatuses = ['CREATED', 'STOCK_VERIFIED', 'APPROVED']
+//   return cancelableStatuses.includes(props.order.status)
+// })
 
 const cancelOrder = () => {
   emit('status-change', 'CANCELLED')

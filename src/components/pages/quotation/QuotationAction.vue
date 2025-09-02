@@ -862,7 +862,7 @@ function addNewUnit() {
   }
 
   const product = products.value.find(
-    (p:any) => p.id === selectedProductForUnit.value
+    (p) => p.id === selectedProductForUnit.value
   );
   if (!product) {
     message.error("Product not found");

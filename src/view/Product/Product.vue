@@ -5,7 +5,7 @@
       :data="dataTable"
       :pagination="{ pageSize: pageSize, showSizeChanger: true }"
       :loading="loading"
-      :row-key="record => record.id"
+      :row-key="(record:any) => record.id"
       :scroll="{ x: 1200, y: 600 }"
       size="small"
       search-placeholder="Search..."
@@ -29,12 +29,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableColumnsType } from "ant-design-vue";
 import TableAnt from "@/components/base/table/TableAnt.vue";
-import { computed, ref, toRaw, watch } from "vue"
-import CustomerForm from "@/components/pages/customer/CustomerForm.vue";
-import AntModal from "@/components/base/modal/AntModal.vue";
-import {getAll,createOne,deleteOne,updateOne} from '@/data/ls_data'
+import { computed, ref, toRaw, watch } from "vue";
+import { getAll, createOne, deleteOne, updateOne } from '@/data/ls_data';
 import { columns, type ProductResponse } from "@/components/pages/product/product";
 import ProductForm from "@/components/pages/product/ProductForm.vue";
 import { KEY } from "@/data/Key";
@@ -128,7 +125,7 @@ const handleSubmit =async (values: any) => {
 
   if (isEditing.value && product.value) {
 
-    const category = categoryData.find(c => c.id === values?.categoryId);
+    const category = categoryData.find((c:any) => c.id === values?.categoryId);
     const units=values?.units?.map((unit:any)=>({
       unitId: unit.unitName?.key,
       unitName: unit?.unitName?.label,

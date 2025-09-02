@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { Modal, Form, Input, Button } from "ant-design-vue";
+import { Modal, Form, Input } from "ant-design-vue";
 import { Form as VForm, Field } from "vee-validate";
 import * as yup from "yup";
-import { UploadOutlined } from "@ant-design/icons-vue";
 import RoundButton from "@/components/base/button/RoundButton.vue";
 import Upload from "@/components/base/upload/Upload.vue";
 import type { Customer } from "./customer";
-import AntModal from "@/components/base/modal/AntModal.vue";
 
 const props = defineProps<{
   open: boolean;

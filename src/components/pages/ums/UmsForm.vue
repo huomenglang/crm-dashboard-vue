@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { Modal, Form, Input, Button } from "ant-design-vue"
+import { Modal, Form, Input } from "ant-design-vue"
 import { Form as VForm, Field } from "vee-validate"
 import * as yup from "yup"
-import { UploadOutlined } from "@ant-design/icons-vue"
 import type { UmsProps } from "./ums"
-import  RoundButton  from "@/components/base/button/RoundButton.vue"
-import Upload from "@/components/base/upload/Upload.vue"
+import RoundButton from "@/components/base/button/RoundButton.vue"
 
 const props = defineProps<{
   open: boolean

@@ -159,7 +159,7 @@
             v-model:value="field.value"
             :min="1"
             :precision="2"
-            :status="errors[`quantity`] ? 'error' : ''"
+            :status="errors&& errors[`quantity`] ? 'error' : ''"
             style="width: 100%"
           />
         </Field>
@@ -173,7 +173,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, ref } from "vue";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -181,7 +181,7 @@ import {
 } from "@ant-design/icons-vue";
 import type { OrderProduct, OrderUnit } from "../order/order";
 import type { Unit } from "../quotation/type";
-import { Field, useForm, Form as VForm, type FormContext } from "vee-validate";
+import { Field, Form as VForm, type FormContext } from "vee-validate";
 import * as yup from "yup";
 import { Form } from "ant-design-vue";
 import { productData } from "@/data/mock_data";
@@ -363,9 +363,9 @@ const addUnit = (product: OrderProduct) => {
 
 const removeUnit = (product: OrderProduct, unit: OrderUnit) => {
   if (product.units.length <= 1) {
-    alert(
-      "Cannot remove the only unit of a product. Remove the entire product instead."
-    );
+    // alert(
+    //   "Cannot remove the only unit of a product. Remove the entire product instead."
+    // );
     return;
   }
 

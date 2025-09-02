@@ -17,15 +17,15 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  FileOutlined, 
-  CheckCircleOutlined, 
+import {
+  FileOutlined,
+  CheckCircleOutlined,
   SafetyCertificateOutlined,
   RocketOutlined,
   CheckSquareOutlined,
   CloseCircleOutlined
 } from '@ant-design/icons-vue'
-import { computed, ref,h } from 'vue'
+import { computed, h } from 'vue'
 import type { OrderStatus } from './order'
 
 interface Step {
